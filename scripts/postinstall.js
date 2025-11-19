@@ -24,7 +24,6 @@ function validateEnvironment() {
   const majorVersion = parseInt(nodeVersion.slice(1).split(".")[0]);
 
   if (majorVersion < 18) {
-    // eslint-disable-next-line no-console
     console.warn(
       `⚠️  Warning: Node.js ${nodeVersion} detected. @kitiumai/lint requires Node.js ≥18.0.0`,
     );
@@ -32,7 +31,6 @@ function validateEnvironment() {
 
   // Check if running in npm install context
   if (!process.env.npm_lifecycle_event) {
-    // eslint-disable-next-line no-console
     console.warn(
       "⚠️  Not running in npm install context. This is normal if running manually.",
     );
@@ -60,7 +58,6 @@ function findConsumerPackageJson() {
       currentDir.length > 1 &&
       levels < maxLevels
     ) {
-      // eslint-disable-next-line security/detect-non-literal-fs-filename
       const packageJsonPath = join(currentDir, "package.json");
 
       // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -350,7 +347,6 @@ export default [
     // eslint-disable-next-line no-console
     console.log("✓ Created eslint.config.js (ESLint v9 flat config)");
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(`Failed to create eslint.config.js: ${error.message}`);
   }
 }
@@ -396,7 +392,6 @@ function createTslintConfig(projectRoot) {
     // eslint-disable-next-line no-console
     console.log("✓ Created tslint.json");
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(`Failed to create tslint.json: ${error.message}`);
   }
 }
@@ -432,7 +427,6 @@ export default {
       // eslint-disable-next-line no-console
       console.log("✓ Created .prettierrc.js");
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(`Failed to create .prettierrc.js: ${error.message}`);
     }
   }
@@ -461,7 +455,6 @@ venv
       // eslint-disable-next-line no-console
       console.log("✓ Created .prettierignore");
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(`Failed to create .prettierignore: ${error.message}`);
     }
   } else {
@@ -506,7 +499,6 @@ coverage
     // eslint-disable-next-line no-console
     console.log("✓ Created .eslintignore");
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(`Failed to create .eslintignore: ${error.message}`);
   }
 }
@@ -599,7 +591,6 @@ async function updatePackageJson(packageJsonPath, config) {
 
     return updated;
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(`Error updating package.json: ${error.message}`);
     return false;
   }
@@ -651,7 +642,7 @@ async function interactiveSetup(projectRoot) {
       // eslint-disable-next-line no-console
       console.log("\n🚀 Running migration...\n");
       // Dynamic import to avoid circular dependencies
-      // eslint-disable-next-line global-require
+
       const { execSync } = await import("node:child_process");
       try {
         execSync("node node_modules/@kitiumai/lint/scripts/migrate.js", {
@@ -816,130 +807,122 @@ async function main() {
  * Detailed error handler with diagnostics and troubleshooting
  */
 function handleSetupError(error) {
-  // eslint-disable-next-line no-console
   console.error(`\n${"━".repeat(70)}`);
-  // eslint-disable-next-line no-console
+
   console.error("❌ SETUP ERROR");
-  // eslint-disable-next-line no-console
+
   console.error(`${"━".repeat(70)}\n`);
 
-  // eslint-disable-next-line no-console
   console.error(`Error: ${error.message}\n`);
 
   // Categorize error and provide specific guidance
   const errorMsg = error.message.toLowerCase();
   const errorStack = error.stack || "";
 
-  // eslint-disable-next-line no-console
   console.error("📋 Diagnostic Information:");
-  // eslint-disable-next-line no-console
+
   console.error(`  • Node.js version: ${process.version}`);
-  // eslint-disable-next-line no-console
+
   console.error(`  • npm version: ${process.env.npm_version || "unknown"}`);
-  // eslint-disable-next-line no-console
+
   console.error(`  • Current directory: ${process.cwd()}`);
-  // eslint-disable-next-line no-console
+
   console.error(
     `  • npm lifecycle event: ${process.env.npm_lifecycle_event || "none"}\n`,
   );
 
   // Specific error handling
   if (errorMsg.includes("eacces") || errorMsg.includes("permission denied")) {
-    // eslint-disable-next-line no-console
     console.error("🔒 Permission Issue Detected:\n");
-    // eslint-disable-next-line no-console
+
     console.error(
       "  This usually means @kitiumai/lint cannot write to the current directory.\n",
     );
-    // eslint-disable-next-line no-console
+
     console.error("  Try these solutions:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  1. Run with sudo (not recommended):");
-    // eslint-disable-next-line no-console
+
     console.error("     sudo npm install @kitiumai/lint\n");
-    // eslint-disable-next-line no-console
+
     console.error("  2. Fix npm permissions:");
-    // eslint-disable-next-line no-console
+
     console.error("     mkdir ~/.npm-global");
-    // eslint-disable-next-line no-console
+
     console.error("     npm config set prefix '~/.npm-global'\n");
-    // eslint-disable-next-line no-console
+
     console.error("  3. Check directory ownership:");
-    // eslint-disable-next-line no-console
+
     console.error("     ls -la package.json\n");
   } else if (errorMsg.includes("enoent") || errorMsg.includes("no such file")) {
-    // eslint-disable-next-line no-console
     console.error("📁 File Not Found:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  A required file is missing. This might happen if:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  • package.json doesn't exist in the current directory");
-    // eslint-disable-next-line no-console
+
     console.error("  • Running from the wrong directory\n");
-    // eslint-disable-next-line no-console
+
     console.error("  Try these solutions:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  1. Verify package.json exists:");
-    // eslint-disable-next-line no-console
+
     console.error("     ls -la package.json\n");
-    // eslint-disable-next-line no-console
+
     console.error("  2. Run from the correct directory:");
-    // eslint-disable-next-line no-console
+
     console.error("     cd /path/to/your/project\n");
   } else if (errorMsg.includes("json") || errorMsg.includes("parse")) {
-    // eslint-disable-next-line no-console
     console.error("📝 Configuration Parse Error:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  Invalid JSON or configuration syntax detected.\n");
-    // eslint-disable-next-line no-console
+
     console.error("  Try these solutions:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  1. Validate package.json:");
-    // eslint-disable-next-line no-console
+
     console.error("     npm ls (checks for syntax errors)\n");
-    // eslint-disable-next-line no-console
+
     console.error("  2. Reset setup configuration:");
-    // eslint-disable-next-line no-console
+
     console.error("     rm .kitium-lint-setup.json\n");
   } else if (errorMsg.includes("timeout") || errorMsg.includes("timed out")) {
-    // eslint-disable-next-line no-console
     console.error("⏱️  Timeout Error:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  The setup took too long to complete.\n");
-    // eslint-disable-next-line no-console
+
     console.error("  Try these solutions:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  1. Run setup manually:");
-    // eslint-disable-next-line no-console
+
     console.error(
       "     node node_modules/@kitiumai/lint/scripts/postinstall.js\n",
     );
-    // eslint-disable-next-line no-console
+
     console.error("  2. Check your internet connection\n");
-    // eslint-disable-next-line no-console
+
     console.error("  3. Clear npm cache:");
-    // eslint-disable-next-line no-console
+
     console.error("     npm cache clean --force\n");
   }
 
   // Show general troubleshooting guide
   showTroubleshootingGuide();
 
-  // eslint-disable-next-line no-console
   console.error("📚 Additional Resources:");
-  // eslint-disable-next-line no-console
+
   console.error("  • Full error stack:");
-  // eslint-disable-next-line no-console
+
   console.error(`    ${errorStack.split("\n").slice(0, 3).join("\n    ")}\n`);
-  // eslint-disable-next-line no-console
+
   console.error("  • Report an issue:");
-  // eslint-disable-next-line no-console
+
   console.error("    https://github.com/kitium-ai/lint/issues\n");
-  // eslint-disable-next-line no-console
+
   console.error("  • Documentation:");
-  // eslint-disable-next-line no-console
+
   console.error("    https://github.com/kitium-ai/lint#troubleshooting\n");
-  // eslint-disable-next-line no-console
+
   console.error(`${"━".repeat(70)}\n`);
 }
 

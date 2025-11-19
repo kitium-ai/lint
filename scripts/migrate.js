@@ -165,7 +165,6 @@ function parsePrettierConfig(configPath) {
     );
     return configObj;
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(`Error parsing Prettier config: ${error.message}`);
     return null;
   }
@@ -192,7 +191,6 @@ function parseTslintConfig(configPath) {
     const content = readFileSync(configPath, "utf-8");
     return JSON.parse(content);
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(`Error parsing TSLint config: ${error.message}`);
     return null;
   }
@@ -213,7 +211,6 @@ function extractTslintCustomRules(config) {
 
   // Remove undefined values
   Object.keys(customRules).forEach((key) => {
-    // eslint-disable-next-line eqeqeq
     if (customRules[key] == null) {
       delete customRules[key];
     }
@@ -387,7 +384,6 @@ function backupConfigFile(filePath) {
     console.log(`✓ Backed up original config: ${basename(backupPath)}`);
     return backupPath;
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(
       `⚠️  Failed to backup ${basename(filePath)}: ${error.message}`,
     );
@@ -585,167 +581,157 @@ async function main() {
  * Detailed error handler for migration with diagnostics
  */
 function handleMigrationError(error) {
-  // eslint-disable-next-line no-console
   console.error(`\n${"━".repeat(70)}`);
-  // eslint-disable-next-line no-console
+
   console.error("❌ MIGRATION ERROR");
-  // eslint-disable-next-line no-console
+
   console.error(`${"━".repeat(70)}\n`);
 
-  // eslint-disable-next-line no-console
   console.error(`Error: ${error.message}\n`);
 
   // Categorize error and provide specific guidance
   const errorMsg = error.message.toLowerCase();
   const errorStack = error.stack || "";
 
-  // eslint-disable-next-line no-console
   console.error("📋 Diagnostic Information:");
-  // eslint-disable-next-line no-console
+
   console.error(`  • Node.js version: ${process.version}`);
-  // eslint-disable-next-line no-console
+
   console.error(`  • Current directory: ${process.cwd()}`);
-  // eslint-disable-next-line no-console
+
   console.error(
     `  • npm lifecycle event: ${process.env.npm_lifecycle_event || "none"}\n`,
   );
 
   // Specific error handling
   if (errorMsg.includes("eacces") || errorMsg.includes("permission denied")) {
-    // eslint-disable-next-line no-console
     console.error("🔒 Permission Issue Detected:\n");
-    // eslint-disable-next-line no-console
+
     console.error(
       "  The migration script cannot write to the current directory.\n",
     );
-    // eslint-disable-next-line no-console
+
     console.error("  Try these solutions:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  1. Check directory permissions:");
-    // eslint-disable-next-line no-console
+
     console.error("     ls -la . | head\n");
-    // eslint-disable-next-line no-console
+
     console.error("  2. Fix ownership if needed:");
-    // eslint-disable-next-line no-console
+
     console.error("     sudo chown -R $USER:$USER .\n");
-    // eslint-disable-next-line no-console
+
     console.error("  3. Try from a different directory with write access\n");
   } else if (errorMsg.includes("enoent") || errorMsg.includes("no such file")) {
-    // eslint-disable-next-line no-console
     console.error("📁 Configuration File Not Found:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  The migration script cannot find your config file.\n");
-    // eslint-disable-next-line no-console
+
     console.error("  Common causes:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  • Config file was deleted or moved");
-    // eslint-disable-next-line no-console
+
     console.error("  • Running from wrong directory\n");
-    // eslint-disable-next-line no-console
+
     console.error("  Try these solutions:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  1. List available configs:");
-    // eslint-disable-next-line no-console
+
     console.error("     ls -la .eslintrc* .prettierrc* tslint.json\n");
-    // eslint-disable-next-line no-console
+
     console.error("  2. Run migration from the correct directory:");
-    // eslint-disable-next-line no-console
+
     console.error("     cd /path/to/your/project && npm run migrate\n");
   } else if (
     errorMsg.includes("json") ||
     errorMsg.includes("parse") ||
     errorMsg.includes("syntax")
   ) {
-    // eslint-disable-next-line no-console
     console.error("📝 Configuration Parse Error:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  Invalid syntax or format in your config file.\n");
-    // eslint-disable-next-line no-console
+
     console.error("  Common causes:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  • Malformed JSON (missing quotes, commas, etc.)");
-    // eslint-disable-next-line no-console
+
     console.error("  • Invalid JavaScript syntax\n");
-    // eslint-disable-next-line no-console
+
     console.error("  Try these solutions:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  1. Validate JSON config:");
-    // eslint-disable-next-line no-console
+
     console.error("     cat .eslintrc.json | python -m json.tool\n");
-    // eslint-disable-next-line no-console
+
     console.error("  2. Check for syntax errors:");
-    // eslint-disable-next-line no-console
+
     console.error("     node -c .eslintrc.js (if using JS format)\n");
-    // eslint-disable-next-line no-console
+
     console.error("  3. Fix config file manually before migration\n");
   } else if (errorMsg.includes("eval") || errorMsg.includes("expression")) {
-    // eslint-disable-next-line no-console
     console.error("⚙️  Configuration Parsing Error:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  Could not evaluate your config file.\n");
-    // eslint-disable-next-line no-console
+
     console.error("  Try these solutions:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  1. Ensure your config is valid JavaScript:");
-    // eslint-disable-next-line no-console
+
     console.error("     node -c eslint.config.js\n");
-    // eslint-disable-next-line no-console
+
     console.error("  2. Check for relative imports that need absolute paths\n");
-    // eslint-disable-next-line no-console
+
     console.error("  3. Remove any non-JSON properties if using JSON format\n");
   } else if (errorMsg.includes("no project") || errorMsg.includes("not find")) {
-    // eslint-disable-next-line no-console
     console.error("🔍 Project Not Found:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  The migration script could not locate a project.\n");
-    // eslint-disable-next-line no-console
+
     console.error("  Requirements:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  • Requires a package.json file in the directory tree\n");
-    // eslint-disable-next-line no-console
+
     console.error("  Try these solutions:\n");
-    // eslint-disable-next-line no-console
+
     console.error("  1. Verify package.json exists:");
-    // eslint-disable-next-line no-console
+
     console.error("     ls -la package.json\n");
-    // eslint-disable-next-line no-console
+
     console.error("  2. Create one if missing:");
-    // eslint-disable-next-line no-console
+
     console.error("     npm init -y\n");
   }
 
-  // eslint-disable-next-line no-console
   console.error("💡 Migration Tips:");
-  // eslint-disable-next-line no-console
+
   console.error("  • Backup your configs before migration:");
-  // eslint-disable-next-line no-console
+
   console.error("    cp .eslintrc.json .eslintrc.json.backup\n");
-  // eslint-disable-next-line no-console
+
   console.error("  • Run migration in non-interactive mode:");
-  // eslint-disable-next-line no-console
+
   console.error("    MIGRATE_AUTO_YES=true npm run migrate\n");
-  // eslint-disable-next-line no-console
+
   console.error("  • Test after migration:");
-  // eslint-disable-next-line no-console
+
   console.error("    npm run lint -- --debug\n");
 
-  // eslint-disable-next-line no-console
   console.error("📚 Additional Resources:");
-  // eslint-disable-next-line no-console
+
   console.error("  • Full error stack:");
-  // eslint-disable-next-line no-console
+
   console.error(`    ${errorStack.split("\n").slice(0, 3).join("\n    ")}\n`);
-  // eslint-disable-next-line no-console
+
   console.error("  • Report an issue:");
-  // eslint-disable-next-line no-console
+
   console.error("    https://github.com/kitium-ai/lint/issues\n");
-  // eslint-disable-next-line no-console
+
   console.error("  • Documentation:");
-  // eslint-disable-next-line no-console
+
   console.error(
     "    https://github.com/kitium-ai/lint#migration-from-existing-configs\n",
   );
-  // eslint-disable-next-line no-console
+
   console.error(`${"━".repeat(70)}\n`);
 }
 
