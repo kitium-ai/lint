@@ -4,24 +4,38 @@
  */
 
 import {
-  eslintBaseConfig,
-  eslintTypeScriptConfig,
-  eslintNodeConfig,
-  eslintGraphQLConfig,
-  eslintJestConfig,
-  eslintSecurityConfig,
-} from '@kitiumai/lint';
+  baseConfig,
+  typeScriptConfig,
+  nodeConfig,
+  graphqlConfig,
+  jestConfig,
+  securityConfig,
+} from '@kitiumai/lint/eslint';
 
 export default [
-  eslintBaseConfig,
-  eslintTypeScriptConfig,
-  eslintNodeConfig,
-  eslintGraphQLConfig,
+  {
+    ignores: [
+      'dist/',
+      'build/',
+      'node_modules/',
+      '.git/',
+      'coverage/',
+      'schema.graphql',
+      'generated/',
+      '.env',
+      '.env.local',
+      '*.log',
+    ],
+  },
+  baseConfig,
+  typeScriptConfig,
+  nodeConfig,
+  graphqlConfig,
+  securityConfig,
   {
     files: ['**/*.test.{ts,js}'],
-    ...eslintJestConfig,
+    ...jestConfig,
   },
-  eslintSecurityConfig,
   {
     // GraphQL-specific overrides
     files: ['**/*.{graphql,gql}', 'src/**/*.graphql.ts'],
@@ -36,15 +50,11 @@ export default [
     },
   },
   {
-    // Server code rules
+    name: 'server-code-rules',
     files: ['src/**/*.ts', 'src/**/*.js'],
     rules: {
       'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
       'node/no-unpublished-import': 'warn',
     },
-  },
-  {
-    // Ignore patterns
-    ignores: ['dist', 'build', 'node_modules', '.git', 'coverage', 'schema.graphql', 'generated'],
   },
 ];

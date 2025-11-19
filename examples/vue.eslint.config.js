@@ -4,24 +4,36 @@
  */
 
 import {
-  eslintBaseConfig,
-  eslintTypeScriptConfig,
-  eslintVueConfig,
-  eslintJestConfig,
-  eslintSecurityConfig,
-} from '@kitiumai/lint';
+  baseConfig,
+  typeScriptConfig,
+  vueConfig,
+  jestConfig,
+  securityConfig,
+} from '@kitiumai/lint/eslint';
 
 export default [
-  eslintBaseConfig,
-  eslintTypeScriptConfig,
-  eslintVueConfig,
+  {
+    ignores: [
+      'dist/',
+      'node_modules/',
+      '.git/',
+      'coverage/',
+      'build/',
+      '.env',
+      '.env.local',
+      '*.log',
+    ],
+  },
+  baseConfig,
+  typeScriptConfig,
+  vueConfig,
+  securityConfig,
   {
     files: ['**/*.test.{js,ts,jsx,tsx}'],
-    ...eslintJestConfig,
+    ...jestConfig,
   },
-  eslintSecurityConfig,
   {
-    // Vue-specific project overrides
+    name: 'vue-specific-rules',
     files: ['**/*.vue'],
     rules: {
       'vue/multi-word-component-names': 'warn',
@@ -31,15 +43,11 @@ export default [
     },
   },
   {
-    // Template files
+    name: 'vue-template-rules',
     files: ['src/**/*.vue'],
     rules: {
       'vue/html-indent': ['error', 2],
       'vue/max-attributes-per-line': ['warn', { singleline: 3, multiline: 1 }],
     },
-  },
-  {
-    // Ignore patterns
-    ignores: ['dist', 'node_modules', '.git', 'coverage', 'build'],
   },
 ];

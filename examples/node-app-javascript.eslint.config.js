@@ -1,9 +1,9 @@
 /**
- * Example ESLint Configuration for Node.js Backend Application
- * Use this as a template for Express, Fastify, or other Node.js backends
+ * Example ESLint Configuration for Node.js Backend Application (JavaScript)
+ * Use this as a template for Express, Fastify, or other Node.js backends in pure JavaScript
  */
 
-import { baseConfig, nodeConfig, typeScriptConfig } from '@kitiumai/lint/eslint';
+import { baseConfig, nodeConfig } from '@kitiumai/lint/eslint';
 
 export default [
   {
@@ -19,10 +19,9 @@ export default [
   },
   baseConfig,
   nodeConfig,
-  typeScriptConfig,
   {
     name: 'project-overrides',
-    files: ['src/**/*.ts'],
+    files: ['src/**/*.js'],
     rules: {
       // Allow console logging for backend applications
       'no-console': ['warn', { allow: ['log', 'warn', 'error', 'info'] }],
@@ -32,10 +31,10 @@ export default [
   },
   {
     name: 'test-files',
-    files: ['**/*.test.ts', '**/*.spec.ts', 'tests/**/*.ts'],
+    files: ['**/*.test.js', '**/*.spec.js', 'tests/**/*.js'],
     rules: {
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': 'off',
+      'no-console': 'off',
+      'no-undef': 'off', // Jest globals are available
     },
   },
 ];

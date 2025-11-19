@@ -260,13 +260,15 @@ function createMigratedTslintConfig(customRules) {
  */
 function createMigratedEslintConfig(customRules, projectType = "node") {
   const configMap = {
-    react: "eslintReactConfig, eslintTypeScriptConfig",
-    node: "eslintNodeConfig, eslintTypeScriptConfig",
-    nextjs: "eslintNextJsConfig, eslintTypeScriptConfig",
-    vue: "eslintVueConfig, eslintTypeScriptConfig",
+    react: { imports: "baseConfig, reactConfig, typeScriptConfig", configs: "baseConfig,\n  reactConfig,\n  typeScriptConfig" },
+    "node.js": { imports: "baseConfig, nodeConfig, typeScriptConfig", configs: "baseConfig,\n  nodeConfig,\n  typeScriptConfig" },
+    "next.js": { imports: "baseConfig, nextjsConfig, typeScriptConfig, jestConfig, testingLibraryConfig, reactConfig", configs: "baseConfig,\n  reactConfig,\n  nextjsConfig,\n  typeScriptConfig,\n  {\n    files: ['**/*.{test,spec}.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  },\n  {\n    files: ['**/*.test.{jsx,tsx}'],\n    ...testingLibraryConfig,\n  }" },
+    vue: { imports: "baseConfig, vueConfig, typeScriptConfig, jestConfig", configs: "baseConfig,\n  vueConfig,\n  typeScriptConfig,\n  {\n    files: ['**/*.test.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  }" },
   };
 
-  const imports = configMap[projectType] || configMap.node;
+  const configData = configMap[projectType] || configMap["node.js"];
+  const imports = configData.imports;
+  const configs = configData.configs;
 
   let configContent = `/**
  * ESLint Configuration - Migrated to @kitiumai/lint
@@ -275,16 +277,32 @@ function createMigratedEslintConfig(customRules, projectType = "node") {
  * Your custom rules have been preserved and layered on top of @kitiumai/lint base configs.
  *
  * To further customize, modify the 'migrated-custom-rules' config object below.
- * Supported base configs: ${Object.keys(configMap).join(", ")}
+ * Supported base configs: react, node.js, next.js, vue
  */
 
-import { ${imports} } from '@kitiumai/lint';
+import { ${imports} } from '@kitiumai/lint/eslint';
 
 export default [
-  ${imports
-    .split(",")
-    .map((s) => s.trim())
-    .join(",\n  ")},
+  {
+    ignores: [
+      'node_modules/',
+      'dist/',
+      'build/',
+      '.next/',
+      'out/',
+      '.venv/',
+      'venv/',
+      '.env',
+      '.env.local',
+      '.env.*.local',
+      '*.log',
+      '.DS_Store',
+      '.cache',
+      '.turbo',
+      'coverage/',
+    ],
+  },
+  ${configs},
   {
     name: 'migrated-custom-rules',
     files: ['**/*.{js,jsx,ts,tsx}'],
@@ -347,7 +365,7 @@ function createMigratedPrettierConfig(customSettings) {
  * Your custom settings have been preserved below.
  */
 
-import { prettierConfig } from '@kitiumai/lint';
+import prettierConfig from '@kitiumai/lint/prettier';
 
 export default {
   ...prettierConfig,

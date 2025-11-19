@@ -4,32 +4,53 @@
  */
 
 import {
-  eslintBaseConfig,
-  eslintReactConfig,
-  eslintNodeConfig,
-  eslintTypeScriptConfig,
-} from '@kitiumai/lint';
+  baseConfig,
+  reactConfig,
+  nodeConfig,
+  typeScriptConfig,
+  jestConfig,
+} from '@kitiumai/lint/eslint';
 
 export default [
+  // Global ignores
+  {
+    ignores: [
+      'node_modules/',
+      'dist/',
+      'build/',
+      '.next/',
+      'coverage/',
+      '.git/',
+      '.turbo/',
+      '.env',
+      '.env.local',
+      '*.log',
+    ],
+  },
+
+  // Base config for all files
+  baseConfig,
+  typeScriptConfig,
+
   // Frontend Web Application
   {
     name: 'web-app',
     files: ['apps/web/src/**/*.{ts,tsx}'],
-    extends: [...eslintReactConfig, ...eslintTypeScriptConfig],
+    ...reactConfig,
   },
 
   // Mobile/Desktop App (React Native/Electron)
   {
     name: 'mobile-app',
     files: ['apps/mobile/src/**/*.{ts,tsx}'],
-    extends: [...eslintReactConfig, ...eslintTypeScriptConfig],
+    ...reactConfig,
   },
 
   // Backend API Server
   {
     name: 'api-server',
     files: ['apps/api/src/**/*.ts'],
-    extends: [...eslintNodeConfig, ...eslintTypeScriptConfig],
+    ...nodeConfig,
     rules: {
       'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
@@ -39,7 +60,7 @@ export default [
   {
     name: 'component-library',
     files: ['packages/components/src/**/*.{ts,tsx}'],
-    extends: [...eslintReactConfig, ...eslintTypeScriptConfig],
+    ...reactConfig,
     rules: {
       'react/prop-types': 'error', // Enforce prop-types for library
     },
@@ -49,13 +70,13 @@ export default [
   {
     name: 'utilities',
     files: ['packages/utils/src/**/*.ts'],
-    extends: [...eslintBaseConfig, ...eslintTypeScriptConfig],
   },
 
   // Test Files
   {
     name: 'test-files',
     files: ['**/*.{test,spec}.{ts,tsx}'],
+    ...jestConfig,
     rules: {
       '@typescript-eslint/no-explicit-any': 'warn',
       'no-console': 'off',

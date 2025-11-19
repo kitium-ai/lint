@@ -1,0 +1,37 @@
+/**
+ * Example ESLint Configuration for Vanilla TypeScript Projects
+ * Use this as a template for pure TypeScript projects without frameworks
+ */
+
+import { baseConfig, typeScriptConfig } from '@kitiumai/lint/eslint';
+
+export default [
+  {
+    ignores: [
+      'node_modules/',
+      'dist/',
+      'build/',
+      '.next/',
+      'out/',
+      '.venv/',
+      'venv/',
+      '.env',
+      '.env.local',
+      '.env.*.local',
+      '*.log',
+      '.DS_Store',
+      '.cache',
+      '.turbo',
+      'coverage/',
+    ],
+  },
+  baseConfig,
+  typeScriptConfig,
+  {
+    name: 'project-overrides',
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    rules: {
+      // Add your project-specific rule overrides here
+    },
+  },
+];

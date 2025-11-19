@@ -4,40 +4,52 @@
  */
 
 import {
-  eslintBaseConfig,
-  eslintTypeScriptConfig,
-  eslintReactConfig,
-  eslintNextjsConfig,
-  eslintJestConfig,
-  eslintTestingLibraryConfig,
-  eslintSecurityConfig,
-} from '@kitiumai/lint';
+  baseConfig,
+  typeScriptConfig,
+  reactConfig,
+  nextjsConfig,
+  jestConfig,
+  testingLibraryConfig,
+  securityConfig,
+} from '@kitiumai/lint/eslint';
 
 export default [
-  eslintBaseConfig,
-  eslintTypeScriptConfig,
-  eslintReactConfig,
-  eslintNextjsConfig,
+  {
+    ignores: [
+      '.next/',
+      'out/',
+      'dist/',
+      'build/',
+      'node_modules/',
+      '.git/',
+      '.vscode/',
+      '.idea/',
+      '.env',
+      '.env.local',
+      '*.log',
+      'coverage/',
+    ],
+  },
+  baseConfig,
+  typeScriptConfig,
+  reactConfig,
+  nextjsConfig,
+  securityConfig,
   {
     files: ['**/*.{test,spec}.{js,ts,jsx,tsx}'],
-    ...eslintJestConfig,
+    ...jestConfig,
   },
   {
     files: ['**/*.test.{jsx,tsx}'],
-    ...eslintTestingLibraryConfig,
+    ...testingLibraryConfig,
   },
-  eslintSecurityConfig,
   {
-    // Project-specific overrides
+    name: 'project-overrides',
     files: ['**/*.{js,jsx,ts,tsx}'],
     rules: {
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'react/react-in-jsx-scope': 'off', // Not needed in Next.js with JSX runtime
       '@next/next/no-html-link-for-pages': 'error',
     },
-  },
-  {
-    // Ignore patterns
-    ignores: ['.next', 'out', 'dist', 'build', 'node_modules', '.git', '.vscode', '.idea'],
   },
 ];

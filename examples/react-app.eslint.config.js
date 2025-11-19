@@ -3,11 +3,23 @@
  * Use this as a template for React + TypeScript applications
  */
 
-import { eslintReactConfig, eslintTypeScriptConfig } from '@kitiumai/lint';
+import { baseConfig, reactConfig, typeScriptConfig } from '@kitiumai/lint/eslint';
 
 export default [
-  ...eslintReactConfig,
-  ...eslintTypeScriptConfig,
+  {
+    ignores: [
+      'node_modules/',
+      'dist/',
+      'build/',
+      '.next/',
+      '.env',
+      '.env.local',
+      'coverage/',
+    ],
+  },
+  baseConfig,
+  reactConfig,
+  typeScriptConfig,
   {
     name: 'project-overrides',
     files: ['src/**/*.{ts,tsx}'],
