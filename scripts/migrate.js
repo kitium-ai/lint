@@ -167,9 +167,8 @@ function parseEslintV8Config(configPath) {
     }
 
     // Handle JS/CJS format - extract export default or module.exports
-    let configObj;
     // eslint-disable-next-line no-eval
-    configObj = eval(`(${content.replace(/^module\.exports\s*=\s*/, "").replace(/^export\s+default\s+/, "")})`);
+    const configObj = eval(`(${content.replace(/^module\.exports\s*=\s*/, "").replace(/^export\s+default\s+/, "")})`);
     return configObj;
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -194,7 +193,8 @@ function extractEslintV8CustomRules(config) {
 
   // Remove undefined values
   Object.keys(customRules).forEach((key) => {
-    if (customRules[key] === undefined) {
+    // eslint-disable-next-line eqeqeq
+    if (customRules[key] == null) {
       delete customRules[key];
     }
   });
@@ -217,9 +217,8 @@ function parsePrettierConfig(configPath) {
     }
 
     // Handle JS/CJS format
-    let configObj;
     // eslint-disable-next-line no-eval
-    configObj = eval(`(${content.replace(/^module\.exports\s*=\s*/, "").replace(/^export\s+default\s+/, "")})`);
+    const configObj = eval(`(${content.replace(/^module\.exports\s*=\s*/, "").replace(/^export\s+default\s+/, "")})`);
     return configObj;
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -270,7 +269,8 @@ function extractTslintCustomRules(config) {
 
   // Remove undefined values
   Object.keys(customRules).forEach((key) => {
-    if (customRules[key] === undefined) {
+    // eslint-disable-next-line eqeqeq
+    if (customRules[key] == null) {
       delete customRules[key];
     }
   });
@@ -491,9 +491,7 @@ async function main() {
   const projectRoot = findProjectRoot();
 
   if (!projectRoot) {
-    // eslint-disable-next-line no-console
-    console.error("❌ Could not find project root (package.json)");
-    process.exit(1);
+    throw new Error("Could not find project root (package.json)");
   }
 
   // eslint-disable-next-line no-console
@@ -575,7 +573,7 @@ async function main() {
     const migratedESLint = createMigratedEslintConfig(eslintConfig, projectType);
 
     // Backup original
-    const backupPath = backupConfigFile(configPath);
+    backupConfigFile(configPath);
 
     // Write migrated config
     const newConfigPath = join(projectRoot, "eslint.config.js");
@@ -641,5 +639,5 @@ async function main() {
 main().catch((error) => {
   // eslint-disable-next-line no-console
   console.error(`❌ Migration error: ${error.message}\n`);
-  process.exit(1);
+  process.exitCode = 1;
 });
