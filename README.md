@@ -4,13 +4,18 @@ Enterprise-ready, simple, and secure linting configuration package for Kitium AI
 
 ## Features
 
-- ✅ **Modular Configurations**: Separate configs for Base, React, Node.js, TypeScript, Jest, Testing Library, GraphQL, Vue, Next.js
+- ✅ **Interactive Setup**: Smart postinstall prompts to configure linting tools and project type
+- ✅ **Project Type Support**: React, Vue, Next.js, Angular, Svelte, Node.js, and more
+- ✅ **Modular Configurations**: Separate configs for Base, React, Node.js, TypeScript, Jest, Testing Library, GraphQL, Vue, Next.js, Angular, Svelte
+- ✅ **TSLint Support**: Optional TSLint configuration for additional TypeScript linting
+- ✅ **Auto-Detection**: Automatically detects project type from package.json dependencies
+- ✅ **Migration Tool**: Standalone migration script for converting existing ESLint v8/v9 and TSLint configs
 - ✅ **Enterprise Security**: Advanced security scanning with SonarJS and OWASP vulnerability detection
 - ✅ **ESLint 9 Compatible**: Modern ESLint flat config format (FlatConfig)
 - ✅ **TypeScript First**: Full TypeScript support with strict type checking
 - ✅ **React Ready**: Complete React and React Hooks support with accessibility rules
 - ✅ **Testing Support**: Jest configuration and Testing Library best practices
-- ✅ **Framework Support**: Next.js, Vue.js, and GraphQL configurations included
+- ✅ **Framework Support**: Next.js, Vue.js, Angular, Svelte, and GraphQL configurations included
 - ✅ **Kitium UI Standards**: Optional Kitium UI component naming & typing enforcement
 - ✅ **Git Hooks Integration**: Pre-built Husky setup for automated code quality checks
 - ✅ **Code Formatting**: Opinionated Prettier configuration included
@@ -82,6 +87,96 @@ Create `eslint.config.js`:
 import { eslintBaseConfig } from "@kitiumai/lint";
 
 export default [...eslintBaseConfig];
+```
+
+## Interactive Setup (Automatic)
+
+When you install `@kitiumai/lint`, the postinstall script prompts you with interactive questions:
+
+```
+🎯 @kitiumai/lint Setup
+
+Let's configure which tools you'd like to use for linting and formatting.
+
+Use ESLint for JavaScript/TypeScript linting? [Y/n]:
+Use TSLint for additional TypeScript linting? [y/N]:
+Use Prettier for code formatting? [Y/n]:
+
+Select your project type:
+  > 1. Node.js
+    2. React
+    3. Next.js
+    4. Vue
+    5. Angular
+    6. Svelte
+```
+
+Based on your selections, the script automatically:
+- Creates `eslint.config.js` with appropriate base configuration
+- Creates `tslint.json` (if selected)
+- Creates `.prettierrc.js` (if selected)
+- Creates `.eslintignore` and `.prettierignore`
+- Adds npm scripts to `package.json` (only for selected tools)
+- Saves your choices in `.kitium-lint-setup.json` for future runs
+
+### Automatic Project Detection
+
+The setup automatically detects your project type based on dependencies:
+- **React** if `react` is found
+- **Next.js** if `next` is found (has priority over React)
+- **Vue** if `vue` is found
+- **Angular** if `@angular/core` is found
+- **Svelte** if `svelte` is found
+- **Node.js** (default)
+
+## Migration from Existing Configs
+
+Have an existing ESLint or TSLint setup? Use the migration tool:
+
+```bash
+npm run migrate
+```
+
+The migration script:
+- **Detects existing configs** (ESLint v8/v9, TSLint, Prettier)
+- **Preserves custom rules** while adopting @kitiumai/lint as base
+- **Backs up originals** with timestamps (e.g., `.eslintrc.backup.2025-11-19T15-33-27`)
+- **Prompts for confirmation** (opt-in, non-destructive)
+- **Supports non-interactive mode** via environment variables:
+  ```bash
+  MIGRATE_AUTO_YES=true npm run migrate  # Auto-migrate all
+  MIGRATE_AUTO_NO=true npm run migrate   # Skip all migrations
+  ```
+
+### Migration Example
+
+**Before** - ESLint v8 config:
+```json
+{
+  "extends": "airbnb",
+  "rules": {
+    "no-console": "warn",
+    "react/prop-types": "off"
+  }
+}
+```
+
+**After** - Migrated to ESLint v9 flat config:
+```javascript
+import { eslintReactConfig, eslintTypeScriptConfig } from '@kitiumai/lint';
+
+export default [
+  ...eslintReactConfig,
+  ...eslintTypeScriptConfig,
+  {
+    name: 'migrated-custom-rules',
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    rules: {
+      'no-console': 'warn',           // ✓ Preserved
+      'react/prop-types': 'off'       // ✓ Preserved
+    },
+  },
+];
 ```
 
 ## Configuration Modules
@@ -215,6 +310,54 @@ Kitium component enforcement aimed at shared design-system packages.
 - Required type exports for `*.types.ts` files
 
 **When to use:** component libraries or apps that must follow Kitium UI patterns.
+
+#### `eslintAngularConfig`
+
+Angular framework-specific configuration with TypeScript support.
+
+**Includes:**
+
+- Directive selector conventions (attribute, camelCase prefix)
+- Component selector conventions (element, kebab-case prefix)
+- Lifecycle method validation
+- TypeScript member ordering and accessibility rules
+- Angular best practices and patterns
+
+**Files:** `**/*.ts` (Angular components and services)
+
+**Example:**
+```javascript
+import { eslintAngularConfig, eslintTypeScriptConfig } from "@kitiumai/lint";
+
+export default [
+  ...eslintAngularConfig,
+  ...eslintTypeScriptConfig,
+];
+```
+
+#### `eslintSvelteConfig`
+
+Svelte framework-specific configuration with TypeScript support.
+
+**Includes:**
+
+- Svelte component best practices
+- Block language configuration (TypeScript, SCSS)
+- Template validation and linting
+- Shorthand and directive usage rules
+- Component structure enforcement
+
+**Files:** `**/*.svelte` (Svelte components)
+
+**Example:**
+```javascript
+import { eslintSvelteConfig, eslintTypeScriptConfig } from "@kitiumai/lint";
+
+export default [
+  ...eslintSvelteConfig,
+  ...eslintTypeScriptConfig,
+];
+```
 
 #### `eslintSecurityConfig`
 
