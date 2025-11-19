@@ -4,12 +4,16 @@ Enterprise-ready, simple, and secure linting configuration package for Kitium AI
 
 ## Features
 
-- ✅ **Modular Configurations**: Separate configs for Base, React, Node.js, and TypeScript
-- ✅ **Enterprise Security**: Built-in security best practices and vulnerability detection
+- ✅ **Modular Configurations**: Separate configs for Base, React, Node.js, TypeScript, Jest, Testing Library, GraphQL, Vue, Next.js
+- ✅ **Enterprise Security**: Advanced security scanning with SonarJS and OWASP vulnerability detection
 - ✅ **ESLint 9 Compatible**: Modern ESLint flat config format (FlatConfig)
 - ✅ **TypeScript First**: Full TypeScript support with strict type checking
 - ✅ **React Ready**: Complete React and React Hooks support with accessibility rules
+- ✅ **Testing Support**: Jest configuration and Testing Library best practices
+- ✅ **Framework Support**: Next.js, Vue.js, and GraphQL configurations included
+- ✅ **Git Hooks Integration**: Pre-built Husky setup for automated code quality checks
 - ✅ **Code Formatting**: Opinionated Prettier configuration included
+- ✅ **Shareable Presets**: Pre-built configurations for common project patterns
 - ✅ **Easy to Use**: Simple, composable configurations for any project type
 - ✅ **Zero Configuration**: Works out of the box, no complex setup needed
 
@@ -133,6 +137,74 @@ Strict TypeScript configuration with comprehensive type checking.
 
 **Note:** Extends `baseConfig`
 
+#### `eslintJestConfig`
+Jest testing configuration for unit and integration tests.
+
+**Includes:**
+- Jest-specific globals and rules
+- Test lifecycle best practices
+- Snapshot testing guidelines
+- Assertion validation
+
+**Files:** `**/*.test.{js,ts,jsx,tsx}`, `**/*.spec.{js,ts,jsx,tsx}`
+
+#### `eslintTestingLibraryConfig`
+React Testing Library configuration for component testing best practices.
+
+**Includes:**
+- Accessibility-first query recommendations
+- Implementation detail avoidance
+- Async/await handling in tests
+- User interaction patterns
+
+**Files:** `**/*.test.{jsx,tsx}`, `**/*.spec.{jsx,tsx}`
+
+#### `eslintGraphQLConfig`
+GraphQL schema and query validation.
+
+**Includes:**
+- GraphQL query validation
+- Schema compliance checking
+- Field existence validation
+- Deprecation warnings
+
+**Files:** `**/*.graphql`, `**/*.gql`
+
+#### `eslintVueConfig`
+Vue.js 3 Single File Component (SFC) configuration.
+
+**Includes:**
+- Vue component best practices
+- Script setup composition API support
+- Template accessibility rules
+- Vue lifecycle validation
+
+**Files:** `**/*.vue`
+
+#### `eslintNextjsConfig`
+Next.js framework-specific configuration.
+
+**Includes:**
+- Image optimization rules
+- Link component usage
+- Performance best practices
+- Font and script optimization
+
+**Extends:** Base configuration
+
+#### `eslintSecurityConfig`
+Enhanced security scanning with advanced vulnerability detection.
+
+**Includes:**
+- OWASP Top 10 checks
+- Code injection prevention
+- SonarJS quality analysis
+- Node.js security patterns
+- XSS prevention (no-unsanitized)
+- Cryptography best practices
+
+**Note:** Recommended for all production applications
+
 ### Prettier Configuration
 
 ```javascript
@@ -244,16 +316,142 @@ export default [
 ];
 ```
 
+## Shareable Configurations
+
+Pre-built configuration presets for common project patterns. Use these to quickly set up linting for your project:
+
+### Quick Presets
+
+```javascript
+// Use a preset
+import { fullstack, react_spa, nextjs_app, node_api, graphql_api, vue_spa } from '@kitium-ai/lint/configs';
+
+export default [...fullstack]; // for full-stack apps
+```
+
+Available presets:
+
+- **`fullstack`** - React + Node.js + TypeScript + Jest + Testing Library + Security
+- **`react_spa`** - React Single Page Application with TypeScript
+- **`nextjs_app`** - Next.js application with all features
+- **`node_api`** - Node.js API server with security
+- **`graphql_api`** - GraphQL server with Node.js and security
+- **`vue_spa`** - Vue.js 3 application
+- **`monorepo`** - Monorepo with multiple packages
+- **`library`** - Library/package development
+- **`minimal`** - Minimal JavaScript configuration
+- **`all`** - All configurations enabled (for advanced users)
+
+### Example: Using Presets
+
+```javascript
+// eslint.config.js
+import { nextjs_app } from '@kitium-ai/lint/configs';
+
+export default [
+  ...nextjs_app,
+  {
+    // Project-specific overrides
+    files: ['src/**/*.ts'],
+    rules: {
+      'no-console': ['warn', { allow: ['error'] }],
+    },
+  },
+];
+```
+
+## Jest Configuration
+
+Use the included Jest configurations:
+
+```javascript
+// jest.config.js
+import { reactConfig } from '@kitium-ai/lint/jest';
+
+export default {
+  ...reactConfig,
+  // Project-specific overrides
+  collectCoverageFrom: [
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.d.ts',
+  ],
+};
+```
+
+Available Jest presets:
+- **`baseConfig`** - Basic Node.js testing
+- **`reactConfig`** - React component testing with jsdom
+- **`reactNativeConfig`** - React Native testing
+- **`nextjsConfig`** - Next.js application testing
+
+## Git Hooks with Husky
+
+Set up automated code quality checks with Husky:
+
+```bash
+# Install dependencies
+npm install --save-dev husky lint-staged
+
+# Initialize husky
+npx husky install
+
+# Create pre-commit hook
+npx husky add .husky/pre-commit 'npx lint-staged'
+
+# Create pre-push hook
+npx husky add .husky/pre-push 'npm run lint && npm test'
+```
+
+Add lint-staged configuration to `package.json`:
+
+```json
+{
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  }
+}
+```
+
+For detailed setup, see the [Husky documentation](https://typicode.github.io/husky/).
+
 ## Security Features
 
-This package includes security-focused configurations:
+The `eslintSecurityConfig` includes comprehensive security scanning:
 
-- **Static Analysis**: Detects potential security vulnerabilities
-- **Code Injection Prevention**: Rules against eval and dynamic code execution
-- **Buffer Safety**: Warnings for unsafe Buffer operations
-- **Child Process Warnings**: Alerts for subprocess spawning
-- **Regex Security**: Detection of unsafe regular expressions
-- **Type Safety**: Strict TypeScript prevents many security issues
+### OWASP Top 10 Protection
+- **Code Injection Prevention**: Rules against eval, Function constructor, and dynamic code
+- **Cross-Site Scripting (XSS)**: Using eslint-plugin-no-unsanitized
+- **Insecure Deserialization**: JSON parsing validation
+- **Broken Authentication**: Type-safe credential handling with TypeScript
+
+### Advanced Scanning
+- **SonarJS Analysis**: Code quality and security hotspots
+- **Node.js Specific**: Buffer safety, child process warnings, path handling
+- **Static Analysis**: Detects potential vulnerabilities at lint time
+- **Regex Security**: Detection of unsafe regular expressions (ReDoS)
+- **Cryptography**: Warnings for weak random number generation
+
+### Type Safety
+- **Strict TypeScript**: Prevents many common security issues at compile time
+- **No Implicit Any**: Enforces explicit type annotations
+- **Exhaustive Checks**: Ensures all cases are handled
+
+Use the security config on all production projects:
+
+```javascript
+import { eslintSecurityConfig } from '@kitium-ai/lint';
+
+export default [
+  // ... other configs
+  eslintSecurityConfig,
+];
+```
 
 ## npm Scripts
 
