@@ -2,49 +2,79 @@
  * Testing Library Configuration for ESLint
  * Rules for React Testing Library best practices
  * Prevents common mistakes in component tests and ensures maintainability
+ *
+ * NOTE: This configuration requires the optional package:
+ * - eslint-plugin-testing-library
+ *
+ * Install with: npm install eslint-plugin-testing-library
  */
 
-import testingLibraryPlugin from "eslint-plugin-testing-library";
+let testingLibraryPlugin;
+let hasTestingLibraryPlugin = false;
 
-export default {
-  files: [
-    "**/*.test.{jsx,tsx}",
-    "**/*.spec.{jsx,tsx}",
-    "**/tests/**/*.{jsx,tsx}",
-    "**/__tests__/**/*.{jsx,tsx}",
-  ],
-  plugins: {
-    "testing-library": testingLibraryPlugin,
-  },
-  rules: {
-    // Accessibility and best practices
-    "testing-library/prefer-screen-queries": "warn",
-    "testing-library/prefer-query-by-role": "warn",
-    "testing-library/no-node-access": "warn",
-    "testing-library/no-container": "warn",
+// Try to load optional Testing Library plugin
+try {
+  const mod = await import("eslint-plugin-testing-library").catch(() => null);
+  if (mod) {
+    testingLibraryPlugin = mod.default;
+    hasTestingLibraryPlugin = true;
+  }
+} catch (_error) {
+  // eslint-plugin-testing-library is not installed - this is optional
+}
 
-    // Avoid implementation details
-    "testing-library/no-render-in-setup": "error",
-    "testing-library/no-wait-for-empty-dom": "error",
-    "testing-library/no-wait-for-multiple-assertions": "warn",
+const createTestingLibraryConfig = () => {
+  const baseConfig = {
+    files: [
+      "**/*.test.{jsx,tsx}",
+      "**/*.spec.{jsx,tsx}",
+      "**/tests/**/*.{jsx,tsx}",
+      "**/__tests__/**/*.{jsx,tsx}",
+    ],
+    rules: {},
+  };
 
-    // Async handling
-    "testing-library/no-wait-for-side-effects": "warn",
-    "testing-library/await-async-query": "error",
-    "testing-library/await-async-utils": "error",
-    "testing-library/await-fire-event": "warn",
+  if (hasTestingLibraryPlugin) {
+    return {
+      ...baseConfig,
+      plugins: {
+        "testing-library": testingLibraryPlugin,
+      },
+      rules: {
+        // Accessibility and best practices
+        "testing-library/prefer-screen-queries": "warn",
+        "testing-library/prefer-query-by-role": "warn",
+        "testing-library/no-node-access": "warn",
+        "testing-library/no-container": "warn",
 
-    // User interaction best practices
-    "testing-library/prefer-user-event": "warn",
-    "testing-library/prefer-explicit-assert": "warn",
+        // Avoid implementation details
+        "testing-library/no-render-in-setup": "error",
+        "testing-library/no-wait-for-empty-dom": "error",
+        "testing-library/no-wait-for-multiple-assertions": "warn",
 
-    // Cleanup and rendering
-    "testing-library/no-unnecessary-act": "warn",
+        // Async handling
+        "testing-library/no-wait-for-side-effects": "warn",
+        "testing-library/await-async-query": "error",
+        "testing-library/await-async-utils": "error",
+        "testing-library/await-fire-event": "warn",
 
-    // Debug methods
-    "testing-library/no-debug": "warn",
+        // User interaction best practices
+        "testing-library/prefer-user-event": "warn",
+        "testing-library/prefer-explicit-assert": "warn",
 
-    // Empty callbacks
-    "testing-library/no-unnecessary-act": "warn",
-  },
+        // Cleanup and rendering
+        "testing-library/no-unnecessary-act": "warn",
+
+        // Debug methods
+        "testing-library/no-debug": "warn",
+
+        // Empty callbacks
+        "testing-library/no-unnecessary-act": "warn",
+      },
+    };
+  }
+
+  return baseConfig;
 };
+
+export default createTestingLibraryConfig();
