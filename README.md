@@ -826,6 +826,38 @@ npm run format
 npm run format:check
 ```
 
+## Manual Setup and Re-running Setup
+
+### Running Setup Manually
+
+If the postinstall script doesn't run during installation (e.g., due to npm script restrictions), you can manually trigger setup using the `setup:lint` script that was added to your `package.json`:
+
+```bash
+npm run setup:lint
+```
+
+This script is always added to your `package.json` by the postinstall process and can be used to:
+- Manually run setup if installation was skipped
+- Re-configure linting options
+- Regenerate configuration files
+
+### Re-running Setup
+
+To reconfigure your linting setup at any time:
+
+```bash
+npm run setup:lint
+```
+
+This will:
+- Detect existing configurations (if any)
+- Offer to migrate them
+- Allow you to change your tool selections
+- Update or regenerate configuration files
+- Save your new preferences
+
+**Note:** If the setup was already completed, you'll see your previous configuration and can choose to keep it or run the interactive setup again.
+
 ## Troubleshooting
 
 ### ESLint Configuration Not Created
@@ -857,7 +889,13 @@ You should see either ESLint v8 (8.50.0+) or v9 (9.0.0+) installed.
 
 #### 3. Run Setup Manually
 
-If postinstall didn't run automatically, you can trigger setup manually:
+If postinstall didn't run automatically, you can use the `setup:lint` script added to your `package.json`:
+
+```bash
+npm run setup:lint
+```
+
+Or run the postinstall script directly:
 
 ```bash
 node node_modules/@kitiumai/lint/scripts/postinstall.js

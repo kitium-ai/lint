@@ -496,6 +496,10 @@ async function updatePackageJson(packageJsonPath, config) {
     const scriptsToAdd = {};
     let updated = false;
 
+    // Always add setup:lint script for manual setup re-runs
+    scriptsToAdd["setup:lint"] =
+      "node node_modules/@kitiumai/lint/scripts/postinstall.js";
+
     // Add ESLint scripts if selected
     if (config.eslint) {
       scriptsToAdd.lint = "eslint .";
@@ -516,10 +520,10 @@ async function updatePackageJson(packageJsonPath, config) {
       scriptsToAdd["format:check"] = "prettier --check .";
     }
 
-    // Check for existing scripts and ask about replacement
-    const existingScripts = Object.keys(scriptsToAdd).filter(
-      (script) => packageJson.scripts[script],
-    );
+    // Check for existing scripts and ask about replacement (but not for setup:lint)
+    const existingScripts = Object.keys(scriptsToAdd)
+      .filter((script) => script !== "setup:lint")
+      .filter((script) => packageJson.scripts[script]);
 
     let shouldReplace = true;
     if (existingScripts.length > 0) {
@@ -581,26 +585,29 @@ function showTroubleshootingGuide() {
 
 If the postinstall script doesn't create config files, try:
 
-1. **Check if npm scripts are disabled:**
+1. **Run setup using the npm script (recommended):**
+   npm run setup:lint
+
+2. **Check if npm scripts are disabled:**
    npm config get ignore-scripts
    npm config set ignore-scripts false
 
-2. **Verify ESLint installation:**
+3. **Verify ESLint installation:**
    npm list eslint
 
-3. **Run setup manually:**
+4. **Run postinstall script directly:**
    node node_modules/@kitiumai/lint/scripts/postinstall.js
 
-4. **Check Node.js version (≥18.0.0 required):**
+5. **Check Node.js version (≥18.0.0 required):**
    node --version
 
-5. **For pnpm users:**
+6. **For pnpm users:**
    pnpm install
-   pnpm exec node node_modules/@kitiumai/lint/scripts/postinstall.js
+   pnpm exec npm run setup:lint
 
-6. **For yarn users:**
+7. **For yarn users:**
    yarn install
-   yarn node node_modules/@kitiumai/lint/scripts/postinstall.js
+   yarn setup:lint
 
 Need help? https://github.com/kitium-ai/lint/issues
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
