@@ -9,14 +9,14 @@ Enterprise-ready, simple, and secure linting configuration package for Kitium AI
 - ✅ **Modular Configurations**: Separate configs for Base, React, Node.js, TypeScript, Jest, Testing Library, GraphQL, Vue, Next.js, Angular, Svelte
 - ✅ **TSLint Support**: Optional TSLint configuration for additional TypeScript linting
 - ✅ **Auto-Detection**: Automatically detects project type from package.json dependencies
-- ✅ **Migration Tool**: Standalone migration script for converting existing ESLint v8/v9 and TSLint configs
+- ✅ **Migration Tool**: Standalone migration script for converting existing ESLint v9 and TSLint configs
 - ✅ **Enterprise Security**: Advanced security scanning with SonarJS and OWASP vulnerability detection
 - ✅ **ESLint 9 Compatible**: Modern ESLint flat config format (FlatConfig)
 - ✅ **TypeScript First**: Full TypeScript support with strict type checking
 - ✅ **React Ready**: Complete React and React Hooks support with accessibility rules
 - ✅ **Testing Support**: Jest configuration and Testing Library best practices
 - ✅ **Framework Support**: Next.js, Vue.js, Angular, Svelte, and GraphQL configurations included
-- ✅ **Dual ESLint Support**: Works with both ESLint v8 and v9 with automatic detection
+- ✅ **ESLint v9 Support**: Full support for ESLint v9 flat config format
 - ✅ **Kitium UI Standards**: Optional Kitium UI component naming & typing enforcement
 - ✅ **Git Hooks Integration**: Pre-built Husky setup for automated code quality checks
 - ✅ **Code Formatting**: Opinionated Prettier configuration included
@@ -124,7 +124,7 @@ If existing ESLint, TSLint, or Prettier configs are found, the setup will offer 
 ```
 📋 Found existing configurations:
 
-  ✓ ESLint v8: .eslintrc.json
+  ✓ ESLint v9: eslint.config.js
   ✓ Prettier: .prettierrc.json
 
 Would you like to migrate these configs to @kitiumai/lint? (y/n)
@@ -137,26 +137,9 @@ If you choose to migrate, the postinstall script will:
 - Backup original configs
 - Update to use @kitiumai/lint as the base
 
-### ESLint Version Selection
-
-When you choose to use ESLint, you'll be prompted to select your preferred version:
-
-```
-Select ESLint version to use:
-  > 1. ESLint v9 (Flat Config - Modern)
-    2. ESLint v8 (Traditional)
-```
-
-Or if ESLint is already installed, the setup detects it and asks to confirm or change:
-
-```
-📦 Detected ESLint v8
-Keep using ESLint v8? [Y/n]:
-```
-
 Based on your selections, the script automatically:
 
-- Creates `eslint.config.js` (ESLint v9) OR `.eslintrc.json` (ESLint v8)
+- Creates `eslint.config.js` (ESLint v9 flat config)
 - Creates `tslint.json` (if selected)
 - Creates `.prettierrc.js` (if selected)
 - Creates `.eslintignore` and `.prettierignore`
@@ -186,7 +169,7 @@ npm run migrate
 
 The migration script:
 
-- **Detects existing configs** (ESLint v8/v9, TSLint, Prettier)
+- **Detects existing configs** (ESLint v9, TSLint, Prettier)
 - **Preserves custom rules** while adopting @kitiumai/lint as base
 - **Backs up originals** with timestamps (e.g., `.eslintrc.backup.2025-11-19T15-33-27`)
 - **Prompts for confirmation** (opt-in, non-destructive)
@@ -888,7 +871,7 @@ Ensure ESLint is properly installed:
 npm list eslint
 ```
 
-You should see either ESLint v8 (8.50.0+) or v9 (9.0.0+) installed.
+You should see ESLint v9 (9.0.0+) installed.
 
 #### 3. Run Setup Manually
 
@@ -939,28 +922,17 @@ npm cache clean --force
 npm install @kitiumai/lint
 ```
 
-### Dual ESLint Version Support
-
-The postinstall script automatically detects your ESLint version and creates the appropriate configuration:
-
-- **ESLint v9**: Creates `eslint.config.js` with flat config format (modern)
-- **ESLint v8**: Creates `.eslintrc.json` with traditional format (legacy)
-
-This means you can use @kitiumai/lint with either ESLint version without any manual configuration changes.
-
 ### Verify Configuration Creation
 
 After installation, check which configuration files were created:
 
 ```bash
-# For ESLint v9
+# ESLint v9 flat config
 ls -la eslint.config.js
 
-# For ESLint v8
-ls -la .eslintrc.json
+# ESLint ignore file
+ls -la .eslintignore
 ```
-
-Both `.eslintignore` should also be created.
 
 ### Still Having Issues?
 
