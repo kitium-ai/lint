@@ -103,6 +103,7 @@ function detectExistingConfigs(projectRoot) {
     eslintV8: null,
     eslintV9: null,
     prettier: null,
+    tslint: null,
   };
 
   // ESLint v9 flat config (takes precedence)
@@ -128,6 +129,12 @@ function detectExistingConfigs(projectRoot) {
       configs.eslintV8 = configPath;
       break;
     }
+  }
+
+  // TSLint config
+  const tslintPath = join(projectRoot, "tslint.json");
+  if (existsSync(tslintPath)) {
+    configs.tslint = tslintPath;
   }
 
   // Prettier configs
@@ -231,6 +238,80 @@ function extractPrettierCustomSettings(config) {
   // We'll preserve everything except @kitiumai/lint overrides if they exist
   const customSettings = { ...config };
   return customSettings;
+}
+
+/**
+ * Parse TSLint configuration
+ */
+function parseTslintConfig(configPath) {
+  try {
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    const content = readFileSync(configPath, "utf-8");
+    return JSON.parse(content);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(`Error parsing TSLint config: ${error.message}`);
+    return null;
+  }
+}
+
+/**
+ * Extract custom rules from TSLint config
+ */
+function extractTslintCustomRules(config) {
+  if (!config) return { rules: {} };
+
+  const customRules = {
+    rules: config.rules || {},
+    extends: config.extends,
+    rulesDirectory: config.rulesDirectory,
+    exclude: config.exclude,
+  };
+
+  // Remove undefined values
+  Object.keys(customRules).forEach((key) => {
+    if (customRules[key] === undefined) {
+      delete customRules[key];
+    }
+  });
+
+  return customRules;
+}
+
+/**
+ * Create migrated TSLint config
+ */
+function createMigratedTslintConfig(customRules) {
+  const tslintConfig = {
+    extends: ["tslint:recommended"],
+    rules: {
+      "no-console": {
+        severity: "warning",
+      },
+      "object-literal-sort-keys": false,
+      "ordered-imports": [
+        true,
+        {
+          "import-sources-order": "lowercase-last",
+          "named-imports-order": "lowercase-last",
+        },
+      ],
+      // Your existing custom rules have been preserved below
+      ...customRules.rules,
+    },
+    exclude: customRules.exclude || ["node_modules", "dist", "build", ".next"],
+  };
+
+  // Add custom extends if they exist (but keep our base)
+  if (customRules.extends && Array.isArray(customRules.extends)) {
+    customRules.extends.forEach((ext) => {
+      if (!tslintConfig.extends.includes(ext)) {
+        tslintConfig.extends.push(ext);
+      }
+    });
+  }
+
+  return JSON.stringify(tslintConfig, null, 2);
 }
 
 /**
@@ -410,9 +491,9 @@ async function main() {
 
   const configs = detectExistingConfigs(projectRoot);
 
-  if (!configs.eslintV8 && !configs.eslintV9 && !configs.prettier) {
+  if (!configs.eslintV8 && !configs.eslintV9 && !configs.prettier && !configs.tslint) {
     // eslint-disable-next-line no-console
-    console.log("ℹ️  No existing ESLint or Prettier configurations found.");
+    console.log("ℹ️  No existing ESLint, TSLint, or Prettier configurations found.");
     // eslint-disable-next-line no-console
     console.log(
       "   Run the postinstall setup to create fresh configurations.\n",
@@ -430,6 +511,10 @@ async function main() {
     // eslint-disable-next-line no-console
     console.log(`  ✓ ESLint v8: ${basename(configs.eslintV8)}`);
   }
+  if (configs.tslint) {
+    // eslint-disable-next-line no-console
+    console.log(`  ✓ TSLint: ${basename(configs.tslint)}`);
+  }
   if (configs.prettier) {
     // eslint-disable-next-line no-console
     console.log(`  ✓ Prettier: ${basename(configs.prettier)}\n`);
@@ -440,11 +525,15 @@ async function main() {
     ? await promptUser("Migrate ESLint configuration? (y/n): ")
     : false;
 
+  const proceedTSLint = configs.tslint
+    ? await promptUser("Migrate TSLint configuration? (y/n): ")
+    : false;
+
   const proceedPrettier = configs.prettier
     ? await promptUser("Migrate Prettier configuration? (y/n): ")
     : false;
 
-  if (!proceedESLint && !proceedPrettier) {
+  if (!proceedESLint && !proceedTSLint && !proceedPrettier) {
     // eslint-disable-next-line no-console
     console.log("\n📝 Migration skipped.\n");
     return;
@@ -484,6 +573,26 @@ async function main() {
     writeFileSync(newConfigPath, migratedESLint, "utf-8");
     // eslint-disable-next-line no-console
     console.log("✓ Created eslint.config.js\n");
+  }
+
+  // Migrate TSLint
+  if (proceedTSLint) {
+    // eslint-disable-next-line no-console
+    console.log("📦 Processing TSLint config...");
+    const parsedTslint = parseTslintConfig(configs.tslint);
+    const customRules = extractTslintCustomRules(parsedTslint);
+
+    const migratedTslint = createMigratedTslintConfig(customRules);
+
+    // Backup original
+    backupConfigFile(configs.tslint);
+
+    // Write migrated config
+    const newConfigPath = join(projectRoot, "tslint.json");
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    writeFileSync(newConfigPath, migratedTslint, "utf-8");
+    // eslint-disable-next-line no-console
+    console.log("✓ Created tslint.json\n");
   }
 
   // Migrate Prettier
