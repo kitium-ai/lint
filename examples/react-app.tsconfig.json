@@ -1,0 +1,18 @@
+{
+  "extends": "@kitium-ai/lint/tsconfig/react",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@utils/*": ["src/utils/*"],
+      "@types/*": ["src/types/*"],
+      "@styles/*": ["src/styles/*"]
+    },
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "types": ["react", "react-dom", "node", "vite/client"]
+  },
+  "include": ["src", "vite-env.d.ts"],
+  "exclude": ["node_modules", "dist", "build", "**/*.test.ts", "**/*.test.tsx"]
+}

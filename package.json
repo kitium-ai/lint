@@ -1,0 +1,89 @@
+{
+  "name": "@kitium-ai/lint",
+  "version": "1.0.0",
+  "description": "Enterprise-ready, simple and secure linting configuration package for Kitium AI",
+  "main": "index.js",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./eslint": "./eslint/index.js",
+    "./eslint/base": "./eslint/base.js",
+    "./eslint/react": "./eslint/react.js",
+    "./eslint/node": "./eslint/node.js",
+    "./eslint/typescript": "./eslint/typescript.js",
+    "./prettier": "./prettier/index.js",
+    "./tsconfig": "./tsconfig.json",
+    "./tsconfig/base": "./tsconfig/base.json",
+    "./tsconfig/react": "./tsconfig/react.json",
+    "./tsconfig/node": "./tsconfig/node.json"
+  },
+  "files": [
+    "index.js",
+    "eslint/",
+    "prettier/",
+    "tsconfig/",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "test:watch": "node --test --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepack": "npm run lint:fix && npm run format",
+    "prepublish": "npm run test"
+  },
+  "keywords": [
+    "linting",
+    "eslint",
+    "prettier",
+    "typescript",
+    "config",
+    "enterprise",
+    "kitium",
+    "ai"
+  ],
+  "author": "Kitium AI Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kitium-ai/lint.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kitium-ai/lint/issues"
+  },
+  "homepage": "https://github.com/kitium-ai/lint#readme",
+  "peerDependencies": {
+    "eslint": "^9.0.0 || ^8.50.0",
+    "typescript": "^5.0.0 || ^4.8.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jest": "^27.6.0",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-react": "^7.34.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-security": "^2.1.0",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "prettier": "^3.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
