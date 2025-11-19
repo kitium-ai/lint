@@ -131,6 +131,7 @@ Would you like to migrate these configs to @kitiumai/lint? (y/n)
 ```
 
 If you choose to migrate, the postinstall script will:
+
 - Call the migrate script automatically
 - Preserve all your custom rules
 - Backup original configs
@@ -837,6 +838,7 @@ npm run setup:lint
 ```
 
 This script is always added to your `package.json` by the postinstall process and can be used to:
+
 - Manually run setup if installation was skipped
 - Re-configure linting options
 - Regenerate configuration files
@@ -850,6 +852,7 @@ npm run setup:lint
 ```
 
 This will:
+
 - Detect existing configurations (if any)
 - Offer to migrate them
 - Allow you to change your tool selections
@@ -975,6 +978,7 @@ node node_modules/@kitiumai/lint/scripts/postinstall.js
 ```
 
 For additional help:
+
 - GitHub Issues: https://github.com/kitium-ai/lint/issues
 - GitHub Discussions: https://github.com/kitium-ai/lint/discussions
 

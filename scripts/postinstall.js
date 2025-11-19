@@ -64,7 +64,9 @@ function detectEslintVersion(projectRoot) {
     }
 
     // Parse version to determine major version
-    const majorVersion = parseInt(eslintVersion.split(".")[0].replace(/[^0-9]/g, ""));
+    const majorVersion = parseInt(
+      eslintVersion.split(".")[0].replace(/[^0-9]/g, ""),
+    );
     return majorVersion === 9 ? "v9" : majorVersion === 8 ? "v8" : null;
   } catch {
     return null;
@@ -327,7 +329,10 @@ async function promptEslintVersion() {
     }
 
     // User wants to switch versions
-    const versions = ["ESLint v9 (Flat Config - Modern)", "ESLint v8 (Traditional)"];
+    const versions = [
+      "ESLint v9 (Flat Config - Modern)",
+      "ESLint v8 (Traditional)",
+    ];
     const selectedIndex = await promptChoice(
       "\nSelect ESLint version to use:",
       versions,
@@ -337,7 +342,10 @@ async function promptEslintVersion() {
   }
 
   // No ESLint detected, ask which version to use
-  const versions = ["ESLint v9 (Flat Config - Modern)", "ESLint v8 (Traditional)"];
+  const versions = [
+    "ESLint v9 (Flat Config - Modern)",
+    "ESLint v8 (Traditional)",
+  ];
   const selectedIndex = await promptChoice(
     "\nSelect ESLint version to use:",
     versions,
@@ -383,9 +391,7 @@ async function interactiveSetup(projectRoot) {
     }
     if (existingConfigs.prettier) {
       // eslint-disable-next-line no-console
-      console.log(
-        `  ✓ Prettier: ${existingConfigs.prettier.split("/").pop()}`,
-      );
+      console.log(`  ✓ Prettier: ${existingConfigs.prettier.split("/").pop()}`);
     }
     if (existingConfigs.tslint) {
       // eslint-disable-next-line no-console
@@ -399,9 +405,7 @@ async function interactiveSetup(projectRoot) {
 
     if (useMigration) {
       // eslint-disable-next-line no-console
-      console.log(
-        "\n🚀 Running migration...\n",
-      );
+      console.log("\n🚀 Running migration...\n");
       // Dynamic import to avoid circular dependencies
       // eslint-disable-next-line global-require
       const { execSync } = await import("node:child_process");
@@ -416,9 +420,7 @@ async function interactiveSetup(projectRoot) {
         return null;
       } catch {
         // eslint-disable-next-line no-console
-        console.log(
-          "\n⚠️  Migration skipped. Running fresh setup instead.\n",
-        );
+        console.log("\n⚠️  Migration skipped. Running fresh setup instead.\n");
       }
     }
   }
@@ -687,14 +689,29 @@ function createEslintV8Config(projectRoot, projectType) {
   }
 
   const configMap = {
-    "node.js": ["@kitiumai/lint/eslint/node", "@kitiumai/lint/eslint/typescript"],
+    "node.js": [
+      "@kitiumai/lint/eslint/node",
+      "@kitiumai/lint/eslint/typescript",
+    ],
     react: ["@kitiumai/lint/eslint/react", "@kitiumai/lint/eslint/typescript"],
-    "next.js": ["@kitiumai/lint/eslint/nextjs", "@kitiumai/lint/eslint/typescript"],
+    "next.js": [
+      "@kitiumai/lint/eslint/nextjs",
+      "@kitiumai/lint/eslint/typescript",
+    ],
     vue: ["@kitiumai/lint/eslint/vue", "@kitiumai/lint/eslint/typescript"],
-    angular: ["@kitiumai/lint/eslint/angular", "@kitiumai/lint/eslint/typescript"],
-    svelte: ["@kitiumai/lint/eslint/svelte", "@kitiumai/lint/eslint/typescript"],
+    angular: [
+      "@kitiumai/lint/eslint/angular",
+      "@kitiumai/lint/eslint/typescript",
+    ],
+    svelte: [
+      "@kitiumai/lint/eslint/svelte",
+      "@kitiumai/lint/eslint/typescript",
+    ],
     "vanilla javascript": ["@kitiumai/lint/eslint/base"],
-    "vanilla typescript": ["@kitiumai/lint/eslint/base", "@kitiumai/lint/eslint/typescript"],
+    "vanilla typescript": [
+      "@kitiumai/lint/eslint/base",
+      "@kitiumai/lint/eslint/typescript",
+    ],
   };
 
   const extends_ = configMap[projectType] || configMap["node.js"];
@@ -952,9 +969,7 @@ async function main() {
   // Create configuration files based on selections
   if (config.eslint) {
     // eslint-disable-next-line no-console
-    console.log(
-      `📋 Creating ESLint ${config.eslintVersion} configuration...`,
-    );
+    console.log(`📋 Creating ESLint ${config.eslintVersion} configuration...`);
     createEslintConfig(projectRoot, config.projectType, config.eslintVersion);
     createEslintIgnore(projectRoot);
   }
@@ -1023,17 +1038,18 @@ function handleSetupError(error) {
   // eslint-disable-next-line no-console
   console.error(`  • Current directory: ${process.cwd()}`);
   // eslint-disable-next-line no-console
-  console.error(`  • npm lifecycle event: ${process.env.npm_lifecycle_event || "none"}\n`);
+  console.error(
+    `  • npm lifecycle event: ${process.env.npm_lifecycle_event || "none"}\n`,
+  );
 
   // Specific error handling
-  if (
-    errorMsg.includes("eacces") ||
-    errorMsg.includes("permission denied")
-  ) {
+  if (errorMsg.includes("eacces") || errorMsg.includes("permission denied")) {
     // eslint-disable-next-line no-console
     console.error("🔒 Permission Issue Detected:\n");
     // eslint-disable-next-line no-console
-    console.error("  This usually means @kitiumai/lint cannot write to the current directory.\n");
+    console.error(
+      "  This usually means @kitiumai/lint cannot write to the current directory.\n",
+    );
     // eslint-disable-next-line no-console
     console.error("  Try these solutions:\n");
     // eslint-disable-next-line no-console
@@ -1050,10 +1066,7 @@ function handleSetupError(error) {
     console.error("  3. Check directory ownership:");
     // eslint-disable-next-line no-console
     console.error("     ls -la package.json\n");
-  } else if (
-    errorMsg.includes("enoent") ||
-    errorMsg.includes("no such file")
-  ) {
+  } else if (errorMsg.includes("enoent") || errorMsg.includes("no such file")) {
     // eslint-disable-next-line no-console
     console.error("📁 File Not Found:\n");
     // eslint-disable-next-line no-console
@@ -1072,10 +1085,7 @@ function handleSetupError(error) {
     console.error("  2. Run from the correct directory:");
     // eslint-disable-next-line no-console
     console.error("     cd /path/to/your/project\n");
-  } else if (
-    errorMsg.includes("json") ||
-    errorMsg.includes("parse")
-  ) {
+  } else if (errorMsg.includes("json") || errorMsg.includes("parse")) {
     // eslint-disable-next-line no-console
     console.error("📝 Configuration Parse Error:\n");
     // eslint-disable-next-line no-console
@@ -1090,10 +1100,7 @@ function handleSetupError(error) {
     console.error("  2. Reset setup configuration:");
     // eslint-disable-next-line no-console
     console.error("     rm .kitium-lint-setup.json\n");
-  } else if (
-    errorMsg.includes("timeout") ||
-    errorMsg.includes("timed out")
-  ) {
+  } else if (errorMsg.includes("timeout") || errorMsg.includes("timed out")) {
     // eslint-disable-next-line no-console
     console.error("⏱️  Timeout Error:\n");
     // eslint-disable-next-line no-console
@@ -1103,7 +1110,9 @@ function handleSetupError(error) {
     // eslint-disable-next-line no-console
     console.error("  1. Run setup manually:");
     // eslint-disable-next-line no-console
-    console.error("     node node_modules/@kitiumai/lint/scripts/postinstall.js\n");
+    console.error(
+      "     node node_modules/@kitiumai/lint/scripts/postinstall.js\n",
+    );
     // eslint-disable-next-line no-console
     console.error("  2. Check your internet connection\n");
     // eslint-disable-next-line no-console

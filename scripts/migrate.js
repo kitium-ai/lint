@@ -702,17 +702,18 @@ function handleMigrationError(error) {
   // eslint-disable-next-line no-console
   console.error(`  • Current directory: ${process.cwd()}`);
   // eslint-disable-next-line no-console
-  console.error(`  • npm lifecycle event: ${process.env.npm_lifecycle_event || "none"}\n`);
+  console.error(
+    `  • npm lifecycle event: ${process.env.npm_lifecycle_event || "none"}\n`,
+  );
 
   // Specific error handling
-  if (
-    errorMsg.includes("eacces") ||
-    errorMsg.includes("permission denied")
-  ) {
+  if (errorMsg.includes("eacces") || errorMsg.includes("permission denied")) {
     // eslint-disable-next-line no-console
     console.error("🔒 Permission Issue Detected:\n");
     // eslint-disable-next-line no-console
-    console.error("  The migration script cannot write to the current directory.\n");
+    console.error(
+      "  The migration script cannot write to the current directory.\n",
+    );
     // eslint-disable-next-line no-console
     console.error("  Try these solutions:\n");
     // eslint-disable-next-line no-console
@@ -725,10 +726,7 @@ function handleMigrationError(error) {
     console.error("     sudo chown -R $USER:$USER .\n");
     // eslint-disable-next-line no-console
     console.error("  3. Try from a different directory with write access\n");
-  } else if (
-    errorMsg.includes("enoent") ||
-    errorMsg.includes("no such file")
-  ) {
+  } else if (errorMsg.includes("enoent") || errorMsg.includes("no such file")) {
     // eslint-disable-next-line no-console
     console.error("📁 Configuration File Not Found:\n");
     // eslint-disable-next-line no-console
@@ -840,7 +838,9 @@ function handleMigrationError(error) {
   // eslint-disable-next-line no-console
   console.error("  • Documentation:");
   // eslint-disable-next-line no-console
-  console.error("    https://github.com/kitium-ai/lint#migration-from-existing-configs\n");
+  console.error(
+    "    https://github.com/kitium-ai/lint#migration-from-existing-configs\n",
+  );
   // eslint-disable-next-line no-console
   console.error(`${"━".repeat(70)}\n`);
 }
