@@ -48,7 +48,8 @@
     "format:check": "prettier --check .",
     "prepack": "npm run lint:fix && npm run format",
     "prepublish": "npm run test",
-    "postinstall": "node scripts/postinstall.js"
+    "postinstall": "node scripts/postinstall.js",
+    "migrate": "node scripts/migrate.js"
   },
   "publishConfig": {
     "access": "public",

@@ -4,6 +4,7 @@
  */
 
 // ESLint Configurations
+export { default as eslintAngularConfig } from "./eslint/angular.js";
 export { default as eslintBaseConfig } from "./eslint/base.js";
 export { default as eslintGraphQLConfig } from "./eslint/graphql.js";
 export { default as eslintJestConfig } from "./eslint/jest.js";
@@ -14,6 +15,7 @@ export { default as eslintNodeConfig } from "./eslint/node.js";
 export { createKitiumPlugin } from "./eslint/plugins/kitium.js";
 export { default as eslintReactConfig } from "./eslint/react.js";
 export { default as eslintSecurityConfig } from "./eslint/security.js";
+export { default as eslintSvelteConfig } from "./eslint/svelte.js";
 export { default as eslintTestingLibraryConfig } from "./eslint/testing-library.js";
 export { default as eslintTypeScriptConfig } from "./eslint/typescript.js";
 export { default as eslintVueConfig } from "./eslint/vue.js";
