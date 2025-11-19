@@ -10,7 +10,13 @@
  *   node scripts/migrate.js
  */
 
-import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  readFileSync,
+  renameSync,
+  unlinkSync,
+  writeFileSync,
+} from "node:fs";
 import { basename, dirname, join } from "node:path";
 import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
@@ -256,28 +262,51 @@ function createMigratedTslintConfig(customRules) {
 }
 
 /**
+ * Remove deprecated .eslintignore file (ESLint v9 uses ignores in eslint.config.js)
+ */
+function removeDeprecatedEslintIgnore(projectRoot) {
+  const eslintIgnorePath = join(projectRoot, ".eslintignore");
+
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
+  if (existsSync(eslintIgnorePath)) {
+    try {
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
+      unlinkSync(eslintIgnorePath);
+      // eslint-disable-next-line no-console
+      console.log(
+        "✓ Removed deprecated .eslintignore (using ignores in eslint.config.js instead)",
+      );
+    } catch (error) {
+      // Silently fail if removal fails
+
+      console.warn(`⚠️  Could not remove .eslintignore: ${error.message}`);
+    }
+  }
+}
+
+/**
  * Create migrated ESLint config (flat config format)
  */
 function createMigratedEslintConfig(customRules, projectType = "node") {
   const configMap = {
     react: {
       imports: "baseConfig, reactConfig, typeScriptConfig",
-      configs: "baseConfig,\n  reactConfig,\n  typeScriptConfig",
+      configs: "...baseConfig,\n  ...reactConfig,\n  ...typeScriptConfig",
     },
     "node.js": {
       imports: "baseConfig, nodeConfig, typeScriptConfig",
-      configs: "baseConfig,\n  nodeConfig,\n  typeScriptConfig",
+      configs: "...baseConfig,\n  ...nodeConfig,\n  ...typeScriptConfig",
     },
     "next.js": {
       imports:
         "baseConfig, nextjsConfig, typeScriptConfig, jestConfig, testingLibraryConfig, reactConfig",
       configs:
-        "baseConfig,\n  reactConfig,\n  nextjsConfig,\n  typeScriptConfig,\n  {\n    files: ['**/*.{test,spec}.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  },\n  {\n    files: ['**/*.test.{jsx,tsx}'],\n    ...testingLibraryConfig,\n  }",
+        "...baseConfig,\n  ...reactConfig,\n  ...nextjsConfig,\n  ...typeScriptConfig,\n  {\n    files: ['**/*.{test,spec}.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  },\n  {\n    files: ['**/*.test.{jsx,tsx}'],\n    ...testingLibraryConfig,\n  }",
     },
     vue: {
       imports: "baseConfig, vueConfig, typeScriptConfig, jestConfig",
       configs:
-        "baseConfig,\n  vueConfig,\n  typeScriptConfig,\n  {\n    files: ['**/*.test.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  }",
+        "...baseConfig,\n  ...vueConfig,\n  ...typeScriptConfig,\n  {\n    files: ['**/*.test.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  }",
     },
   };
 
@@ -536,6 +565,7 @@ async function main() {
   if (proceedESLint) {
     // eslint-disable-next-line no-console
     console.log("📦 Processing ESLint v9 (flat config)...");
+    removeDeprecatedEslintIgnore(projectRoot);
     const configPath = configs.eslintV9;
     const eslintConfig = { rules: {}, overrides: [] };
 

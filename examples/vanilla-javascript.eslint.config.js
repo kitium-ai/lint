@@ -25,7 +25,7 @@ export default [
       'coverage/',
     ],
   },
-  baseConfig,
+  ...baseConfig,
   {
     name: 'project-overrides',
     files: ['**/*.js'],

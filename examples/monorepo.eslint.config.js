@@ -29,8 +29,8 @@ export default [
   },
 
   // Base config for all files
-  baseConfig,
-  typeScriptConfig,
+  ...baseConfig,
+  ...typeScriptConfig,
 
   // Frontend Web Application
   {

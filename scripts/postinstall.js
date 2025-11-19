@@ -6,7 +6,7 @@
  * Stores user preferences and creates appropriate config files
  */
 
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
@@ -309,35 +309,39 @@ function createEslintV9Config(projectRoot, projectType) {
   const configMap = {
     "node.js": {
       imports: "baseConfig, nodeConfig, typeScriptConfig",
-      configs: "baseConfig,\n  nodeConfig,\n  typeScriptConfig",
+      configs: "...baseConfig,\n  ...nodeConfig,\n  ...typeScriptConfig",
     },
     react: {
-      imports: "baseConfig, reactConfig, typeScriptConfig",
-      configs: "baseConfig,\n  reactConfig,\n  typeScriptConfig",
+      imports: "baseConfig, reactConfig, typeScriptConfig, securityConfig",
+      configs:
+        "...baseConfig,\n  ...reactConfig,\n  ...typeScriptConfig,\n ...securityConfig",
     },
     "next.js": {
       imports:
-        "baseConfig, nextjsConfig, typeScriptConfig, jestConfig, testingLibraryConfig, reactConfig",
+        "baseConfig, nextjsConfig, typeScriptConfig, jestConfig, testingLibraryConfig, reactConfig, securityConfig",
       configs:
-        "baseConfig,\n  reactConfig,\n  nextjsConfig,\n  typeScriptConfig,\n  {\n    files: ['**/*.{test,spec}.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  },\n  {\n    files: ['**/*.test.{jsx,tsx}'],\n    ...testingLibraryConfig,\n  }",
+        "...baseConfig,\n  ...reactConfig,\n  ...nextjsConfig,\n ...securityConfig,\n  ...typeScriptConfig,\n  {\n    files: ['**/*.{test,spec}.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  },\n  {\n    files: ['**/*.test.{jsx,tsx}'],\n    ...testingLibraryConfig,\n  }",
     },
     vue: {
       imports: "baseConfig, vueConfig, typeScriptConfig, jestConfig",
       configs:
-        "baseConfig,\n  vueConfig,\n  typeScriptConfig,\n  {\n    files: ['**/*.test.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  }",
+        "...baseConfig,\n  ...vueConfig,\n  ...typeScriptConfig,\n  {\n    files: ['**/*.test.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  }",
     },
     angular: {
       imports: "baseConfig, angularConfig, typeScriptConfig",
-      configs: "baseConfig,\n  angularConfig,\n  typeScriptConfig",
+      configs: "...baseConfig,\n  ...angularConfig,\n  ...typeScriptConfig",
     },
     svelte: {
       imports: "baseConfig, svelteConfig, typeScriptConfig",
-      configs: "baseConfig,\n  svelteConfig,\n  typeScriptConfig",
+      configs: "...baseConfig,\n  ...svelteConfig,\n  ...typeScriptConfig",
     },
-    "vanilla javascript": { imports: "baseConfig", configs: "baseConfig" },
+    "vanilla javascript": {
+      imports: "baseConfig, securityConfig",
+      configs: "...baseConfig,\n ...securityConfig",
+    },
     "vanilla typescript": {
-      imports: "baseConfig, typeScriptConfig",
-      configs: "baseConfig,\n  typeScriptConfig",
+      imports: "baseConfig, typeScriptConfig, securityConfig",
+      configs: "...baseConfig,\n  ...typeScriptConfig,\n ...securityConfig",
     },
   };
 
@@ -542,6 +546,29 @@ coverage
     console.log("✓ Created .eslintignore");
   } catch (error) {
     console.error(`Failed to create .eslintignore: ${error.message}`);
+  }
+}
+
+/**
+ * Remove deprecated .eslintignore file (ESLint v9 uses ignores in eslint.config.js)
+ */
+function removeDeprecatedEslintIgnore(projectRoot) {
+  const eslintIgnorePath = join(projectRoot, ".eslintignore");
+
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
+  if (existsSync(eslintIgnorePath)) {
+    try {
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
+      unlinkSync(eslintIgnorePath);
+      // eslint-disable-next-line no-console
+      console.log(
+        "✓ Removed deprecated .eslintignore (using ignores in eslint.config.js instead)",
+      );
+    } catch (error) {
+      // Silently fail if removal fails
+
+      console.warn(`⚠️  Could not remove .eslintignore: ${error.message}`);
+    }
   }
 }
 
@@ -804,6 +831,7 @@ async function main() {
   if (config.eslint) {
     // eslint-disable-next-line no-console
     console.log("📋 Creating ESLint v9 configuration...");
+    removeDeprecatedEslintIgnore(projectRoot);
     createEslintV9Config(projectRoot, config.projectType);
     createEslintIgnore(projectRoot);
   }

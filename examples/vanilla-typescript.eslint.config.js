@@ -25,8 +25,8 @@ export default [
       'coverage/',
     ],
   },
-  baseConfig,
-  typeScriptConfig,
+  ...baseConfig,
+  ...typeScriptConfig,
   {
     name: 'project-overrides',
     files: ['**/*.{js,jsx,ts,tsx}'],

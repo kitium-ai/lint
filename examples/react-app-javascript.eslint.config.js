@@ -9,8 +9,8 @@ export default [
   {
     ignores: ['node_modules/', 'dist/', 'build/', '.next/', '.env', '.env.local', 'coverage/'],
   },
-  baseConfig,
-  reactConfig,
+  ...baseConfig,
+  ...reactConfig,
   {
     name: 'project-overrides',
     files: ['src/**/*.{js,jsx}'],

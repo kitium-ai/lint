@@ -9,9 +9,9 @@ export default [
   {
     ignores: ['node_modules/', 'dist/', 'build/', '.next/', '.env', '.env.local', 'coverage/'],
   },
-  baseConfig,
-  reactConfig,
-  typeScriptConfig,
+  ...baseConfig,
+  ...reactConfig,
+  ...typeScriptConfig,
   {
     name: 'project-overrides',
     files: ['src/**/*.{ts,tsx}'],
