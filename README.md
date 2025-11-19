@@ -100,6 +100,9 @@ When you install `@kitiumai/lint`, the postinstall script prompts you with inter
 Let's configure which tools you'd like to use for linting and formatting.
 
 Use ESLint for JavaScript/TypeScript linting? [Y/n]:
+📦 Detected ESLint v9
+Keep using ESLint v9? [Y/n]:
+
 Use TSLint for additional TypeScript linting? [y/N]:
 Use Prettier for code formatting? [Y/n]:
 
@@ -110,11 +113,49 @@ Select your project type:
     4. Vue
     5. Angular
     6. Svelte
+    7. Vanilla JavaScript
+    8. Vanilla TypeScript
+```
+
+### Smart Migration Detection
+
+If existing ESLint, TSLint, or Prettier configs are found, the setup will offer to migrate them:
+
+```
+📋 Found existing configurations:
+
+  ✓ ESLint v8: .eslintrc.json
+  ✓ Prettier: .prettierrc.json
+
+Would you like to migrate these configs to @kitiumai/lint? (y/n)
+```
+
+If you choose to migrate, the postinstall script will:
+- Call the migrate script automatically
+- Preserve all your custom rules
+- Backup original configs
+- Update to use @kitiumai/lint as the base
+
+### ESLint Version Selection
+
+When you choose to use ESLint, you'll be prompted to select your preferred version:
+
+```
+Select ESLint version to use:
+  > 1. ESLint v9 (Flat Config - Modern)
+    2. ESLint v8 (Traditional)
+```
+
+Or if ESLint is already installed, the setup detects it and asks to confirm or change:
+
+```
+📦 Detected ESLint v8
+Keep using ESLint v8? [Y/n]:
 ```
 
 Based on your selections, the script automatically:
 
-- Creates `eslint.config.js` with appropriate base configuration
+- Creates `eslint.config.js` (ESLint v9) OR `.eslintrc.json` (ESLint v8)
 - Creates `tslint.json` (if selected)
 - Creates `.prettierrc.js` (if selected)
 - Creates `.eslintignore` and `.prettierignore`
@@ -130,7 +171,9 @@ The setup automatically detects your project type based on dependencies:
 - **Vue** if `vue` is found
 - **Angular** if `@angular/core` is found
 - **Svelte** if `svelte` is found
-- **Node.js** (default)
+- **Node.js** (default for projects with server-side code)
+- **Vanilla JavaScript** (for projects without frameworks)
+- **Vanilla TypeScript** (for TypeScript-only projects)
 
 ## Migration from Existing Configs
 
@@ -783,6 +826,38 @@ npm run format
 npm run format:check
 ```
 
+## Manual Setup and Re-running Setup
+
+### Running Setup Manually
+
+If the postinstall script doesn't run during installation (e.g., due to npm script restrictions), you can manually trigger setup using the `setup:lint` script that was added to your `package.json`:
+
+```bash
+npm run setup:lint
+```
+
+This script is always added to your `package.json` by the postinstall process and can be used to:
+- Manually run setup if installation was skipped
+- Re-configure linting options
+- Regenerate configuration files
+
+### Re-running Setup
+
+To reconfigure your linting setup at any time:
+
+```bash
+npm run setup:lint
+```
+
+This will:
+- Detect existing configurations (if any)
+- Offer to migrate them
+- Allow you to change your tool selections
+- Update or regenerate configuration files
+- Save your new preferences
+
+**Note:** If the setup was already completed, you'll see your previous configuration and can choose to keep it or run the interactive setup again.
+
 ## Troubleshooting
 
 ### ESLint Configuration Not Created
@@ -814,7 +889,13 @@ You should see either ESLint v8 (8.50.0+) or v9 (9.0.0+) installed.
 
 #### 3. Run Setup Manually
 
-If postinstall didn't run automatically, you can trigger setup manually:
+If postinstall didn't run automatically, you can use the `setup:lint` script added to your `package.json`:
+
+```bash
+npm run setup:lint
+```
+
+Or run the postinstall script directly:
 
 ```bash
 node node_modules/@kitiumai/lint/scripts/postinstall.js
