@@ -10,10 +10,10 @@
  *   node scripts/migrate.js
  */
 
-import { existsSync, readFileSync, writeFileSync, renameSync } from "node:fs";
-import { dirname, join, basename } from "node:path";
-import { fileURLToPath } from "node:url";
+import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { basename, dirname, join } from "node:path";
 import { createInterface } from "node:readline";
+import { fileURLToPath } from "node:url";
 import { inspect } from "node:util";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -34,7 +34,12 @@ function findProjectRoot() {
     const maxLevels = 10;
     let levels = 0;
 
-    while (currentDir && currentDir !== "/" && currentDir.length > 1 && levels < maxLevels) {
+    while (
+      currentDir &&
+      currentDir !== "/" &&
+      currentDir.length > 1 &&
+      levels < maxLevels
+    ) {
       const packageJsonPath = join(currentDir, "package.json");
 
       // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -138,7 +143,14 @@ function detectExistingConfigs(projectRoot) {
   }
 
   // Prettier configs
-  const prettierPatterns = [".prettierrc.js", ".prettierrc.cjs", ".prettierrc.json", ".prettierrc.yml", ".prettierrc.yaml", ".prettierrc"];
+  const prettierPatterns = [
+    ".prettierrc.js",
+    ".prettierrc.cjs",
+    ".prettierrc.json",
+    ".prettierrc.yml",
+    ".prettierrc.yaml",
+    ".prettierrc",
+  ];
 
   for (const pattern of prettierPatterns) {
     const configPath = join(projectRoot, pattern);
@@ -168,7 +180,9 @@ function parseEslintV8Config(configPath) {
 
     // Handle JS/CJS format - extract export default or module.exports
     // eslint-disable-next-line no-eval
-    const configObj = eval(`(${content.replace(/^module\.exports\s*=\s*/, "").replace(/^export\s+default\s+/, "")})`);
+    const configObj = eval(
+      `(${content.replace(/^module\.exports\s*=\s*/, "").replace(/^export\s+default\s+/, "")})`,
+    );
     return configObj;
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -218,7 +232,9 @@ function parsePrettierConfig(configPath) {
 
     // Handle JS/CJS format
     // eslint-disable-next-line no-eval
-    const configObj = eval(`(${content.replace(/^module\.exports\s*=\s*/, "").replace(/^export\s+default\s+/, "")})`);
+    const configObj = eval(
+      `(${content.replace(/^module\.exports\s*=\s*/, "").replace(/^export\s+default\s+/, "")})`,
+    );
     return configObj;
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -340,7 +356,10 @@ function createMigratedEslintConfig(customRules, projectType = "node") {
 import { ${imports} } from '@kitiumai/lint';
 
 export default [
-  ${imports.split(",").map((s) => s.trim()).join(",\n  ")},
+  ${imports
+    .split(",")
+    .map((s) => s.trim())
+    .join(",\n  ")},
   {
     name: 'migrated-custom-rules',
     files: ['**/*.{js,jsx,ts,tsx}'],
@@ -429,7 +448,10 @@ export default {
  */
 function backupConfigFile(filePath) {
   try {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, -5);
+    const timestamp = new Date()
+      .toISOString()
+      .replace(/[:.]/g, "-")
+      .slice(0, -5);
     const backupPath = `${filePath}.backup.${timestamp}`;
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     renameSync(filePath, backupPath);
@@ -438,7 +460,9 @@ function backupConfigFile(filePath) {
     return backupPath;
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error(`⚠️  Failed to backup ${basename(filePath)}: ${error.message}`);
+    console.error(
+      `⚠️  Failed to backup ${basename(filePath)}: ${error.message}`,
+    );
     return null;
   }
 }
@@ -452,7 +476,10 @@ function detectProjectType(projectRoot, config) {
   const pkg = JSON.parse(pkgContent);
 
   // Check dependencies
-  if (pkg.dependencies?.["@angular/core"] || pkg.devDependencies?.["@angular/core"]) {
+  if (
+    pkg.dependencies?.["@angular/core"] ||
+    pkg.devDependencies?.["@angular/core"]
+  ) {
     return "angular";
   }
 
@@ -499,9 +526,16 @@ async function main() {
 
   const configs = detectExistingConfigs(projectRoot);
 
-  if (!configs.eslintV8 && !configs.eslintV9 && !configs.prettier && !configs.tslint) {
+  if (
+    !configs.eslintV8 &&
+    !configs.eslintV9 &&
+    !configs.prettier &&
+    !configs.tslint
+  ) {
     // eslint-disable-next-line no-console
-    console.log("ℹ️  No existing ESLint, TSLint, or Prettier configurations found.");
+    console.log(
+      "ℹ️  No existing ESLint, TSLint, or Prettier configurations found.",
+    );
     // eslint-disable-next-line no-console
     console.log(
       "   Run the postinstall setup to create fresh configurations.\n",
@@ -529,9 +563,10 @@ async function main() {
   }
 
   // Prompt for migration
-  const proceedESLint = configs.eslintV8 || configs.eslintV9
-    ? await promptUser("Migrate ESLint configuration? (y/n): ")
-    : false;
+  const proceedESLint =
+    configs.eslintV8 || configs.eslintV9
+      ? await promptUser("Migrate ESLint configuration? (y/n): ")
+      : false;
 
   const proceedTSLint = configs.tslint
     ? await promptUser("Migrate TSLint configuration? (y/n): ")
@@ -561,7 +596,9 @@ async function main() {
       // For v9, we'll just update it to add our configs
       eslintConfig = { rules: {}, overrides: [] };
       // eslint-disable-next-line no-console
-      console.log("   ⚠️  Please manually review and merge your flat config rules.");
+      console.log(
+        "   ⚠️  Please manually review and merge your flat config rules.",
+      );
     } else {
       // eslint-disable-next-line no-console
       console.log("📦 Processing ESLint v8 config...");
@@ -570,7 +607,10 @@ async function main() {
     }
 
     const projectType = detectProjectType(projectRoot, eslintConfig);
-    const migratedESLint = createMigratedEslintConfig(eslintConfig, projectType);
+    const migratedESLint = createMigratedEslintConfig(
+      eslintConfig,
+      projectType,
+    );
 
     // Backup original
     backupConfigFile(configPath);
@@ -632,7 +672,9 @@ async function main() {
   // eslint-disable-next-line no-console
   console.log("  2. Test your project: npm run lint");
   // eslint-disable-next-line no-console
-  console.log("  3. The original configs are backed up with .backup timestamps\n");
+  console.log(
+    "  3. The original configs are backed up with .backup timestamps\n",
+  );
 }
 
 // Run migration

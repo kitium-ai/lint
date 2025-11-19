@@ -112,6 +112,7 @@ Select your project type:
 ```
 
 Based on your selections, the script automatically:
+
 - Creates `eslint.config.js` with appropriate base configuration
 - Creates `tslint.json` (if selected)
 - Creates `.prettierrc.js` (if selected)
@@ -122,6 +123,7 @@ Based on your selections, the script automatically:
 ### Automatic Project Detection
 
 The setup automatically detects your project type based on dependencies:
+
 - **React** if `react` is found
 - **Next.js** if `next` is found (has priority over React)
 - **Vue** if `vue` is found
@@ -138,6 +140,7 @@ npm run migrate
 ```
 
 The migration script:
+
 - **Detects existing configs** (ESLint v8/v9, TSLint, Prettier)
 - **Preserves custom rules** while adopting @kitiumai/lint as base
 - **Backs up originals** with timestamps (e.g., `.eslintrc.backup.2025-11-19T15-33-27`)
@@ -151,6 +154,7 @@ The migration script:
 ### Migration Example
 
 **Before** - ESLint v8 config:
+
 ```json
 {
   "extends": "airbnb",
@@ -162,18 +166,19 @@ The migration script:
 ```
 
 **After** - Migrated to ESLint v9 flat config:
+
 ```javascript
-import { eslintReactConfig, eslintTypeScriptConfig } from '@kitiumai/lint';
+import { eslintReactConfig, eslintTypeScriptConfig } from "@kitiumai/lint";
 
 export default [
   ...eslintReactConfig,
   ...eslintTypeScriptConfig,
   {
-    name: 'migrated-custom-rules',
-    files: ['**/*.{js,jsx,ts,tsx}'],
+    name: "migrated-custom-rules",
+    files: ["**/*.{js,jsx,ts,tsx}"],
     rules: {
-      'no-console': 'warn',           // ✓ Preserved
-      'react/prop-types': 'off'       // ✓ Preserved
+      "no-console": "warn", // ✓ Preserved
+      "react/prop-types": "off", // ✓ Preserved
     },
   },
 ];
@@ -326,13 +331,11 @@ Angular framework-specific configuration with TypeScript support.
 **Files:** `**/*.ts` (Angular components and services)
 
 **Example:**
+
 ```javascript
 import { eslintAngularConfig, eslintTypeScriptConfig } from "@kitiumai/lint";
 
-export default [
-  ...eslintAngularConfig,
-  ...eslintTypeScriptConfig,
-];
+export default [...eslintAngularConfig, ...eslintTypeScriptConfig];
 ```
 
 #### `eslintSvelteConfig`
@@ -350,13 +353,11 @@ Svelte framework-specific configuration with TypeScript support.
 **Files:** `**/*.svelte` (Svelte components)
 
 **Example:**
+
 ```javascript
 import { eslintSvelteConfig, eslintTypeScriptConfig } from "@kitiumai/lint";
 
-export default [
-  ...eslintSvelteConfig,
-  ...eslintTypeScriptConfig,
-];
+export default [...eslintSvelteConfig, ...eslintTypeScriptConfig];
 ```
 
 #### `eslintSecurityConfig`

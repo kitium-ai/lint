@@ -8,8 +8,8 @@
 
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { createInterface } from "node:readline";
+import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -117,9 +117,10 @@ async function promptYesNo(question, defaultAnswer = true) {
 async function promptChoice(question, choices, defaultIndex = 0) {
   const setupProjectType = process.env.SETUP_PROJECT_TYPE;
 
+  // eslint-disable-next-line no-undefined
   if (setupProjectType !== undefined) {
     const index = choices.findIndex(
-      (c) => c.toLowerCase() === setupProjectType.toLowerCase()
+      (c) => c.toLowerCase() === setupProjectType.toLowerCase(),
     );
     // eslint-disable-next-line no-console
     console.log(`\n${question}`);
@@ -151,9 +152,9 @@ async function promptChoice(question, choices, defaultIndex = 0) {
         rl.close();
         const selected = answer === "" ? defaultIndex : parseInt(answer) - 1;
         resolve(
-          selected >= 0 && selected < choices.length ? selected : defaultIndex
+          selected >= 0 && selected < choices.length ? selected : defaultIndex,
         );
-      }
+      },
     );
   });
 }
@@ -194,35 +195,42 @@ async function interactiveSetup(projectRoot) {
   console.log("\n🎯 @kitiumai/lint Setup\n");
   // eslint-disable-next-line no-console
   console.log(
-    "Let's configure which tools you'd like to use for linting and formatting.\n"
+    "Let's configure which tools you'd like to use for linting and formatting.\n",
   );
 
   // Ask about ESLint
   const useESLint = await promptYesNo(
     "Use ESLint for JavaScript/TypeScript linting?",
-    true
+    true,
   );
 
   // Ask about TSLint
   const useTSLint = await promptYesNo(
     "Use TSLint for additional TypeScript linting?",
-    false
+    false,
   );
 
   // Ask about Prettier
   const usePrettier = await promptYesNo(
     "Use Prettier for code formatting?",
-    true
+    true,
   );
 
   // Ask about project type (only if ESLint is selected)
   let projectType = "node";
   if (useESLint) {
-    const projectTypes = ["Node.js", "React", "Next.js", "Vue", "Angular", "Svelte"];
+    const projectTypes = [
+      "Node.js",
+      "React",
+      "Next.js",
+      "Vue",
+      "Angular",
+      "Svelte",
+    ];
     const selectedIndex = await promptChoice(
       "\nSelect your project type:",
       projectTypes,
-      0
+      0,
     );
     projectType = projectTypes[selectedIndex].toLowerCase();
   }
@@ -277,25 +285,21 @@ async function updatePackageJson(packageJsonPath, config) {
 
     // Check for existing scripts and ask about replacement
     const existingScripts = Object.keys(scriptsToAdd).filter(
-      (script) => packageJson.scripts[script]
+      (script) => packageJson.scripts[script],
     );
 
     let shouldReplace = true;
     if (existingScripts.length > 0) {
       // eslint-disable-next-line no-console
-      console.log(
-        "\n⚠️  Found existing scripts in your package.json:"
-      );
+      console.log("\n⚠️  Found existing scripts in your package.json:");
       existingScripts.forEach((script) => {
         // eslint-disable-next-line no-console
-        console.log(
-          `   "${script}": "${packageJson.scripts[script]}"`
-        );
+        console.log(`   "${script}": "${packageJson.scripts[script]}"`);
       });
 
       shouldReplace = await promptYesNo(
         "\nReplace them with @kitiumai/lint scripts?",
-        true
+        true,
       );
     }
 
@@ -322,9 +326,7 @@ async function updatePackageJson(packageJsonPath, config) {
       // eslint-disable-next-line security/detect-non-literal-fs-filename
       writeFileSync(packageJsonPath, updatedContent, "utf-8");
       // eslint-disable-next-line no-console
-      console.log(
-        "\n✨ Updated package.json with selected scripts\n"
-      );
+      console.log("\n✨ Updated package.json with selected scripts\n");
     }
 
     return updated;
@@ -356,8 +358,7 @@ function createEslintConfig(projectRoot, projectType) {
     svelte: "eslintSvelteConfig, eslintTypeScriptConfig",
   };
 
-  const imports =
-    configMap[projectType] || configMap["node.js"];
+  const imports = configMap[projectType] || configMap["node.js"];
 
   const eslintConfigContent = `/**
  * ESLint Configuration
@@ -427,7 +428,7 @@ function createTslintConfig(projectRoot) {
     writeFileSync(
       tslintConfigPath,
       JSON.stringify(tslintConfig, null, 2),
-      "utf-8"
+      "utf-8",
     );
     // eslint-disable-next-line no-console
     console.log("✓ Created tslint.json");
@@ -496,9 +497,7 @@ venv
       console.log("✓ Created .prettierignore");
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(
-        `Failed to create .prettierignore: ${error.message}`
-      );
+      console.error(`Failed to create .prettierignore: ${error.message}`);
     }
   } else {
     // eslint-disable-next-line no-console
@@ -602,13 +601,11 @@ async function main() {
   if (!isNewSetup) {
     // eslint-disable-next-line no-console
     console.log(
-      "\n✨ @kitiumai/lint is ready to use with your existing configuration.\n"
+      "\n✨ @kitiumai/lint is ready to use with your existing configuration.\n",
     );
   } else {
     // eslint-disable-next-line no-console
-    console.log(
-      "\n✨ @kitiumai/lint setup complete!\n"
-    );
+    console.log("\n✨ @kitiumai/lint setup complete!\n");
     // eslint-disable-next-line no-console
     console.log("Quick start:");
     if (config.eslint) {
@@ -619,17 +616,13 @@ async function main() {
     }
     if (config.tslint) {
       // eslint-disable-next-line no-console
-      console.log(
-        "  npm run lint:tslint    - Check TypeScript linting issues"
-      );
+      console.log("  npm run lint:tslint    - Check TypeScript linting issues");
     }
     if (config.prettier) {
       // eslint-disable-next-line no-console
       console.log("  npm run format     - Format your code");
       // eslint-disable-next-line no-console
-      console.log(
-        "  npm run format:check   - Check code formatting\n"
-      );
+      console.log("  npm run format:check   - Check code formatting\n");
     }
   }
 }
