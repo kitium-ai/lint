@@ -12,3 +12,4 @@ export { default as graphqlConfig } from './graphql.js';
 export { default as vueConfig } from './vue.js';
 export { default as nextjsConfig } from './nextjs.js';
 export { default as securityConfig } from './security.js';
+export { default as kitiumConfig } from './kitium.js';

@@ -11,6 +11,7 @@ Enterprise-ready, simple, and secure linting configuration package for Kitium AI
 - ✅ **React Ready**: Complete React and React Hooks support with accessibility rules
 - ✅ **Testing Support**: Jest configuration and Testing Library best practices
 - ✅ **Framework Support**: Next.js, Vue.js, and GraphQL configurations included
+- ✅ **Kitium UI Standards**: Optional Kitium UI component naming & typing enforcement
 - ✅ **Git Hooks Integration**: Pre-built Husky setup for automated code quality checks
 - ✅ **Code Formatting**: Opinionated Prettier configuration included
 - ✅ **Shareable Presets**: Pre-built configurations for common project patterns
@@ -191,6 +192,17 @@ Next.js framework-specific configuration.
 - Font and script optimization
 
 **Extends:** Base configuration
+
+#### `eslintKitiumConfig`
+Kitium component enforcement aimed at shared design-system packages.
+
+**Includes:**
+- Kt* component class naming requirements (`KtButtonWeb`, etc.)
+- Props/Event interface naming conventions
+- BaseProps/BaseComponent inheritance enforcement
+- Required type exports for `*.types.ts` files
+
+**When to use:** component libraries or apps that must follow Kitium UI patterns.
 
 #### `eslintSecurityConfig`
 Enhanced security scanning with advanced vulnerability detection.

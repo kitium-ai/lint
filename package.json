@@ -16,6 +16,7 @@
     "./eslint/graphql": "./eslint/graphql.js",
     "./eslint/vue": "./eslint/vue.js",
     "./eslint/nextjs": "./eslint/nextjs.js",
+    "./eslint/kitium": "./eslint/kitium.js",
     "./prettier": "./prettier/index.js",
     "./tsconfig": "./tsconfig.json",
     "./tsconfig/base": "./tsconfig/base.json",

@@ -14,6 +14,7 @@ export { default as eslintGraphQLConfig } from './eslint/graphql.js';
 export { default as eslintVueConfig } from './eslint/vue.js';
 export { default as eslintNextjsConfig } from './eslint/nextjs.js';
 export { default as eslintSecurityConfig } from './eslint/security.js';
+export { default as eslintKitiumConfig } from './eslint/kitium.js';
 
 // Prettier Configuration
 export { default as prettierConfig } from './prettier/index.js';
