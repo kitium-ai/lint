@@ -16,6 +16,7 @@ Enterprise-ready, simple, and secure linting configuration package for Kitium AI
 - ✅ **React Ready**: Complete React and React Hooks support with accessibility rules
 - ✅ **Testing Support**: Jest configuration and Testing Library best practices
 - ✅ **Framework Support**: Next.js, Vue.js, Angular, Svelte, and GraphQL configurations included
+- ✅ **Dual ESLint Support**: Works with both ESLint v8 and v9 with automatic detection
 - ✅ **Kitium UI Standards**: Optional Kitium UI component naming & typing enforcement
 - ✅ **Git Hooks Integration**: Pre-built Husky setup for automated code quality checks
 - ✅ **Code Formatting**: Opinionated Prettier configuration included
@@ -782,11 +783,125 @@ npm run format
 npm run format:check
 ```
 
+## Troubleshooting
+
+### ESLint Configuration Not Created
+
+If the postinstall script fails to create ESLint configuration files, try the following:
+
+#### 1. Check if npm scripts are disabled
+
+```bash
+npm config get ignore-scripts
+```
+
+If set to `true`, enable scripts:
+
+```bash
+npm config set ignore-scripts false
+npm install @kitiumai/lint
+```
+
+#### 2. Verify ESLint Installation
+
+Ensure ESLint is properly installed:
+
+```bash
+npm list eslint
+```
+
+You should see either ESLint v8 (8.50.0+) or v9 (9.0.0+) installed.
+
+#### 3. Run Setup Manually
+
+If postinstall didn't run automatically, you can trigger setup manually:
+
+```bash
+node node_modules/@kitiumai/lint/scripts/postinstall.js
+```
+
+#### 4. Check Node.js Version
+
+@kitiumai/lint requires Node.js ≥18.0.0:
+
+```bash
+node --version
+```
+
+#### 5. For pnpm Users
+
+If using pnpm, run setup after installation:
+
+```bash
+pnpm install
+pnpm exec node node_modules/@kitiumai/lint/scripts/postinstall.js
+```
+
+#### 6. For yarn Users
+
+If using yarn:
+
+```bash
+yarn install
+yarn node node_modules/@kitiumai/lint/scripts/postinstall.js
+```
+
+#### 7. Clear npm Cache
+
+Sometimes npm cache issues prevent script execution:
+
+```bash
+npm cache clean --force
+npm install @kitiumai/lint
+```
+
+### Dual ESLint Version Support
+
+The postinstall script automatically detects your ESLint version and creates the appropriate configuration:
+
+- **ESLint v9**: Creates `eslint.config.js` with flat config format (modern)
+- **ESLint v8**: Creates `.eslintrc.json` with traditional format (legacy)
+
+This means you can use @kitiumai/lint with either ESLint version without any manual configuration changes.
+
+### Verify Configuration Creation
+
+After installation, check which configuration files were created:
+
+```bash
+# For ESLint v9
+ls -la eslint.config.js
+
+# For ESLint v8
+ls -la .eslintrc.json
+```
+
+Both `.eslintignore` should also be created.
+
+### Still Having Issues?
+
+If configuration files weren't created, check your setup configuration:
+
+```bash
+cat .kitium-lint-setup.json
+```
+
+To reset and re-run setup:
+
+```bash
+rm .kitium-lint-setup.json
+node node_modules/@kitiumai/lint/scripts/postinstall.js
+```
+
+For additional help:
+- GitHub Issues: https://github.com/kitium-ai/lint/issues
+- GitHub Discussions: https://github.com/kitium-ai/lint/discussions
+
 ## Compatibility
 
 - **Node.js**: ≥ 18.0.0
 - **npm**: ≥ 9.0.0
-- **ESLint**: 8.50.0 or 9.0.0+
+- **ESLint**: 8.50.0 or 9.0.0+ (automatic version detection)
 - **TypeScript**: 4.8.0 or 5.0.0+ (optional, for TypeScript projects)
 
 ## Contributing
