@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.7] - 2025-11-19
+
+### Fixed
+
+- **TypeScript Config Compatibility**: Simplified TypeScript ESLint configuration for @typescript-eslint v8.x compatibility
+  - Removed rules that don't exist in v8.x (ban-types, explicit-function-return-types, type-annotation-spacing, etc.)
+  - Kept only rules verified to work in v8.47.0 and newer versions
+  - Enabled type information with `project: true` for rules that require type checking
+  - Package now works out of the box with @typescript-eslint v8.x
+- **Plugin Import Fix**: Changed `eslint-plugin-node` import to `eslint-plugin-n` in security.js (updated package name)
+
 ## [1.2.6] - 2025-11-19
 
 ### Fixed
