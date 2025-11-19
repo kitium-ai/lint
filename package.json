@@ -1,6 +1,6 @@
 {
   "name": "@kitiumai/lint",
-  "version": "1.2.3",
+  "version": "1.2.5",
   "description": "Enterprise-ready, simple and secure linting configuration package for Kitium AI",
   "main": "index.js",
   "type": "module",
@@ -91,10 +91,18 @@
   "homepage": "https://github.com/kitium-ai/lint#readme",
   "peerDependencies": {
     "eslint": "^9.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "graphql": "^15.0.0",
+    "eslint-plugin-graphql": "^4.0.0"
   },
   "peerDependenciesMeta": {
     "typescript": {
+      "optional": true
+    },
+    "graphql": {
+      "optional": true
+    },
+    "eslint-plugin-graphql": {
       "optional": true
     }
   },
@@ -105,6 +113,15 @@
     "eslint-plugin-import": "^2.30.0",
     "eslint-plugin-security": "^3.0.0",
     "eslint-plugin-simple-import-sort": "^12.0.0",
+    "eslint-plugin-jest": "^28.0.0",
+    "eslint-plugin-jsx-a11y": "^6.10.0",
+    "eslint-plugin-react": "^7.37.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-security": "^3.0.0",
+    "eslint-plugin-simple-import-sort": "^12.0.0",
+    "eslint-plugin-testing-library": "^7.0.0",
+    "eslint-plugin-vue": "^9.30.0",
+    "@next/eslint-plugin-next": "^15.0.0",
     "eslint-plugin-sonarjs": "^1.0.0",
     "eslint-plugin-n": "^17.0.0",
     "eslint-plugin-no-unsanitized": "^4.1.0",
@@ -123,7 +140,9 @@
   },
   "devDependencies": {
     "eslint": "^9.15.0",
-    "typescript": "^5.6.0"
+    "typescript": "^5.6.0",
+    "graphql": "^16.8.0",
+    "eslint-plugin-graphql": "^4.0.0"
   },
   "engines": {
     "node": ">=18.0.0",

@@ -4,8 +4,8 @@
  * Includes: OWASP checks, injection prevention, cryptography rules, and more
  */
 
+import nodePlugin from "eslint-plugin-n";
 import noUnsanitizedPlugin from "eslint-plugin-no-unsanitized";
-import nodePlugin from "eslint-plugin-node";
 import securityPlugin from "eslint-plugin-security";
 import sonarjsPlugin from "eslint-plugin-sonarjs";
 

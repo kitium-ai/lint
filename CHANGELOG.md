@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.4] - 2025-11-19
+
+### Fixed
+
+- **Dependency Fix**: Fixed `eslint-plugin-react-hooks` version constraint from `^4.7.0` to `^4.6.0` to use available versions
+- **GraphQL Optional**: Moved `graphql` and `eslint-plugin-graphql` from hard dependencies to optional peer dependencies
+  - GraphQL configuration is now only required when using the GraphQL ESLint config
+  - Users without GraphQL projects no longer need to install these packages
+  - Users can still use the GraphQL config by explicitly installing `graphql` and `eslint-plugin-graphql`
+
 ## [1.2.0] - 2025-11-19
 
 ### Added
