@@ -144,7 +144,6 @@ function detectExistingConfigs(projectRoot) {
   return configs;
 }
 
-
 /**
  * Parse Prettier configuration
  */
@@ -455,11 +454,7 @@ async function main() {
 
   const configs = detectExistingConfigs(projectRoot);
 
-  if (
-    !configs.eslintV9 &&
-    !configs.prettier &&
-    !configs.tslint
-  ) {
+  if (!configs.eslintV9 && !configs.prettier && !configs.tslint) {
     // eslint-disable-next-line no-console
     console.log(
       "ℹ️  No existing ESLint v9, TSLint, or Prettier configurations found.",
