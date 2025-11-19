@@ -3,7 +3,7 @@
  * Use this as a template for React + TypeScript applications
  */
 
-import { eslintReactConfig, eslintTypeScriptConfig } from '@kitium-ai/lint';
+import { eslintReactConfig, eslintTypeScriptConfig } from '@kitiumai/lint';
 
 export default [
   ...eslintReactConfig,

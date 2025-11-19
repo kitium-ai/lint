@@ -7,16 +7,13 @@
  * Base Jest configuration for unit testing
  */
 export const baseConfig = {
-  testEnvironment: 'node',
-  testMatch: [
-    '**/__tests__/**/*.[jt]s?(x)',
-    '**/?(*.)+(spec|test).[jt]s?(x)',
-  ],
+  testEnvironment: "node",
+  testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
   collectCoverageFrom: [
-    'src/**/*.{js,ts,jsx,tsx}',
-    '!src/**/*.d.ts',
-    '!src/**/*.stories.{js,ts,jsx,tsx}',
-    '!src/index.{js,ts}',
+    "src/**/*.{js,ts,jsx,tsx}",
+    "!src/**/*.d.ts",
+    "!src/**/*.stories.{js,ts,jsx,tsx}",
+    "!src/index.{js,ts}",
   ],
   coverageThreshold: {
     global: {
@@ -27,10 +24,10 @@ export const baseConfig = {
     },
   },
   transform: {
-    '^.+\\.[tj]sx?$': 'ts-jest',
+    "^.+\\.[tj]sx?$": "ts-jest",
   },
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
 };
 
@@ -39,19 +36,19 @@ export const baseConfig = {
  */
 export const reactConfig = {
   ...baseConfig,
-  testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  testEnvironment: "jsdom",
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   moduleNameMapper: {
-    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
-    '^@/(.*)$': '<rootDir>/src/$1',
+    "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
   transform: {
-    '^.+\\.[tj]sx?$': 'ts-jest',
+    "^.+\\.[tj]sx?$": "ts-jest",
   },
   globals: {
-    'ts-jest': {
+    "ts-jest": {
       tsconfig: {
-        jsx: 'react-jsx',
+        jsx: "react-jsx",
       },
     },
   },
@@ -62,9 +59,9 @@ export const reactConfig = {
  */
 export const reactNativeConfig = {
   ...baseConfig,
-  testEnvironment: 'node',
-  preset: 'react-native',
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  testEnvironment: "node",
+  preset: "react-native",
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
 };
 
 /**
@@ -72,12 +69,12 @@ export const reactNativeConfig = {
  */
 export const nextjsConfig = {
   ...reactConfig,
-  testEnvironment: 'jsdom',
+  testEnvironment: "jsdom",
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
   transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': ['next/dist/build/swc/jest-transformer', {}],
+    "^.+\\.(js|jsx|ts|tsx)$": ["next/dist/build/swc/jest-transformer", {}],
   },
 };
 

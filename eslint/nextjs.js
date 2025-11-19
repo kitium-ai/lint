@@ -4,33 +4,35 @@
  * Enforces Next.js best practices, performance, and security patterns
  */
 
+import nextPlugin from "@next/eslint-plugin-next";
+
 export default {
-  files: ['**/*.{js,jsx,ts,tsx}'],
+  files: ["**/*.{js,jsx,ts,tsx}"],
   plugins: {
-    '@next/next': require('@next/eslint-plugin-next'),
+    "@next/next": nextPlugin,
   },
   rules: {
     // Core Next.js rules
-    '@next/next/no-img-element': 'warn',
-    '@next/next/no-html-link-for-pages': 'error',
-    '@next/next/no-unwanted-polyfillio': 'warn',
+    "@next/next/no-img-element": "warn",
+    "@next/next/no-html-link-for-pages": "error",
+    "@next/next/no-unwanted-polyfillio": "warn",
 
     // Performance
-    '@next/next/no-sync-scripts': 'error',
-    '@next/next/no-document-import-in-page': 'error',
-    '@next/next/no-page-custom-font': 'warn',
+    "@next/next/no-sync-scripts": "error",
+    "@next/next/no-document-import-in-page": "error",
+    "@next/next/no-page-custom-font": "warn",
 
     // Image optimization
-    '@next/next/no-img-element': 'error',
+    "@next/next/no-img-element": "error",
 
     // CSS and styling
-    '@next/next/inline-script-id': 'error',
+    "@next/next/inline-script-id": "error",
 
     // Font optimization
-    '@next/next/google-font-display': 'warn',
-    '@next/next/google-font-preconnect': 'warn',
+    "@next/next/google-font-display": "warn",
+    "@next/next/google-font-preconnect": "warn",
 
     // Script optimization
-    '@next/next/next-script-for-ga': 'warn',
+    "@next/next/next-script-for-ga": "warn",
   },
 };

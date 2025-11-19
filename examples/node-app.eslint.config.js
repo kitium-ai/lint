@@ -3,7 +3,7 @@
  * Use this as a template for Express, Fastify, or other Node.js backends
  */
 
-import { eslintNodeConfig, eslintTypeScriptConfig } from '@kitium-ai/lint';
+import { eslintNodeConfig, eslintTypeScriptConfig } from '@kitiumai/lint';
 
 export default [
   ...eslintNodeConfig,

@@ -4,16 +4,16 @@
  * Combines multiple ESLint configs for common use cases
  */
 
-import base from '../eslint/base.js';
-import typescript from '../eslint/typescript.js';
-import react from '../eslint/react.js';
-import node from '../eslint/node.js';
-import jest from '../eslint/jest.js';
-import testingLibrary from '../eslint/testing-library.js';
-import graphql from '../eslint/graphql.js';
-import vue from '../eslint/vue.js';
-import nextjs from '../eslint/nextjs.js';
-import security from '../eslint/security.js';
+import base from "../eslint/base.js";
+import graphql from "../eslint/graphql.js";
+import jest from "../eslint/jest.js";
+import nextjs from "../eslint/nextjs.js";
+import node from "../eslint/node.js";
+import react from "../eslint/react.js";
+import security from "../eslint/security.js";
+import testingLibrary from "../eslint/testing-library.js";
+import typescript from "../eslint/typescript.js";
+import vue from "../eslint/vue.js";
 
 /**
  * Full-stack application with React and Node.js
@@ -33,13 +33,7 @@ export const fullstack = [
  * React Single Page Application (SPA)
  * Includes: Base, TypeScript, React, Jest, Testing Library
  */
-export const react_spa = [
-  base,
-  typescript,
-  react,
-  jest,
-  testingLibrary,
-];
+export const react_spa = [base, typescript, react, jest, testingLibrary];
 
 /**
  * React with Next.js Framework
@@ -59,67 +53,37 @@ export const nextjs_app = [
  * Node.js Backend API
  * Includes: Base, TypeScript, Node, Jest, Security
  */
-export const node_api = [
-  base,
-  typescript,
-  node,
-  jest,
-  security,
-];
+export const node_api = [base, typescript, node, jest, security];
 
 /**
  * GraphQL API Server
  * Includes: Base, TypeScript, Node, GraphQL, Jest, Security
  */
-export const graphql_api = [
-  base,
-  typescript,
-  node,
-  graphql,
-  jest,
-  security,
-];
+export const graphql_api = [base, typescript, node, graphql, jest, security];
 
 /**
  * Vue.js Single Page Application
  * Includes: Base, TypeScript, Vue, Jest
  */
-export const vue_spa = [
-  base,
-  typescript,
-  vue,
-  jest,
-];
+export const vue_spa = [base, typescript, vue, jest];
 
 /**
  * Monorepo with multiple packages
  * Includes: Base, TypeScript, Jest, Security
  */
-export const monorepo = [
-  base,
-  typescript,
-  jest,
-  security,
-];
+export const monorepo = [base, typescript, jest, security];
 
 /**
  * Library/Package development
  * Includes: Base, TypeScript, Jest, Security
  */
-export const library = [
-  base,
-  typescript,
-  jest,
-  security,
-];
+export const library = [base, typescript, jest, security];
 
 /**
  * Minimal configuration (JS only, no TypeScript)
  * Includes: Base only
  */
-export const minimal = [
-  base,
-];
+export const minimal = [base];
 
 /**
  * Everything enabled (all rules)

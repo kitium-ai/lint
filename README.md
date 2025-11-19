@@ -1,4 +1,4 @@
-# @kitium-ai/lint
+# @kitiumai/lint
 
 Enterprise-ready, simple, and secure linting configuration package for Kitium AI projects.
 
@@ -21,13 +21,13 @@ Enterprise-ready, simple, and secure linting configuration package for Kitium AI
 ## Installation
 
 ```bash
-npm install --save-dev @kitium-ai/lint
+npm install --save-dev @kitiumai/lint
 
 # or
-yarn add --dev @kitium-ai/lint
+yarn add --dev @kitiumai/lint
 
 # or
-pnpm add --save-dev @kitium-ai/lint
+pnpm add --save-dev @kitiumai/lint
 ```
 
 ## Quick Start
@@ -37,19 +37,16 @@ pnpm add --save-dev @kitium-ai/lint
 Create `eslint.config.js`:
 
 ```javascript
-import { eslintReactConfig, eslintTypeScriptConfig } from '@kitium-ai/lint';
+import { eslintReactConfig, eslintTypeScriptConfig } from "@kitiumai/lint";
 
-export default [
-  ...eslintReactConfig,
-  ...eslintTypeScriptConfig,
-];
+export default [...eslintReactConfig, ...eslintTypeScriptConfig];
 ```
 
 Create `tsconfig.json`:
 
 ```json
 {
-  "extends": "@kitium-ai/lint/tsconfig/react",
+  "extends": "@kitiumai/lint/tsconfig/react",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
@@ -64,19 +61,16 @@ Create `tsconfig.json`:
 Create `eslint.config.js`:
 
 ```javascript
-import { eslintNodeConfig, eslintTypeScriptConfig } from '@kitium-ai/lint';
+import { eslintNodeConfig, eslintTypeScriptConfig } from "@kitiumai/lint";
 
-export default [
-  ...eslintNodeConfig,
-  ...eslintTypeScriptConfig,
-];
+export default [...eslintNodeConfig, ...eslintTypeScriptConfig];
 ```
 
 Create `tsconfig.json`:
 
 ```json
 {
-  "extends": "@kitium-ai/lint/tsconfig/node"
+  "extends": "@kitiumai/lint/tsconfig/node"
 }
 ```
 
@@ -85,11 +79,9 @@ Create `tsconfig.json`:
 Create `eslint.config.js`:
 
 ```javascript
-import { eslintBaseConfig } from '@kitium-ai/lint';
+import { eslintBaseConfig } from "@kitiumai/lint";
 
-export default [
-  ...eslintBaseConfig,
-];
+export default [...eslintBaseConfig];
 ```
 
 ## Configuration Modules
@@ -97,18 +89,22 @@ export default [
 ### ESLint Configurations
 
 #### `eslintBaseConfig`
+
 Core JavaScript/TypeScript linting rules applicable to all projects.
 
 **Includes:**
+
 - Code quality rules
 - Best practices
 - Variable management
 - Formatting standards
 
 #### `eslintReactConfig`
+
 React-specific configuration with React hooks and accessibility rules.
 
 **Includes:**
+
 - React best practices
 - React Hooks exhaustive deps checking
 - JSX accessibility (a11y) rules
@@ -117,9 +113,11 @@ React-specific configuration with React hooks and accessibility rules.
 **Note:** Extends `baseConfig`
 
 #### `eslintNodeConfig`
+
 Node.js backend configuration with security scanning.
 
 **Includes:**
+
 - Node.js-specific globals and rules
 - Import sorting (simple-import-sort)
 - Security vulnerability detection
@@ -128,9 +126,11 @@ Node.js backend configuration with security scanning.
 **Note:** Extends `baseConfig`
 
 #### `eslintTypeScriptConfig`
+
 Strict TypeScript configuration with comprehensive type checking.
 
 **Includes:**
+
 - Strict type checking rules
 - TypeScript best practices
 - Type safety enforcement
@@ -139,9 +139,11 @@ Strict TypeScript configuration with comprehensive type checking.
 **Note:** Extends `baseConfig`
 
 #### `eslintJestConfig`
+
 Jest testing configuration for unit and integration tests.
 
 **Includes:**
+
 - Jest-specific globals and rules
 - Test lifecycle best practices
 - Snapshot testing guidelines
@@ -150,9 +152,11 @@ Jest testing configuration for unit and integration tests.
 **Files:** `**/*.test.{js,ts,jsx,tsx}`, `**/*.spec.{js,ts,jsx,tsx}`
 
 #### `eslintTestingLibraryConfig`
+
 React Testing Library configuration for component testing best practices.
 
 **Includes:**
+
 - Accessibility-first query recommendations
 - Implementation detail avoidance
 - Async/await handling in tests
@@ -161,9 +165,11 @@ React Testing Library configuration for component testing best practices.
 **Files:** `**/*.test.{jsx,tsx}`, `**/*.spec.{jsx,tsx}`
 
 #### `eslintGraphQLConfig`
+
 GraphQL schema and query validation.
 
 **Includes:**
+
 - GraphQL query validation
 - Schema compliance checking
 - Field existence validation
@@ -172,9 +178,11 @@ GraphQL schema and query validation.
 **Files:** `**/*.graphql`, `**/*.gql`
 
 #### `eslintVueConfig`
+
 Vue.js 3 Single File Component (SFC) configuration.
 
 **Includes:**
+
 - Vue component best practices
 - Script setup composition API support
 - Template accessibility rules
@@ -183,9 +191,11 @@ Vue.js 3 Single File Component (SFC) configuration.
 **Files:** `**/*.vue`
 
 #### `eslintNextjsConfig`
+
 Next.js framework-specific configuration.
 
 **Includes:**
+
 - Image optimization rules
 - Link component usage
 - Performance best practices
@@ -194,10 +204,12 @@ Next.js framework-specific configuration.
 **Extends:** Base configuration
 
 #### `eslintKitiumConfig`
+
 Kitium component enforcement aimed at shared design-system packages.
 
 **Includes:**
-- Kt* component class naming requirements (`KtButtonWeb`, etc.)
+
+- Kt\* component class naming requirements (`KtButtonWeb`, etc.)
 - Props/Event interface naming conventions
 - BaseProps/BaseComponent inheritance enforcement
 - Required type exports for `*.types.ts` files
@@ -205,9 +217,11 @@ Kitium component enforcement aimed at shared design-system packages.
 **When to use:** component libraries or apps that must follow Kitium UI patterns.
 
 #### `eslintSecurityConfig`
+
 Enhanced security scanning with advanced vulnerability detection.
 
 **Includes:**
+
 - OWASP Top 10 checks
 - Code injection prevention
 - SonarJS quality analysis
@@ -220,12 +234,13 @@ Enhanced security scanning with advanced vulnerability detection.
 ### Prettier Configuration
 
 ```javascript
-import { prettierConfig } from '@kitium-ai/lint';
+import { prettierConfig } from "@kitiumai/lint";
 
 export default prettierConfig;
 ```
 
 **Configuration:**
+
 - Print width: 100 characters
 - Tab width: 2 spaces
 - Single quotes for JavaScript/TypeScript
@@ -236,9 +251,9 @@ export default prettierConfig;
 
 Available via `extends` in your `tsconfig.json`:
 
-- `@kitium-ai/lint/tsconfig/base` - Base TypeScript configuration
-- `@kitium-ai/lint/tsconfig/react` - React + TypeScript configuration
-- `@kitium-ai/lint/tsconfig/node` - Node.js + TypeScript configuration
+- `@kitiumai/lint/tsconfig/base` - Base TypeScript configuration
+- `@kitiumai/lint/tsconfig/react` - React + TypeScript configuration
+- `@kitiumai/lint/tsconfig/node` - Node.js + TypeScript configuration
 
 ## Full Configuration Examples
 
@@ -246,18 +261,18 @@ Available via `extends` in your `tsconfig.json`:
 
 ```javascript
 // eslint.config.js
-import { eslintReactConfig, eslintTypeScriptConfig } from '@kitium-ai/lint';
-import tailwind from 'eslint-plugin-tailwindcss';
+import { eslintReactConfig, eslintTypeScriptConfig } from "@kitiumai/lint";
+import tailwind from "eslint-plugin-tailwindcss";
 
 export default [
   ...eslintReactConfig,
   ...eslintTypeScriptConfig,
   {
-    files: ['**/*.{jsx,tsx}'],
+    files: ["**/*.{jsx,tsx}"],
     plugins: { tailwindcss: tailwind },
     rules: {
-      'tailwindcss/classnames-order': 'warn',
-      'tailwindcss/no-custom-classname': 'warn',
+      "tailwindcss/classnames-order": "warn",
+      "tailwindcss/no-custom-classname": "warn",
     },
   },
 ];
@@ -267,15 +282,15 @@ export default [
 
 ```javascript
 // eslint.config.js
-import { eslintNodeConfig, eslintTypeScriptConfig } from '@kitium-ai/lint';
+import { eslintNodeConfig, eslintTypeScriptConfig } from "@kitiumai/lint";
 
 export default [
   ...eslintNodeConfig,
   ...eslintTypeScriptConfig,
   {
-    files: ['src/**/*.ts'],
+    files: ["src/**/*.ts"],
     rules: {
-      'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
+      "no-console": ["warn", { allow: ["warn", "error", "info"] }],
     },
   },
 ];
@@ -285,23 +300,28 @@ export default [
 
 ```javascript
 // eslint.config.js
-import { eslintBaseConfig, eslintReactConfig, eslintNodeConfig, eslintTypeScriptConfig } from '@kitium-ai/lint';
-import { prettierConfig } from '@kitium-ai/lint';
+import {
+  eslintBaseConfig,
+  eslintReactConfig,
+  eslintNodeConfig,
+  eslintTypeScriptConfig,
+} from "@kitiumai/lint";
+import { prettierConfig } from "@kitiumai/lint";
 
 export default [
   // Frontend apps
   {
-    files: ['apps/web/**/*.{js,jsx,ts,tsx}'],
+    files: ["apps/web/**/*.{js,jsx,ts,tsx}"],
     extends: [...eslintReactConfig, ...eslintTypeScriptConfig],
   },
   // Backend services
   {
-    files: ['apps/api/**/*.ts'],
+    files: ["apps/api/**/*.ts"],
     extends: [...eslintNodeConfig, ...eslintTypeScriptConfig],
   },
   // Shared utilities
   {
-    files: ['packages/shared/**/*.ts'],
+    files: ["packages/shared/**/*.ts"],
     extends: [...eslintBaseConfig, ...eslintTypeScriptConfig],
   },
 ];
@@ -312,21 +332,100 @@ export default [
 You can override any rules from the package configurations:
 
 ```javascript
-import { eslintReactConfig, eslintTypeScriptConfig } from '@kitium-ai/lint';
+import { eslintReactConfig, eslintTypeScriptConfig } from "@kitiumai/lint";
 
 export default [
   ...eslintReactConfig,
   ...eslintTypeScriptConfig,
   {
-    name: 'my-custom-rules',
-    files: ['src/**/*.{ts,tsx}'],
+    name: "my-custom-rules",
+    files: ["src/**/*.{ts,tsx}"],
     rules: {
-      '@typescript-eslint/no-explicit-any': 'warn', // Override to warning
-      'react/prop-types': 'off', // Disable rule
+      "@typescript-eslint/no-explicit-any": "warn", // Override to warning
+      "react/prop-types": "off", // Disable rule
     },
   },
 ];
 ```
+
+## Extending Kitium Rules and Plugins
+
+Need to enforce additional Kitium-specific conventions or register your own rules? Use the helper utilities exported by the package.
+
+### `createKitiumConfig`
+
+Programmatically extend the Kitium ESLint config with additional rules, plugins, or overrides:
+
+```javascript
+import { createKitiumConfig, eslintTypeScriptConfig } from "@kitiumai/lint";
+import tailwindcss from "eslint-plugin-tailwindcss";
+
+export default [
+  ...createKitiumConfig({
+    additionalRules: {
+      "kitium/custom-rule": "warn",
+    },
+    additionalPlugins: {
+      tailwindcss,
+    },
+    overrides: [
+      {
+        name: "kitium-tailwind",
+        files: ["packages/ui/**/*.{ts,tsx}"],
+        rules: {
+          "tailwindcss/no-custom-classname": "warn",
+        },
+      },
+    ],
+  }),
+  ...eslintTypeScriptConfig,
+];
+```
+
+### `createKitiumPlugin`
+
+Merge your own custom rules into the Kitium ESLint plugin without rewriting it:
+
+```javascript
+import { createKitiumPlugin } from "@kitiumai/lint";
+
+const customRule = {
+  meta: { type: "suggestion", docs: { description: "Require design tokens" } },
+  create(context) {
+    return {
+      Literal(node) {
+        if (typeof node.value === "string" && node.value.includes("#")) {
+          context.report({
+            node,
+            message: "Use design token variables instead of hex colors.",
+          });
+        }
+      },
+    };
+  },
+};
+
+export default [
+  {
+    name: "kitium-with-custom",
+    plugins: {
+      kitium: createKitiumPlugin({
+        additionalRules: {
+          "design-tokens": customRule,
+        },
+        recommendedRules: {
+          "kitium/design-tokens": "error",
+        },
+      }),
+    },
+    rules: {
+      "kitium/design-tokens": "error",
+    },
+  },
+];
+```
+
+These helpers keep the default Kitium behavior intact while giving you an ergonomic way to layer project-specific lints on top.
 
 ## Shareable Configurations
 
@@ -336,7 +435,14 @@ Pre-built configuration presets for common project patterns. Use these to quickl
 
 ```javascript
 // Use a preset
-import { fullstack, react_spa, nextjs_app, node_api, graphql_api, vue_spa } from '@kitium-ai/lint/configs';
+import {
+  fullstack,
+  react_spa,
+  nextjs_app,
+  node_api,
+  graphql_api,
+  vue_spa,
+} from "@kitiumai/lint/configs";
 
 export default [...fullstack]; // for full-stack apps
 ```
@@ -358,15 +464,15 @@ Available presets:
 
 ```javascript
 // eslint.config.js
-import { nextjs_app } from '@kitium-ai/lint/configs';
+import { nextjs_app } from "@kitiumai/lint/configs";
 
 export default [
   ...nextjs_app,
   {
     // Project-specific overrides
-    files: ['src/**/*.ts'],
+    files: ["src/**/*.ts"],
     rules: {
-      'no-console': ['warn', { allow: ['error'] }],
+      "no-console": ["warn", { allow: ["error"] }],
     },
   },
 ];
@@ -378,19 +484,17 @@ Use the included Jest configurations:
 
 ```javascript
 // jest.config.js
-import { reactConfig } from '@kitium-ai/lint/jest';
+import { reactConfig } from "@kitiumai/lint/jest";
 
 export default {
   ...reactConfig,
   // Project-specific overrides
-  collectCoverageFrom: [
-    'src/**/*.{ts,tsx}',
-    '!src/**/*.d.ts',
-  ],
+  collectCoverageFrom: ["src/**/*.{ts,tsx}", "!src/**/*.d.ts"],
 };
 ```
 
 Available Jest presets:
+
 - **`baseConfig`** - Basic Node.js testing
 - **`reactConfig`** - React component testing with jsdom
 - **`reactNativeConfig`** - React Native testing
@@ -419,13 +523,8 @@ Add lint-staged configuration to `package.json`:
 ```json
 {
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md}": [
-      "prettier --write"
-    ]
+    "*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"],
+    "*.{json,md}": ["prettier --write"]
   }
 }
 ```
@@ -437,12 +536,14 @@ For detailed setup, see the [Husky documentation](https://typicode.github.io/hus
 The `eslintSecurityConfig` includes comprehensive security scanning:
 
 ### OWASP Top 10 Protection
+
 - **Code Injection Prevention**: Rules against eval, Function constructor, and dynamic code
 - **Cross-Site Scripting (XSS)**: Using eslint-plugin-no-unsanitized
 - **Insecure Deserialization**: JSON parsing validation
 - **Broken Authentication**: Type-safe credential handling with TypeScript
 
 ### Advanced Scanning
+
 - **SonarJS Analysis**: Code quality and security hotspots
 - **Node.js Specific**: Buffer safety, child process warnings, path handling
 - **Static Analysis**: Detects potential vulnerabilities at lint time
@@ -450,6 +551,7 @@ The `eslintSecurityConfig` includes comprehensive security scanning:
 - **Cryptography**: Warnings for weak random number generation
 
 ### Type Safety
+
 - **Strict TypeScript**: Prevents many common security issues at compile time
 - **No Implicit Any**: Enforces explicit type annotations
 - **Exhaustive Checks**: Ensures all cases are handled
@@ -457,7 +559,7 @@ The `eslintSecurityConfig` includes comprehensive security scanning:
 Use the security config on all production projects:
 
 ```javascript
-import { eslintSecurityConfig } from '@kitium-ai/lint';
+import { eslintSecurityConfig } from "@kitiumai/lint";
 
 export default [
   // ... other configs
@@ -486,6 +588,7 @@ Add these scripts to your `package.json`:
 ### VS Code
 
 Install the following extensions:
+
 - ESLint (`dbaeumer.vscode-eslint`)
 - Prettier (`esbenp.prettier-vscode`)
 
@@ -516,17 +619,20 @@ Create `.vscode/settings.json`:
 ## Development and Testing
 
 ### Run Tests
+
 ```bash
 npm run test
 ```
 
 ### Run Linting
+
 ```bash
 npm run lint
 npm run lint:fix
 ```
 
 ### Format Code
+
 ```bash
 npm run format
 npm run format:check
@@ -542,6 +648,7 @@ npm run format:check
 ## Contributing
 
 Contributions are welcome! Please ensure all changes:
+
 1. Follow the existing code style
 2. Include appropriate tests
 3. Update documentation
@@ -554,6 +661,7 @@ MIT
 ## Support
 
 For issues and questions:
+
 - GitHub Issues: https://github.com/kitium-ai/lint/issues
 - Discussions: https://github.com/kitium-ai/lint/discussions
 

@@ -1,4 +1,4 @@
-import kitiumPlugin, { configs as kitiumConfigs } from './plugins/kitium.js';
+import kitiumPlugin, { configs as kitiumConfigs } from "./plugins/kitium.js";
 
 /**
  * Kitium component/style enforcement.
@@ -6,7 +6,7 @@ import kitiumPlugin, { configs as kitiumConfigs } from './plugins/kitium.js';
  */
 export default [
   {
-    name: 'kitium/component-standards',
+    name: "kitium/component-standards",
     plugins: {
       kitium: kitiumPlugin,
     },
@@ -15,4 +15,3 @@ export default [
     },
   },
 ];
-

@@ -11,24 +11,24 @@ export default {
   useTabs: false,
   semi: true,
   singleQuote: true,
-  quoteProps: 'as-needed',
+  quoteProps: "as-needed",
   jsxSingleQuote: false,
-  trailingComma: 'all',
+  trailingComma: "all",
   bracketSpacing: true,
   bracketSameLine: false,
-  arrowParens: 'always',
+  arrowParens: "always",
   requirePragma: false,
   insertPragma: false,
-  proseWrap: 'preserve',
+  proseWrap: "preserve",
 
   // HTML
-  htmlWhitespaceSensitivity: 'css',
+  htmlWhitespaceSensitivity: "css",
 
   // Vue
   vueIndentScriptAndStyle: false,
 
   // Embedded
-  embeddedLanguageFormatting: 'auto',
+  embeddedLanguageFormatting: "auto",
 
   // Markdown
   markdownObjectCurlyNewline: true,
@@ -39,28 +39,28 @@ export default {
   // Overrides for specific file types
   overrides: [
     {
-      files: '*.json',
+      files: "*.json",
       options: {
-        parser: 'json',
+        parser: "json",
       },
     },
     {
-      files: '*.yaml',
+      files: "*.yaml",
       options: {
-        parser: 'yaml',
+        parser: "yaml",
       },
     },
     {
-      files: '*.md',
+      files: "*.md",
       options: {
-        parser: 'markdown',
-        proseWrap: 'always',
+        parser: "markdown",
+        proseWrap: "always",
       },
     },
     {
-      files: '*.mdx',
+      files: "*.mdx",
       options: {
-        parser: 'mdx',
+        parser: "mdx",
       },
     },
   ],

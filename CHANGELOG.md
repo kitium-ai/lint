@@ -5,16 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - 2025-11-19
+## [1.1.0] - 2024-11-19
 
 ### Added
-- Kitium custom ESLint plugin and config (`eslintKitiumConfig`) for enforcing component naming, prop/event typing, and required exports.
-- Documentation updates describing the new configuration and when to enable it.
+
+- `createKitiumPlugin` helper to merge custom rules into the Kitium ESLint plugin.
+- `createKitiumConfig` helper to append extra rules/plugins/overrides to the Kitium configuration.
+- Documentation and examples showing how to extend Kitium lint behavior.
+- Tests covering the new customization APIs.
 
 ## [1.0.0] - 2024-11-19
 
 ### Added
-- Initial release of @kitium-ai/lint package
+
+- Kitium custom ESLint plugin and config (`eslintKitiumConfig`) for enforcing component naming, prop/event typing, and required exports.
+- Documentation updates describing the new configuration and when to enable it.
+- Initial release of @kitiumai/lint package
 - ESLint base configuration with core JavaScript/TypeScript rules
 - ESLint React configuration with hooks and accessibility rules
 - ESLint Node.js configuration with security scanning
@@ -32,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive documentation with usage examples
 
 ### Features
+
 - ✅ Modular and composable configurations
 - ✅ Enterprise-grade security rules
 - ✅ Type safety with TypeScript strict mode
@@ -41,10 +48,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ✅ Zero-configuration setup
 - ✅ Full IDE integration support
 - ✅ Monorepo compatible
-
-## [Unreleased]
-
-### Planned
 - Jest configuration for unit testing
 - Testing Library rules for React component tests
 - GraphQL configuration

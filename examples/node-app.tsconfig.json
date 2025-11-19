@@ -1,5 +1,5 @@
 {
-  "extends": "@kitium-ai/lint/tsconfig/node",
+  "extends": "@kitiumai/lint/tsconfig/node",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

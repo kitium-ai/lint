@@ -1,6 +1,6 @@
 {
-  "name": "@kitium-ai/lint",
-  "version": "1.0.0",
+  "name": "@kitiumai/lint",
+  "version": "1.1.0",
   "description": "Enterprise-ready, simple and secure linting configuration package for Kitium AI",
   "main": "index.js",
   "type": "module",
@@ -34,6 +34,7 @@
     "jest/",
     "husky/",
     "configs/",
+    "scripts/",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"
@@ -46,7 +47,12 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepack": "npm run lint:fix && npm run format",
-    "prepublish": "npm run test"
+    "prepublish": "npm run test",
+    "postinstall": "node scripts/postinstall.js"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "keywords": [
     "linting",
@@ -56,9 +62,23 @@
     "config",
     "enterprise",
     "kitium",
-    "ai"
+    "ai",
+    "security",
+    "react",
+    "node",
+    "jest",
+    "testing-library",
+    "graphql",
+    "vue",
+    "nextjs",
+    "monorepo",
+    "kitiumai",
+    "javascript",
+    "eslint",
+    "lint",
+    "prettier"
   ],
-  "author": "Kitium AI Team",
+  "author": "Kitium AI",
   "license": "MIT",
   "repository": {
     "type": "git",

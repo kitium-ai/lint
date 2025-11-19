@@ -8,7 +8,7 @@ import {
   eslintReactConfig,
   eslintNodeConfig,
   eslintTypeScriptConfig,
-} from '@kitium-ai/lint';
+} from '@kitiumai/lint';
 
 export default [
   // Frontend Web Application

@@ -23,7 +23,7 @@
     "react-dom": "^18.0.0"
   },
   "devDependencies": {
-    "@kitium-ai/lint": "^1.0.0",
+    "@kitiumai/lint": "^1.0.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/jest-dom": "^6.0.0",
     "@types/jest": "^29.0.0",

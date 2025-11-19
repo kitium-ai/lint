@@ -10,7 +10,7 @@ import {
   eslintGraphQLConfig,
   eslintJestConfig,
   eslintSecurityConfig,
-} from '@kitium-ai/lint';
+} from '@kitiumai/lint';
 
 export default [
   eslintBaseConfig,
@@ -45,14 +45,6 @@ export default [
   },
   {
     // Ignore patterns
-    ignores: [
-      'dist',
-      'build',
-      'node_modules',
-      '.git',
-      'coverage',
-      'schema.graphql',
-      'generated',
-    ],
+    ignores: ['dist', 'build', 'node_modules', '.git', 'coverage', 'schema.graphql', 'generated'],
   },
 ];

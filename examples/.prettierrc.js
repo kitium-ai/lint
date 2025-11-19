@@ -1,9 +1,9 @@
 /**
  * Example Prettier Configuration
- * Uses @kitium-ai/lint prettier configuration as a base
+ * Uses @kitiumai/lint prettier configuration as a base
  */
 
-import { prettierConfig } from '@kitium-ai/lint';
+import { prettierConfig } from '@kitiumai/lint';
 
 export default {
   ...prettierConfig,

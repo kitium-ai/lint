@@ -11,7 +11,7 @@ import {
   eslintJestConfig,
   eslintTestingLibraryConfig,
   eslintSecurityConfig,
-} from '@kitium-ai/lint';
+} from '@kitiumai/lint';
 
 export default [
   eslintBaseConfig,
@@ -38,15 +38,6 @@ export default [
   },
   {
     // Ignore patterns
-    ignores: [
-      '.next',
-      'out',
-      'dist',
-      'build',
-      'node_modules',
-      '.git',
-      '.vscode',
-      '.idea',
-    ],
+    ignores: ['.next', 'out', 'dist', 'build', 'node_modules', '.git', '.vscode', '.idea'],
   },
 ];

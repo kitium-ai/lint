@@ -9,7 +9,7 @@ import {
   eslintVueConfig,
   eslintJestConfig,
   eslintSecurityConfig,
-} from '@kitium-ai/lint';
+} from '@kitiumai/lint';
 
 export default [
   eslintBaseConfig,
@@ -27,10 +27,7 @@ export default [
       'vue/multi-word-component-names': 'warn',
       'vue/require-explicit-emits': 'warn',
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        { argsIgnorePattern: '^_' },
-      ],
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
   {
@@ -43,12 +40,6 @@ export default [
   },
   {
     // Ignore patterns
-    ignores: [
-      'dist',
-      'node_modules',
-      '.git',
-      'coverage',
-      'build',
-    ],
+    ignores: ['dist', 'node_modules', '.git', 'coverage', 'build'],
   },
 ];

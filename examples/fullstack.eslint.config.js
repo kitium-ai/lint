@@ -4,7 +4,7 @@
  * Includes all necessary rules for a complete React + Node.js application
  */
 
-import { fullstack } from '@kitium-ai/lint/configs';
+import { fullstack } from '@kitiumai/lint/configs';
 
 export default [
   ...fullstack,
@@ -47,7 +47,7 @@ export default [
 
 /**
  * Usage:
- * 1. Install @kitium-ai/lint package
+ * 1. Install @kitiumai/lint package
  * 2. Copy this file as your eslint.config.js
  * 3. Run: npm run lint
  *
