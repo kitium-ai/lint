@@ -2,7 +2,7 @@
 
 /**
  * Migration Script for @kitiumai/lint
- * Migrates existing ESLint (v8 & v9) and Prettier configurations
+ * Migrates existing ESLint v9 and Prettier configurations
  * Preserves custom rules while adopting @kitiumai/lint as base
  *
  * Usage:
@@ -101,39 +101,19 @@ async function promptUser(question) {
 }
 
 /**
- * Detect existing ESLint and Prettier configurations
+ * Detect existing ESLint v9 and Prettier configurations
  */
 function detectExistingConfigs(projectRoot) {
   const configs = {
-    eslintV8: null,
     eslintV9: null,
     prettier: null,
     tslint: null,
   };
 
-  // ESLint v9 flat config (takes precedence)
+  // ESLint v9 flat config
   const eslintV9Path = join(projectRoot, "eslint.config.js");
   if (existsSync(eslintV9Path)) {
     configs.eslintV9 = eslintV9Path;
-  }
-
-  // ESLint v8 configs
-  const eslintV8Patterns = [
-    ".eslintrc.js",
-    ".eslintrc.cjs",
-    ".eslintrc.json",
-    ".eslintrc.yml",
-    ".eslintrc.yaml",
-    ".eslintrc",
-  ];
-
-  for (const pattern of eslintV8Patterns) {
-    const configPath = join(projectRoot, pattern);
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    if (existsSync(configPath)) {
-      configs.eslintV8 = configPath;
-      break;
-    }
   }
 
   // TSLint config
@@ -164,57 +144,6 @@ function detectExistingConfigs(projectRoot) {
   return configs;
 }
 
-/**
- * Parse ESLint v8 configuration
- */
-function parseEslintV8Config(configPath) {
-  try {
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    const content = readFileSync(configPath, "utf-8");
-    const ext = basename(configPath);
-
-    // Handle JSON format
-    if (ext.endsWith(".json") || ext === ".eslintrc") {
-      return JSON.parse(content);
-    }
-
-    // Handle JS/CJS format - extract export default or module.exports
-    // eslint-disable-next-line no-eval
-    const configObj = eval(
-      `(${content.replace(/^module\.exports\s*=\s*/, "").replace(/^export\s+default\s+/, "")})`,
-    );
-    return configObj;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(`Error parsing ESLint v8 config: ${error.message}`);
-    return null;
-  }
-}
-
-/**
- * Extract custom rules from ESLint v8 config
- */
-function extractEslintV8CustomRules(config) {
-  if (!config) return { rules: {}, overrides: [] };
-
-  const customRules = {
-    rules: config.rules || {},
-    overrides: config.overrides || [],
-    env: config.env,
-    parserOptions: config.parserOptions,
-    settings: config.settings,
-  };
-
-  // Remove undefined values
-  Object.keys(customRules).forEach((key) => {
-    // eslint-disable-next-line eqeqeq
-    if (customRules[key] == null) {
-      delete customRules[key];
-    }
-  });
-
-  return customRules;
-}
 
 /**
  * Parse Prettier configuration
@@ -527,14 +456,13 @@ async function main() {
   const configs = detectExistingConfigs(projectRoot);
 
   if (
-    !configs.eslintV8 &&
     !configs.eslintV9 &&
     !configs.prettier &&
     !configs.tslint
   ) {
     // eslint-disable-next-line no-console
     console.log(
-      "ℹ️  No existing ESLint, TSLint, or Prettier configurations found.",
+      "ℹ️  No existing ESLint v9, TSLint, or Prettier configurations found.",
     );
     // eslint-disable-next-line no-console
     console.log(
@@ -549,10 +477,6 @@ async function main() {
     // eslint-disable-next-line no-console
     console.log(`  ✓ ESLint v9 (flat config): ${basename(configs.eslintV9)}`);
   }
-  if (configs.eslintV8) {
-    // eslint-disable-next-line no-console
-    console.log(`  ✓ ESLint v8: ${basename(configs.eslintV8)}`);
-  }
   if (configs.tslint) {
     // eslint-disable-next-line no-console
     console.log(`  ✓ TSLint: ${basename(configs.tslint)}`);
@@ -563,10 +487,9 @@ async function main() {
   }
 
   // Prompt for migration
-  const proceedESLint =
-    configs.eslintV8 || configs.eslintV9
-      ? await promptUser("Migrate ESLint configuration? (y/n): ")
-      : false;
+  const proceedESLint = configs.eslintV9
+    ? await promptUser("Migrate ESLint v9 configuration? (y/n): ")
+    : false;
 
   const proceedTSLint = configs.tslint
     ? await promptUser("Migrate TSLint configuration? (y/n): ")
@@ -587,24 +510,10 @@ async function main() {
 
   // Migrate ESLint
   if (proceedESLint) {
-    let eslintConfig = null;
-    const configPath = configs.eslintV9 || configs.eslintV8;
-
-    if (configs.eslintV9) {
-      // eslint-disable-next-line no-console
-      console.log("📦 Processing ESLint v9 (flat config)...");
-      // For v9, we'll just update it to add our configs
-      eslintConfig = { rules: {}, overrides: [] };
-      // eslint-disable-next-line no-console
-      console.log(
-        "   ⚠️  Please manually review and merge your flat config rules.",
-      );
-    } else {
-      // eslint-disable-next-line no-console
-      console.log("📦 Processing ESLint v8 config...");
-      const parsedConfig = parseEslintV8Config(configPath);
-      eslintConfig = extractEslintV8CustomRules(parsedConfig);
-    }
+    // eslint-disable-next-line no-console
+    console.log("📦 Processing ESLint v9 (flat config)...");
+    const configPath = configs.eslintV9;
+    const eslintConfig = { rules: {}, overrides: [] };
 
     const projectType = detectProjectType(projectRoot, eslintConfig);
     const migratedESLint = createMigratedEslintConfig(

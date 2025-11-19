@@ -2,9 +2,8 @@
 
 /**
  * Post-install script for @kitiumai/lint
- * Interactive setup to configure ESLint, TSLint, and Prettier
+ * Interactive setup to configure ESLint v9, TSLint, and Prettier
  * Stores user preferences and creates appropriate config files
- * Supports both ESLint v8 and v9 with automatic version detection
  */
 
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
@@ -37,39 +36,6 @@ function validateEnvironment() {
     console.warn(
       "⚠️  Not running in npm install context. This is normal if running manually.",
     );
-  }
-}
-
-/**
- * Detects installed ESLint version
- * @returns {string} - Either "v9" or "v8" or null if not found
- */
-function detectEslintVersion(projectRoot) {
-  try {
-    const packageJsonPath = join(projectRoot, "package.json");
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    if (!existsSync(packageJsonPath)) {
-      return null;
-    }
-
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
-    const eslintVersion =
-      packageJson.devDependencies?.eslint ||
-      packageJson.dependencies?.eslint ||
-      packageJson.peerDependencies?.eslint;
-
-    if (!eslintVersion) {
-      return null;
-    }
-
-    // Parse version to determine major version
-    const majorVersion = parseInt(
-      eslintVersion.split(".")[0].replace(/[^0-9]/g, ""),
-    );
-    return majorVersion === 9 ? "v9" : majorVersion === 8 ? "v8" : null;
-  } catch {
-    return null;
   }
 }
 
@@ -250,7 +216,6 @@ function saveSetupConfig(projectRoot, config) {
 function detectExistingConfigs(projectRoot) {
   const configs = {
     eslintV9: null,
-    eslintV8: null,
     prettier: null,
     tslint: null,
   };
@@ -260,25 +225,6 @@ function detectExistingConfigs(projectRoot) {
   // eslint-disable-next-line security/detect-non-literal-fs-filename
   if (existsSync(eslintV9Path)) {
     configs.eslintV9 = eslintV9Path;
-  }
-
-  // ESLint v8 patterns
-  const eslintV8Patterns = [
-    ".eslintrc.js",
-    ".eslintrc.cjs",
-    ".eslintrc.json",
-    ".eslintrc.yml",
-    ".eslintrc.yaml",
-    ".eslintrc",
-  ];
-
-  for (const pattern of eslintV8Patterns) {
-    const configPath = join(projectRoot, pattern);
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    if (existsSync(configPath)) {
-      configs.eslintV8 = configPath;
-      break;
-    }
   }
 
   // Prettier configs
@@ -308,272 +254,6 @@ function detectExistingConfigs(projectRoot) {
   }
 
   return configs;
-}
-
-/**
- * Ask user to choose ESLint version
- */
-async function promptEslintVersion() {
-  const installedVersion = detectEslintVersion(process.cwd());
-
-  if (installedVersion) {
-    // eslint-disable-next-line no-console
-    console.log(`\n📦 Detected ESLint ${installedVersion}`);
-    const keepVersion = await promptYesNo(
-      `Keep using ESLint ${installedVersion}?`,
-      true,
-    );
-
-    if (keepVersion) {
-      return installedVersion === "v9" ? "v9" : "v8";
-    }
-
-    // User wants to switch versions
-    const versions = [
-      "ESLint v9 (Flat Config - Modern)",
-      "ESLint v8 (Traditional)",
-    ];
-    const selectedIndex = await promptChoice(
-      "\nSelect ESLint version to use:",
-      versions,
-      installedVersion === "v9" ? 0 : 1,
-    );
-    return selectedIndex === 0 ? "v9" : "v8";
-  }
-
-  // No ESLint detected, ask which version to use
-  const versions = [
-    "ESLint v9 (Flat Config - Modern)",
-    "ESLint v8 (Traditional)",
-  ];
-  const selectedIndex = await promptChoice(
-    "\nSelect ESLint version to use:",
-    versions,
-    0,
-  );
-  return selectedIndex === 0 ? "v9" : "v8";
-}
-
-/**
- * Interactive setup prompts
- */
-async function interactiveSetup(projectRoot) {
-  // eslint-disable-next-line no-console
-  console.log("\n🎯 @kitiumai/lint Setup\n");
-  // eslint-disable-next-line no-console
-  console.log(
-    "Let's configure which tools you'd like to use for linting and formatting.\n",
-  );
-
-  // Detect existing configs
-  const existingConfigs = detectExistingConfigs(projectRoot);
-  const hasExistingConfigs =
-    existingConfigs.eslintV8 ||
-    existingConfigs.eslintV9 ||
-    existingConfigs.prettier ||
-    existingConfigs.tslint;
-
-  // If existing configs found, offer migration
-  if (hasExistingConfigs) {
-    // eslint-disable-next-line no-console
-    console.log("📋 Found existing configurations:\n");
-    if (existingConfigs.eslintV9) {
-      // eslint-disable-next-line no-console
-      console.log(
-        `  ✓ ESLint v9: ${existingConfigs.eslintV9.split("/").pop()}`,
-      );
-    }
-    if (existingConfigs.eslintV8) {
-      // eslint-disable-next-line no-console
-      console.log(
-        `  ✓ ESLint v8: ${existingConfigs.eslintV8.split("/").pop()}`,
-      );
-    }
-    if (existingConfigs.prettier) {
-      // eslint-disable-next-line no-console
-      console.log(`  ✓ Prettier: ${existingConfigs.prettier.split("/").pop()}`);
-    }
-    if (existingConfigs.tslint) {
-      // eslint-disable-next-line no-console
-      console.log(`  ✓ TSLint: ${existingConfigs.tslint.split("/").pop()}\n`);
-    }
-
-    const useMigration = await promptYesNo(
-      "\nWould you like to migrate these configs to @kitiumai/lint? (y/n)",
-      true,
-    );
-
-    if (useMigration) {
-      // eslint-disable-next-line no-console
-      console.log("\n🚀 Running migration...\n");
-      // Dynamic import to avoid circular dependencies
-      // eslint-disable-next-line global-require
-      const { execSync } = await import("node:child_process");
-      try {
-        execSync("node node_modules/@kitiumai/lint/scripts/migrate.js", {
-          cwd: projectRoot,
-          stdio: "inherit",
-        });
-        // eslint-disable-next-line no-console
-        console.log("\n✨ Migration complete!\n");
-        // Return empty config - migration handles everything
-        return null;
-      } catch {
-        // eslint-disable-next-line no-console
-        console.log("\n⚠️  Migration skipped. Running fresh setup instead.\n");
-      }
-    }
-  }
-
-  // Ask about ESLint
-  const useESLint = await promptYesNo(
-    "Use ESLint for JavaScript/TypeScript linting?",
-    true,
-  );
-
-  let eslintVersion = "v9";
-  if (useESLint) {
-    eslintVersion = await promptEslintVersion();
-  }
-
-  // Ask about TSLint
-  const useTSLint = await promptYesNo(
-    "Use TSLint for additional TypeScript linting?",
-    false,
-  );
-
-  // Ask about Prettier
-  const usePrettier = await promptYesNo(
-    "Use Prettier for code formatting?",
-    true,
-  );
-
-  // Ask about project type (only if ESLint is selected)
-  let projectType = "node";
-  if (useESLint) {
-    const projectTypes = [
-      "Node.js",
-      "React",
-      "Next.js",
-      "Vue",
-      "Angular",
-      "Svelte",
-      "Vanilla JavaScript",
-      "Vanilla TypeScript",
-    ];
-    const selectedIndex = await promptChoice(
-      "\nSelect your project type:",
-      projectTypes,
-      0,
-    );
-    projectType = projectTypes[selectedIndex].toLowerCase();
-  }
-
-  const config = {
-    eslint: useESLint,
-    eslintVersion,
-    tslint: useTSLint,
-    prettier: usePrettier,
-    projectType,
-    createdAt: new Date().toISOString(),
-  };
-
-  saveSetupConfig(projectRoot, config);
-  return config;
-}
-
-/**
- * Update package.json with selected scripts
- */
-async function updatePackageJson(packageJsonPath, config) {
-  try {
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    const packageJsonContent = readFileSync(packageJsonPath, "utf-8");
-    const packageJson = JSON.parse(packageJsonContent);
-
-    if (!packageJson.scripts) {
-      packageJson.scripts = {};
-    }
-
-    const scriptsToAdd = {};
-    let updated = false;
-
-    // Always add setup:lint script for manual setup re-runs
-    scriptsToAdd["setup:lint"] =
-      "node node_modules/@kitiumai/lint/scripts/postinstall.js";
-
-    // Add ESLint scripts if selected
-    if (config.eslint) {
-      scriptsToAdd.lint = "eslint .";
-      scriptsToAdd["lint:fix"] = "eslint . --fix";
-    }
-
-    // Add TSLint scripts if selected
-    if (config.tslint) {
-      scriptsToAdd["lint:tslint"] =
-        "tslint -c tslint.json --project tsconfig.json '**/*.ts'";
-      scriptsToAdd["lint:tslint:fix"] =
-        "tslint -c tslint.json --project tsconfig.json --fix '**/*.ts'";
-    }
-
-    // Add Prettier scripts if selected
-    if (config.prettier) {
-      scriptsToAdd.format = "prettier --write .";
-      scriptsToAdd["format:check"] = "prettier --check .";
-    }
-
-    // Check for existing scripts and ask about replacement (but not for setup:lint)
-    const existingScripts = Object.keys(scriptsToAdd)
-      .filter((script) => script !== "setup:lint")
-      .filter((script) => packageJson.scripts[script]);
-
-    let shouldReplace = true;
-    if (existingScripts.length > 0) {
-      // eslint-disable-next-line no-console
-      console.log("\n⚠️  Found existing scripts in your package.json:");
-      existingScripts.forEach((script) => {
-        // eslint-disable-next-line no-console
-        console.log(`   "${script}": "${packageJson.scripts[script]}"`);
-      });
-
-      shouldReplace = await promptYesNo(
-        "\nReplace them with @kitiumai/lint scripts?",
-        true,
-      );
-    }
-
-    // Add or update scripts
-    for (const [scriptName, scriptValue] of Object.entries(scriptsToAdd)) {
-      if (!packageJson.scripts[scriptName]) {
-        packageJson.scripts[scriptName] = scriptValue;
-        updated = true;
-        // eslint-disable-next-line no-console
-        console.log(`✓ Added "${scriptName}" script`);
-      } else if (
-        packageJson.scripts[scriptName] !== scriptValue &&
-        shouldReplace
-      ) {
-        packageJson.scripts[scriptName] = scriptValue;
-        updated = true;
-        // eslint-disable-next-line no-console
-        console.log(`✓ Updated "${scriptName}" script`);
-      }
-    }
-
-    if (updated) {
-      const updatedContent = `${JSON.stringify(packageJson, null, 2)}\n`;
-      // eslint-disable-next-line security/detect-non-literal-fs-filename
-      writeFileSync(packageJsonPath, updatedContent, "utf-8");
-      // eslint-disable-next-line no-console
-      console.log("\n✨ Updated package.json with selected scripts\n");
-    }
-
-    return updated;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(`Error updating package.json: ${error.message}`);
-    return false;
-  }
 }
 
 /**
@@ -672,94 +352,6 @@ export default [
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(`Failed to create eslint.config.js: ${error.message}`);
-  }
-}
-
-/**
- * Create ESLint v8 config (traditional .eslintrc.json format)
- */
-function createEslintV8Config(projectRoot, projectType) {
-  const eslintrcPath = join(projectRoot, ".eslintrc.json");
-
-  // eslint-disable-next-line security/detect-non-literal-fs-filename
-  if (existsSync(eslintrcPath)) {
-    // eslint-disable-next-line no-console
-    console.log("✓ ESLint v8 configuration already exists");
-    return;
-  }
-
-  const configMap = {
-    "node.js": [
-      "@kitiumai/lint/eslint/node",
-      "@kitiumai/lint/eslint/typescript",
-    ],
-    react: ["@kitiumai/lint/eslint/react", "@kitiumai/lint/eslint/typescript"],
-    "next.js": [
-      "@kitiumai/lint/eslint/nextjs",
-      "@kitiumai/lint/eslint/typescript",
-    ],
-    vue: ["@kitiumai/lint/eslint/vue", "@kitiumai/lint/eslint/typescript"],
-    angular: [
-      "@kitiumai/lint/eslint/angular",
-      "@kitiumai/lint/eslint/typescript",
-    ],
-    svelte: [
-      "@kitiumai/lint/eslint/svelte",
-      "@kitiumai/lint/eslint/typescript",
-    ],
-    "vanilla javascript": ["@kitiumai/lint/eslint/base"],
-    "vanilla typescript": [
-      "@kitiumai/lint/eslint/base",
-      "@kitiumai/lint/eslint/typescript",
-    ],
-  };
-
-  const extends_ = configMap[projectType] || configMap["node.js"];
-
-  const eslintrcConfig = {
-    extends: extends_,
-    rules: {
-      // Add your project-specific rule overrides here
-    },
-  };
-
-  try {
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    writeFileSync(
-      eslintrcPath,
-      JSON.stringify(eslintrcConfig, null, 2),
-      "utf-8",
-    );
-    // eslint-disable-next-line no-console
-    console.log("✓ Created .eslintrc.json (ESLint v8 traditional config)");
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(`Failed to create .eslintrc.json: ${error.message}`);
-  }
-}
-
-/**
- * Create ESLint config based on user's choice or detected version
- */
-function createEslintConfig(projectRoot, projectType, userPreferredVersion) {
-  let eslintVersion = userPreferredVersion;
-
-  // If no user preference, try to detect
-  if (!eslintVersion) {
-    eslintVersion = detectEslintVersion(projectRoot);
-  }
-
-  if (eslintVersion === "v9") {
-    createEslintV9Config(projectRoot, projectType);
-  } else if (eslintVersion === "v8") {
-    createEslintV8Config(projectRoot, projectType);
-  } else {
-    // Fallback to v9 if we can't detect
-    // eslint-disable-next-line no-console
-    console.log(
-      "⚠️  Could not detect ESLint version. Creating v9 config (flat config format)...",
-    );
-    createEslintV9Config(projectRoot, projectType);
   }
 }
 
@@ -920,6 +512,215 @@ coverage
 }
 
 /**
+ * Update package.json with selected scripts
+ */
+async function updatePackageJson(packageJsonPath, config) {
+  try {
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    const packageJsonContent = readFileSync(packageJsonPath, "utf-8");
+    const packageJson = JSON.parse(packageJsonContent);
+
+    if (!packageJson.scripts) {
+      packageJson.scripts = {};
+    }
+
+    const scriptsToAdd = {};
+    let updated = false;
+
+    // Always add setup:lint script for manual setup re-runs
+    scriptsToAdd["setup:lint"] =
+      "node node_modules/@kitiumai/lint/scripts/postinstall.js";
+
+    // Add ESLint scripts if selected
+    if (config.eslint) {
+      scriptsToAdd.lint = "eslint .";
+      scriptsToAdd["lint:fix"] = "eslint . --fix";
+    }
+
+    // Add TSLint scripts if selected
+    if (config.tslint) {
+      scriptsToAdd["lint:tslint"] =
+        "tslint -c tslint.json --project tsconfig.json '**/*.ts'";
+      scriptsToAdd["lint:tslint:fix"] =
+        "tslint -c tslint.json --project tsconfig.json --fix '**/*.ts'";
+    }
+
+    // Add Prettier scripts if selected
+    if (config.prettier) {
+      scriptsToAdd.format = "prettier --write .";
+      scriptsToAdd["format:check"] = "prettier --check .";
+    }
+
+    // Check for existing scripts and ask about replacement (but not for setup:lint)
+    const existingScripts = Object.keys(scriptsToAdd)
+      .filter((script) => script !== "setup:lint")
+      .filter((script) => packageJson.scripts[script]);
+
+    let shouldReplace = true;
+    if (existingScripts.length > 0) {
+      // eslint-disable-next-line no-console
+      console.log("\n⚠️  Found existing scripts in your package.json:");
+      existingScripts.forEach((script) => {
+        // eslint-disable-next-line no-console
+        console.log(`   "${script}": "${packageJson.scripts[script]}"`);
+      });
+
+      shouldReplace = await promptYesNo(
+        "\nReplace them with @kitiumai/lint scripts?",
+        true,
+      );
+    }
+
+    // Add or update scripts
+    for (const [scriptName, scriptValue] of Object.entries(scriptsToAdd)) {
+      if (!packageJson.scripts[scriptName]) {
+        packageJson.scripts[scriptName] = scriptValue;
+        updated = true;
+        // eslint-disable-next-line no-console
+        console.log(`✓ Added "${scriptName}" script`);
+      } else if (
+        packageJson.scripts[scriptName] !== scriptValue &&
+        shouldReplace
+      ) {
+        packageJson.scripts[scriptName] = scriptValue;
+        updated = true;
+        // eslint-disable-next-line no-console
+        console.log(`✓ Updated "${scriptName}" script`);
+      }
+    }
+
+    if (updated) {
+      const updatedContent = `${JSON.stringify(packageJson, null, 2)}\n`;
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
+      writeFileSync(packageJsonPath, updatedContent, "utf-8");
+      // eslint-disable-next-line no-console
+      console.log("\n✨ Updated package.json with selected scripts\n");
+    }
+
+    return updated;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(`Error updating package.json: ${error.message}`);
+    return false;
+  }
+}
+
+/**
+ * Interactive setup prompts
+ */
+async function interactiveSetup(projectRoot) {
+  // eslint-disable-next-line no-console
+  console.log("\n🎯 @kitiumai/lint Setup\n");
+  // eslint-disable-next-line no-console
+  console.log(
+    "Let's configure which tools you'd like to use for linting and formatting.\n",
+  );
+
+  // Detect existing configs
+  const existingConfigs = detectExistingConfigs(projectRoot);
+  const hasExistingConfigs =
+    existingConfigs.eslintV9 ||
+    existingConfigs.prettier ||
+    existingConfigs.tslint;
+
+  // If existing configs found, offer migration
+  if (hasExistingConfigs) {
+    // eslint-disable-next-line no-console
+    console.log("📋 Found existing configurations:\n");
+    if (existingConfigs.eslintV9) {
+      // eslint-disable-next-line no-console
+      console.log(
+        `  ✓ ESLint v9: ${existingConfigs.eslintV9.split("/").pop()}`,
+      );
+    }
+    if (existingConfigs.prettier) {
+      // eslint-disable-next-line no-console
+      console.log(`  ✓ Prettier: ${existingConfigs.prettier.split("/").pop()}`);
+    }
+    if (existingConfigs.tslint) {
+      // eslint-disable-next-line no-console
+      console.log(`  ✓ TSLint: ${existingConfigs.tslint.split("/").pop()}\n`);
+    }
+
+    const useMigration = await promptYesNo(
+      "\nWould you like to migrate these configs to @kitiumai/lint? (y/n)",
+      true,
+    );
+
+    if (useMigration) {
+      // eslint-disable-next-line no-console
+      console.log("\n🚀 Running migration...\n");
+      // Dynamic import to avoid circular dependencies
+      // eslint-disable-next-line global-require
+      const { execSync } = await import("node:child_process");
+      try {
+        execSync("node node_modules/@kitiumai/lint/scripts/migrate.js", {
+          cwd: projectRoot,
+          stdio: "inherit",
+        });
+        // eslint-disable-next-line no-console
+        console.log("\n✨ Migration complete!\n");
+        // Return empty config - migration handles everything
+        return null;
+      } catch {
+        // eslint-disable-next-line no-console
+        console.log("\n⚠️  Migration skipped. Running fresh setup instead.\n");
+      }
+    }
+  }
+
+  // Ask about ESLint
+  const useESLint = await promptYesNo(
+    "Use ESLint v9 for JavaScript/TypeScript linting?",
+    true,
+  );
+
+  // Ask about TSLint
+  const useTSLint = await promptYesNo(
+    "Use TSLint for additional TypeScript linting?",
+    false,
+  );
+
+  // Ask about Prettier
+  const usePrettier = await promptYesNo(
+    "Use Prettier for code formatting?",
+    true,
+  );
+
+  // Ask about project type (only if ESLint is selected)
+  let projectType = "node";
+  if (useESLint) {
+    const projectTypes = [
+      "Node.js",
+      "React",
+      "Next.js",
+      "Vue",
+      "Angular",
+      "Svelte",
+      "Vanilla JavaScript",
+      "Vanilla TypeScript",
+    ];
+    const selectedIndex = await promptChoice(
+      "\nSelect your project type:",
+      projectTypes,
+      0,
+    );
+    projectType = projectTypes[selectedIndex].toLowerCase();
+  }
+
+  const config = {
+    eslint: useESLint,
+    tslint: useTSLint,
+    prettier: usePrettier,
+    projectType,
+    createdAt: new Date().toISOString(),
+  };
+
+  saveSetupConfig(projectRoot, config);
+  return config;
+}
+
+/**
  * Main execution function
  */
 async function main() {
@@ -954,7 +755,7 @@ async function main() {
     // eslint-disable-next-line no-console
     console.log("\n🚀 @kitiumai/lint - Setup Already Configured\n");
     // eslint-disable-next-line no-console
-    console.log(`ESLint: ${config.eslint ? "✓" : "✗"}`);
+    console.log(`ESLint v9: ${config.eslint ? "✓" : "✗"}`);
     // eslint-disable-next-line no-console
     console.log(`TSLint: ${config.tslint ? "✓" : "✗"}`);
     // eslint-disable-next-line no-console
@@ -969,8 +770,8 @@ async function main() {
   // Create configuration files based on selections
   if (config.eslint) {
     // eslint-disable-next-line no-console
-    console.log(`📋 Creating ESLint ${config.eslintVersion} configuration...`);
-    createEslintConfig(projectRoot, config.projectType, config.eslintVersion);
+    console.log("📋 Creating ESLint v9 configuration...");
+    createEslintV9Config(projectRoot, config.projectType);
     createEslintIgnore(projectRoot);
   }
 
