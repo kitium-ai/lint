@@ -76,17 +76,17 @@ async function promptYesNo(question, defaultAnswer = true) {
   const setupTSLint = process.env.SETUP_TSLINT;
   const setupPrettier = process.env.SETUP_PRETTIER;
 
-  if (setupESLint !== undefined && question.includes("ESLint")) {
+  if (typeof setupESLint !== "undefined" && question.includes("ESLint")) {
     // eslint-disable-next-line no-console
     console.log(`${question} [${setupESLint}]`);
     return setupESLint === "true";
   }
-  if (setupTSLint !== undefined && question.includes("TSLint")) {
+  if (typeof setupTSLint !== "undefined" && question.includes("TSLint")) {
     // eslint-disable-next-line no-console
     console.log(`${question} [${setupTSLint}]`);
     return setupTSLint === "true";
   }
-  if (setupPrettier !== undefined && question.includes("Prettier")) {
+  if (typeof setupPrettier !== "undefined" && question.includes("Prettier")) {
     // eslint-disable-next-line no-console
     console.log(`${question} [${setupPrettier}]`);
     return setupPrettier === "true";
@@ -237,15 +237,6 @@ async function interactiveSetup(projectRoot) {
 
   saveSetupConfig(projectRoot, config);
   return config;
-}
-
-/**
- * Detect if setup has already been done
- */
-function isSetupAlreadyDone(projectRoot) {
-  const configPath = join(projectRoot, SETUP_CONFIG_FILE);
-  // eslint-disable-next-line security/detect-non-literal-fs-filename
-  return existsSync(configPath);
 }
 
 /**
@@ -647,5 +638,5 @@ async function main() {
 main().catch((error) => {
   // eslint-disable-next-line no-console
   console.error(`Setup error: ${error.message}`);
-  process.exit(1);
+  process.exitCode = 1;
 });
