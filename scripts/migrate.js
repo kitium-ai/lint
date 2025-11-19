@@ -452,6 +452,14 @@ function detectProjectType(projectRoot, config) {
   const pkg = JSON.parse(pkgContent);
 
   // Check dependencies
+  if (pkg.dependencies?.["@angular/core"] || pkg.devDependencies?.["@angular/core"]) {
+    return "angular";
+  }
+
+  if (pkg.dependencies?.svelte || pkg.devDependencies?.svelte) {
+    return "svelte";
+  }
+
   if (pkg.dependencies?.react || pkg.devDependencies?.react) {
     if (pkg.dependencies?.next || pkg.devDependencies?.next) {
       return "nextjs";
@@ -466,6 +474,8 @@ function detectProjectType(projectRoot, config) {
   // Check extends in old config
   if (config?.extends) {
     const extendsStr = String(config.extends).toLowerCase();
+    if (extendsStr.includes("angular")) return "angular";
+    if (extendsStr.includes("svelte")) return "svelte";
     if (extendsStr.includes("react")) return "react";
     if (extendsStr.includes("next")) return "nextjs";
     if (extendsStr.includes("vue")) return "vue";

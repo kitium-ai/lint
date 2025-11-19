@@ -218,7 +218,7 @@ async function interactiveSetup(projectRoot) {
   // Ask about project type (only if ESLint is selected)
   let projectType = "node";
   if (useESLint) {
-    const projectTypes = ["Node.js", "React", "Next.js", "Vue"];
+    const projectTypes = ["Node.js", "React", "Next.js", "Vue", "Angular", "Svelte"];
     const selectedIndex = await promptChoice(
       "\nSelect your project type:",
       projectTypes,
@@ -361,6 +361,8 @@ function createEslintConfig(projectRoot, projectType) {
     react: "eslintReactConfig, eslintTypeScriptConfig",
     "next.js": "eslintNextJsConfig, eslintTypeScriptConfig",
     vue: "eslintVueConfig, eslintTypeScriptConfig",
+    angular: "eslintAngularConfig, eslintTypeScriptConfig",
+    svelte: "eslintSvelteConfig, eslintTypeScriptConfig",
   };
 
   const imports =
