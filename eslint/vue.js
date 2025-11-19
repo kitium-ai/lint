@@ -56,7 +56,10 @@ const createVueConfig = () => {
         // Component best practices
         "vue/prefer-template": "warn",
         "vue/html-indent": ["error", 2],
-        "vue/max-attributes-per-line": ["warn", { singleline: 3, multiline: 1 }],
+        "vue/max-attributes-per-line": [
+          "warn",
+          { singleline: 3, multiline: 1 },
+        ],
         "vue/no-empty-component-block": "warn",
         "vue/component-definition-name-casing": ["error", "PascalCase"],
 

@@ -11,6 +11,8 @@
  * Install with: npm install eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-jsx-a11y
  */
 
+import baseConfig from "./base.js";
+
 let reactPlugin;
 let reactHooksPlugin;
 let jsxA11yPlugin;
@@ -31,8 +33,6 @@ try {
 } catch (_error) {
   // React plugins not installed - this is optional
 }
-
-import baseConfig from "./base.js";
 
 const createReactConfig = () => {
   const baseReactConfig = {
@@ -105,7 +105,10 @@ const createReactConfig = () => {
           "react/no-string-refs": "error",
           "react/no-this-in-sfc": "error",
           "react/no-unescaped-entities": "error",
-          "react/no-unstable-nested-components": ["error", { allowAsProps: false }],
+          "react/no-unstable-nested-components": [
+            "error",
+            { allowAsProps: false },
+          ],
           "react/no-unused-class-component-methods": "error",
           "react/no-unused-prop-types": "error",
           "react/no-unused-state": "error",
@@ -163,10 +166,7 @@ const createReactConfig = () => {
   }
 
   // Return minimal config when plugins not available
-  return [
-    ...baseConfig,
-    baseReactConfig,
-  ];
+  return [...baseConfig, baseReactConfig];
 };
 
 export default createReactConfig();
