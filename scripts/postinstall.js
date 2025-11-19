@@ -307,14 +307,38 @@ function createEslintV9Config(projectRoot, projectType) {
   }
 
   const configMap = {
-    "node.js": { imports: "baseConfig, nodeConfig, typeScriptConfig", configs: "baseConfig,\n  nodeConfig,\n  typeScriptConfig" },
-    react: { imports: "baseConfig, reactConfig, typeScriptConfig", configs: "baseConfig,\n  reactConfig,\n  typeScriptConfig" },
-    "next.js": { imports: "baseConfig, nextjsConfig, typeScriptConfig, jestConfig, testingLibraryConfig, reactConfig", configs: "baseConfig,\n  reactConfig,\n  nextjsConfig,\n  typeScriptConfig,\n  {\n    files: ['**/*.{test,spec}.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  },\n  {\n    files: ['**/*.test.{jsx,tsx}'],\n    ...testingLibraryConfig,\n  }" },
-    vue: { imports: "baseConfig, vueConfig, typeScriptConfig, jestConfig", configs: "baseConfig,\n  vueConfig,\n  typeScriptConfig,\n  {\n    files: ['**/*.test.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  }" },
-    angular: { imports: "baseConfig, angularConfig, typeScriptConfig", configs: "baseConfig,\n  angularConfig,\n  typeScriptConfig" },
-    svelte: { imports: "baseConfig, svelteConfig, typeScriptConfig", configs: "baseConfig,\n  svelteConfig,\n  typeScriptConfig" },
+    "node.js": {
+      imports: "baseConfig, nodeConfig, typeScriptConfig",
+      configs: "baseConfig,\n  nodeConfig,\n  typeScriptConfig",
+    },
+    react: {
+      imports: "baseConfig, reactConfig, typeScriptConfig",
+      configs: "baseConfig,\n  reactConfig,\n  typeScriptConfig",
+    },
+    "next.js": {
+      imports:
+        "baseConfig, nextjsConfig, typeScriptConfig, jestConfig, testingLibraryConfig, reactConfig",
+      configs:
+        "baseConfig,\n  reactConfig,\n  nextjsConfig,\n  typeScriptConfig,\n  {\n    files: ['**/*.{test,spec}.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  },\n  {\n    files: ['**/*.test.{jsx,tsx}'],\n    ...testingLibraryConfig,\n  }",
+    },
+    vue: {
+      imports: "baseConfig, vueConfig, typeScriptConfig, jestConfig",
+      configs:
+        "baseConfig,\n  vueConfig,\n  typeScriptConfig,\n  {\n    files: ['**/*.test.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  }",
+    },
+    angular: {
+      imports: "baseConfig, angularConfig, typeScriptConfig",
+      configs: "baseConfig,\n  angularConfig,\n  typeScriptConfig",
+    },
+    svelte: {
+      imports: "baseConfig, svelteConfig, typeScriptConfig",
+      configs: "baseConfig,\n  svelteConfig,\n  typeScriptConfig",
+    },
     "vanilla javascript": { imports: "baseConfig", configs: "baseConfig" },
-    "vanilla typescript": { imports: "baseConfig, typeScriptConfig", configs: "baseConfig,\n  typeScriptConfig" },
+    "vanilla typescript": {
+      imports: "baseConfig, typeScriptConfig",
+      configs: "baseConfig,\n  typeScriptConfig",
+    },
   };
 
   const configData = configMap[projectType] || configMap["node.js"];

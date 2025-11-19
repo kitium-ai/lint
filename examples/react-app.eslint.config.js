@@ -7,15 +7,7 @@ import { baseConfig, reactConfig, typeScriptConfig } from '@kitiumai/lint/eslint
 
 export default [
   {
-    ignores: [
-      'node_modules/',
-      'dist/',
-      'build/',
-      '.next/',
-      '.env',
-      '.env.local',
-      'coverage/',
-    ],
+    ignores: ['node_modules/', 'dist/', 'build/', '.next/', '.env', '.env.local', 'coverage/'],
   },
   baseConfig,
   reactConfig,

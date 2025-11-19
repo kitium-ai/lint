@@ -7,15 +7,7 @@ import { baseConfig, nodeConfig } from '@kitiumai/lint/eslint';
 
 export default [
   {
-    ignores: [
-      'node_modules/',
-      'dist/',
-      'build/',
-      '.env',
-      '.env.local',
-      '*.log',
-      'coverage/',
-    ],
+    ignores: ['node_modules/', 'dist/', 'build/', '.env', '.env.local', '*.log', 'coverage/'],
   },
   baseConfig,
   nodeConfig,

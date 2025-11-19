@@ -260,10 +260,25 @@ function createMigratedTslintConfig(customRules) {
  */
 function createMigratedEslintConfig(customRules, projectType = "node") {
   const configMap = {
-    react: { imports: "baseConfig, reactConfig, typeScriptConfig", configs: "baseConfig,\n  reactConfig,\n  typeScriptConfig" },
-    "node.js": { imports: "baseConfig, nodeConfig, typeScriptConfig", configs: "baseConfig,\n  nodeConfig,\n  typeScriptConfig" },
-    "next.js": { imports: "baseConfig, nextjsConfig, typeScriptConfig, jestConfig, testingLibraryConfig, reactConfig", configs: "baseConfig,\n  reactConfig,\n  nextjsConfig,\n  typeScriptConfig,\n  {\n    files: ['**/*.{test,spec}.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  },\n  {\n    files: ['**/*.test.{jsx,tsx}'],\n    ...testingLibraryConfig,\n  }" },
-    vue: { imports: "baseConfig, vueConfig, typeScriptConfig, jestConfig", configs: "baseConfig,\n  vueConfig,\n  typeScriptConfig,\n  {\n    files: ['**/*.test.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  }" },
+    react: {
+      imports: "baseConfig, reactConfig, typeScriptConfig",
+      configs: "baseConfig,\n  reactConfig,\n  typeScriptConfig",
+    },
+    "node.js": {
+      imports: "baseConfig, nodeConfig, typeScriptConfig",
+      configs: "baseConfig,\n  nodeConfig,\n  typeScriptConfig",
+    },
+    "next.js": {
+      imports:
+        "baseConfig, nextjsConfig, typeScriptConfig, jestConfig, testingLibraryConfig, reactConfig",
+      configs:
+        "baseConfig,\n  reactConfig,\n  nextjsConfig,\n  typeScriptConfig,\n  {\n    files: ['**/*.{test,spec}.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  },\n  {\n    files: ['**/*.test.{jsx,tsx}'],\n    ...testingLibraryConfig,\n  }",
+    },
+    vue: {
+      imports: "baseConfig, vueConfig, typeScriptConfig, jestConfig",
+      configs:
+        "baseConfig,\n  vueConfig,\n  typeScriptConfig,\n  {\n    files: ['**/*.test.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  }",
+    },
   };
 
   const configData = configMap[projectType] || configMap["node.js"];

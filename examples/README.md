@@ -1,6 +1,7 @@
 # @kitiumai/lint - ESLint Configuration Examples
 
-This directory contains ready-to-use ESLint configuration examples for different project types. Choose the one that matches your project setup.
+This directory contains ready-to-use ESLint configuration examples for different
+project types. Choose the one that matches your project setup.
 
 ## Available Templates
 
@@ -57,11 +58,13 @@ This directory contains ready-to-use ESLint configuration examples for different
 ## How to Use
 
 1. Copy the appropriate config file to your project root as `eslint.config.js`
+
    ```bash
    cp vanilla-typescript.eslint.config.js /path/to/your/project/eslint.config.js
    ```
 
 2. Run ESLint to verify it works
+
    ```bash
    npm run lint
    ```
@@ -74,24 +77,25 @@ All templates import from `@kitiumai/lint/eslint`. Available exports:
 
 ```javascript
 import {
-  baseConfig,           // Base ESLint rules
-  typeScriptConfig,     // TypeScript strict rules
-  reactConfig,          // React best practices
-  nodeConfig,           // Node.js environment
-  vueConfig,            // Vue.js rules
-  nextjsConfig,         // Next.js specific rules
-  jestConfig,           // Jest testing rules
+  baseConfig, // Base ESLint rules
+  typeScriptConfig, // TypeScript strict rules
+  reactConfig, // React best practices
+  nodeConfig, // Node.js environment
+  vueConfig, // Vue.js rules
+  nextjsConfig, // Next.js specific rules
+  jestConfig, // Jest testing rules
   testingLibraryConfig, // Testing Library rules
-  graphqlConfig,        // GraphQL rules
-  securityConfig,       // Security rules
-  angularConfig,        // Angular rules
-  svelteConfig,         // Svelte rules
+  graphqlConfig, // GraphQL rules
+  securityConfig, // Security rules
+  angularConfig, // Angular rules
+  svelteConfig, // Svelte rules
 } from '@kitiumai/lint/eslint';
 ```
 
 ## Common Customizations
 
 ### Disable Type Checking
+
 If you want faster linting, you can disable TypeScript type checking:
 
 ```javascript
@@ -110,6 +114,7 @@ export default [
 ```
 
 ### Allow More Console Logs
+
 For development environments:
 
 ```javascript
@@ -123,6 +128,7 @@ For development environments:
 ```
 
 ### Stricter Rules for Libraries
+
 For published packages:
 
 ```javascript
@@ -144,13 +150,7 @@ The ignores block (at the beginning of config array) uses ESLint v9 syntax:
 ```javascript
 export default [
   {
-    ignores: [
-      'node_modules/',
-      'dist/',
-      '.next/',
-      '.env',
-      '*.log',
-    ],
+    ignores: ['node_modules/', 'dist/', '.next/', '.env', '*.log'],
   },
   // ... rest of config
 ];
@@ -174,10 +174,14 @@ npm run format
 ## Troubleshooting
 
 ### "Unexpected array" error
-Make sure you're using ESLint v9.0.0 or higher and that your `eslint.config.js` exports an array (not an object).
+
+Make sure you're using ESLint v9.0.0 or higher and that your `eslint.config.js`
+exports an array (not an object).
 
 ### Missing plugin errors
+
 Some configs require optional dependencies. Install them as needed:
+
 ```bash
 npm install --save-dev @next/eslint-plugin-next  # For Next.js
 npm install --save-dev eslint-plugin-vue         # For Vue
@@ -185,7 +189,9 @@ npm install --save-dev eslint-plugin-angular     # For Angular
 ```
 
 ### TypeScript errors
+
 Ensure your project has TypeScript installed and a valid `tsconfig.json`:
+
 ```bash
 npm install --save-dev typescript
 ```
