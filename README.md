@@ -100,6 +100,9 @@ When you install `@kitiumai/lint`, the postinstall script prompts you with inter
 Let's configure which tools you'd like to use for linting and formatting.
 
 Use ESLint for JavaScript/TypeScript linting? [Y/n]:
+📦 Detected ESLint v9
+Keep using ESLint v9? [Y/n]:
+
 Use TSLint for additional TypeScript linting? [y/N]:
 Use Prettier for code formatting? [Y/n]:
 
@@ -110,11 +113,49 @@ Select your project type:
     4. Vue
     5. Angular
     6. Svelte
+    7. Vanilla JavaScript
+    8. Vanilla TypeScript
+```
+
+### Smart Migration Detection
+
+If existing ESLint, TSLint, or Prettier configs are found, the setup will offer to migrate them:
+
+```
+📋 Found existing configurations:
+
+  ✓ ESLint v8: .eslintrc.json
+  ✓ Prettier: .prettierrc.json
+
+Would you like to migrate these configs to @kitiumai/lint? (y/n)
+```
+
+If you choose to migrate, the postinstall script will:
+- Call the migrate script automatically
+- Preserve all your custom rules
+- Backup original configs
+- Update to use @kitiumai/lint as the base
+
+### ESLint Version Selection
+
+When you choose to use ESLint, you'll be prompted to select your preferred version:
+
+```
+Select ESLint version to use:
+  > 1. ESLint v9 (Flat Config - Modern)
+    2. ESLint v8 (Traditional)
+```
+
+Or if ESLint is already installed, the setup detects it and asks to confirm or change:
+
+```
+📦 Detected ESLint v8
+Keep using ESLint v8? [Y/n]:
 ```
 
 Based on your selections, the script automatically:
 
-- Creates `eslint.config.js` with appropriate base configuration
+- Creates `eslint.config.js` (ESLint v9) OR `.eslintrc.json` (ESLint v8)
 - Creates `tslint.json` (if selected)
 - Creates `.prettierrc.js` (if selected)
 - Creates `.eslintignore` and `.prettierignore`
@@ -130,7 +171,9 @@ The setup automatically detects your project type based on dependencies:
 - **Vue** if `vue` is found
 - **Angular** if `@angular/core` is found
 - **Svelte** if `svelte` is found
-- **Node.js** (default)
+- **Node.js** (default for projects with server-side code)
+- **Vanilla JavaScript** (for projects without frameworks)
+- **Vanilla TypeScript** (for TypeScript-only projects)
 
 ## Migration from Existing Configs
 

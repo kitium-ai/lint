@@ -243,6 +243,110 @@ function saveSetupConfig(projectRoot, config) {
 }
 
 /**
+ * Detect existing linting configurations
+ */
+function detectExistingConfigs(projectRoot) {
+  const configs = {
+    eslintV9: null,
+    eslintV8: null,
+    prettier: null,
+    tslint: null,
+  };
+
+  // ESLint v9
+  const eslintV9Path = join(projectRoot, "eslint.config.js");
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
+  if (existsSync(eslintV9Path)) {
+    configs.eslintV9 = eslintV9Path;
+  }
+
+  // ESLint v8 patterns
+  const eslintV8Patterns = [
+    ".eslintrc.js",
+    ".eslintrc.cjs",
+    ".eslintrc.json",
+    ".eslintrc.yml",
+    ".eslintrc.yaml",
+    ".eslintrc",
+  ];
+
+  for (const pattern of eslintV8Patterns) {
+    const configPath = join(projectRoot, pattern);
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    if (existsSync(configPath)) {
+      configs.eslintV8 = configPath;
+      break;
+    }
+  }
+
+  // Prettier configs
+  const prettierPatterns = [
+    ".prettierrc.js",
+    ".prettierrc.cjs",
+    ".prettierrc.json",
+    ".prettierrc.yml",
+    ".prettierrc.yaml",
+    ".prettierrc",
+  ];
+
+  for (const pattern of prettierPatterns) {
+    const configPath = join(projectRoot, pattern);
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    if (existsSync(configPath)) {
+      configs.prettier = configPath;
+      break;
+    }
+  }
+
+  // TSLint config
+  const tslintPath = join(projectRoot, "tslint.json");
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
+  if (existsSync(tslintPath)) {
+    configs.tslint = tslintPath;
+  }
+
+  return configs;
+}
+
+/**
+ * Ask user to choose ESLint version
+ */
+async function promptEslintVersion() {
+  const installedVersion = detectEslintVersion(process.cwd());
+
+  if (installedVersion) {
+    // eslint-disable-next-line no-console
+    console.log(`\n📦 Detected ESLint ${installedVersion}`);
+    const keepVersion = await promptYesNo(
+      `Keep using ESLint ${installedVersion}?`,
+      true,
+    );
+
+    if (keepVersion) {
+      return installedVersion === "v9" ? "v9" : "v8";
+    }
+
+    // User wants to switch versions
+    const versions = ["ESLint v9 (Flat Config - Modern)", "ESLint v8 (Traditional)"];
+    const selectedIndex = await promptChoice(
+      "\nSelect ESLint version to use:",
+      versions,
+      installedVersion === "v9" ? 0 : 1,
+    );
+    return selectedIndex === 0 ? "v9" : "v8";
+  }
+
+  // No ESLint detected, ask which version to use
+  const versions = ["ESLint v9 (Flat Config - Modern)", "ESLint v8 (Traditional)"];
+  const selectedIndex = await promptChoice(
+    "\nSelect ESLint version to use:",
+    versions,
+    0,
+  );
+  return selectedIndex === 0 ? "v9" : "v8";
+}
+
+/**
  * Interactive setup prompts
  */
 async function interactiveSetup(projectRoot) {
@@ -253,11 +357,82 @@ async function interactiveSetup(projectRoot) {
     "Let's configure which tools you'd like to use for linting and formatting.\n",
   );
 
+  // Detect existing configs
+  const existingConfigs = detectExistingConfigs(projectRoot);
+  const hasExistingConfigs =
+    existingConfigs.eslintV8 ||
+    existingConfigs.eslintV9 ||
+    existingConfigs.prettier ||
+    existingConfigs.tslint;
+
+  // If existing configs found, offer migration
+  if (hasExistingConfigs) {
+    // eslint-disable-next-line no-console
+    console.log("📋 Found existing configurations:\n");
+    if (existingConfigs.eslintV9) {
+      // eslint-disable-next-line no-console
+      console.log(
+        `  ✓ ESLint v9: ${existingConfigs.eslintV9.split("/").pop()}`,
+      );
+    }
+    if (existingConfigs.eslintV8) {
+      // eslint-disable-next-line no-console
+      console.log(
+        `  ✓ ESLint v8: ${existingConfigs.eslintV8.split("/").pop()}`,
+      );
+    }
+    if (existingConfigs.prettier) {
+      // eslint-disable-next-line no-console
+      console.log(
+        `  ✓ Prettier: ${existingConfigs.prettier.split("/").pop()}`,
+      );
+    }
+    if (existingConfigs.tslint) {
+      // eslint-disable-next-line no-console
+      console.log(`  ✓ TSLint: ${existingConfigs.tslint.split("/").pop()}\n`);
+    }
+
+    const useMigration = await promptYesNo(
+      "\nWould you like to migrate these configs to @kitiumai/lint? (y/n)",
+      true,
+    );
+
+    if (useMigration) {
+      // eslint-disable-next-line no-console
+      console.log(
+        "\n🚀 Running migration...\n",
+      );
+      // Dynamic import to avoid circular dependencies
+      // eslint-disable-next-line global-require
+      const { execSync } = await import("node:child_process");
+      try {
+        execSync("node node_modules/@kitiumai/lint/scripts/migrate.js", {
+          cwd: projectRoot,
+          stdio: "inherit",
+        });
+        // eslint-disable-next-line no-console
+        console.log("\n✨ Migration complete!\n");
+        // Return empty config - migration handles everything
+        return null;
+      } catch {
+        // eslint-disable-next-line no-console
+        console.log(
+          "\n⚠️  Migration skipped. Running fresh setup instead.\n",
+        );
+      }
+    }
+  }
+
   // Ask about ESLint
   const useESLint = await promptYesNo(
     "Use ESLint for JavaScript/TypeScript linting?",
     true,
   );
+
+  let eslintVersion = "v9";
+  if (useESLint) {
+    eslintVersion = await promptEslintVersion();
+  }
 
   // Ask about TSLint
   const useTSLint = await promptYesNo(
@@ -281,6 +456,8 @@ async function interactiveSetup(projectRoot) {
       "Vue",
       "Angular",
       "Svelte",
+      "Vanilla JavaScript",
+      "Vanilla TypeScript",
     ];
     const selectedIndex = await promptChoice(
       "\nSelect your project type:",
@@ -292,6 +469,7 @@ async function interactiveSetup(projectRoot) {
 
   const config = {
     eslint: useESLint,
+    eslintVersion,
     tslint: useTSLint,
     prettier: usePrettier,
     projectType,
@@ -449,6 +627,8 @@ function createEslintV9Config(projectRoot, projectType) {
     vue: "eslintVueConfig, eslintTypeScriptConfig",
     angular: "eslintAngularConfig, eslintTypeScriptConfig",
     svelte: "eslintSvelteConfig, eslintTypeScriptConfig",
+    "vanilla javascript": "eslintBaseConfig",
+    "vanilla typescript": "eslintBaseConfig, eslintTypeScriptConfig",
   };
 
   const imports = configMap[projectType] || configMap["node.js"];
@@ -506,6 +686,8 @@ function createEslintV8Config(projectRoot, projectType) {
     vue: ["@kitiumai/lint/eslint/vue", "@kitiumai/lint/eslint/typescript"],
     angular: ["@kitiumai/lint/eslint/angular", "@kitiumai/lint/eslint/typescript"],
     svelte: ["@kitiumai/lint/eslint/svelte", "@kitiumai/lint/eslint/typescript"],
+    "vanilla javascript": ["@kitiumai/lint/eslint/base"],
+    "vanilla typescript": ["@kitiumai/lint/eslint/base", "@kitiumai/lint/eslint/typescript"],
   };
 
   const extends_ = configMap[projectType] || configMap["node.js"];
@@ -533,10 +715,15 @@ function createEslintV8Config(projectRoot, projectType) {
 }
 
 /**
- * Create ESLint config based on detected version
+ * Create ESLint config based on user's choice or detected version
  */
-function createEslintConfig(projectRoot, projectType) {
-  const eslintVersion = detectEslintVersion(projectRoot);
+function createEslintConfig(projectRoot, projectType, userPreferredVersion) {
+  let eslintVersion = userPreferredVersion;
+
+  // If no user preference, try to detect
+  if (!eslintVersion) {
+    eslintVersion = detectEslintVersion(projectRoot);
+  }
 
   if (eslintVersion === "v9") {
     createEslintV9Config(projectRoot, projectType);
@@ -732,6 +919,11 @@ async function main() {
     // eslint-disable-next-line no-console
     console.log("\n🚀 @kitiumai/lint - Initial Setup\n");
     config = await interactiveSetup(projectRoot);
+    // If migration was run, config will be null
+    if (!config) {
+      // Migration handled everything, we're done
+      return;
+    }
     // eslint-disable-next-line no-console
     console.log("\n📝 Creating configuration files...\n");
   } else {
@@ -754,9 +946,9 @@ async function main() {
   if (config.eslint) {
     // eslint-disable-next-line no-console
     console.log(
-      "📋 Detecting ESLint version for optimal configuration...",
+      `📋 Creating ESLint ${config.eslintVersion} configuration...`,
     );
-    createEslintConfig(projectRoot, config.projectType);
+    createEslintConfig(projectRoot, config.projectType, config.eslintVersion);
     createEslintIgnore(projectRoot);
   }
 
