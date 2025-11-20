@@ -86,7 +86,7 @@ export default [
         "error",
         {
           selector: "default",
-          format: ["camelCase"],
+          format: ["camelCase", "PascalCase"],
           leadingUnderscore: "allow",
           trailingUnderscore: "allow",
         },
@@ -96,13 +96,17 @@ export default [
         },
         {
           selector: "enumMember",
-          format: ["UPPER_SNAKE_CASE"],
+          format: ["UPPER_CASE"],
         },
         {
           selector: "variable",
           types: ["boolean"],
           format: ["PascalCase"],
           prefix: ["is", "has", "can", "should", "will", "did"],
+        },
+        {
+          selector: "objectLiteralProperty",
+          format: ["PascalCase", "camelCase", "UPPER_CASE"],
         },
       ],
 
@@ -118,16 +122,6 @@ export default [
         },
       ],
       "@typescript-eslint/only-throw-error": "error",
-
-      // Explicit Return Types (Google Standards)
-      "@typescript-eslint/explicit-function-return-types": [
-        "warn",
-        {
-          allowExpressions: true,
-          allowTypedFunctionExpressions: true,
-          allowHigherOrderFunctions: true,
-        },
-      ],
     },
   },
 ];

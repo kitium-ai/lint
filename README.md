@@ -777,9 +777,13 @@ The following rules enforce production-grade code quality standards:
 Enforces industry-standard naming:
 
 ```typescript
-// Variables: camelCase
+// Variables: camelCase (or PascalCase for imports)
 const userName = "John";
 const isActive = true; // Boolean prefix: is/has/can/should/will/did
+
+// Imports: camelCase or PascalCase allowed
+import { DailyRotateFile } from "winston-daily-rotate-file";
+import { createServer } from "http";
 
 // Types/Interfaces: PascalCase
 type UserProfile = { name: string };
@@ -787,12 +791,19 @@ interface IUser {
   id: string;
 }
 
-// Enums: UPPER_SNAKE_CASE
-enum USER_ROLES {
+// Enums: UPPER_CASE
+enum USERROLES {
   ADMIN,
   USER,
   GUEST,
 }
+
+// Object Literal Properties: flexible naming
+const config = {
+  DEBUG: true, // UPPER_CASE
+  serverPort: 3000, // camelCase
+  APIKey: "secret", // PascalCase
+};
 ```
 
 #### Async/Promise Safety (Microsoft Standards)
@@ -811,12 +822,6 @@ Prevents common async-related bugs:
 - `@typescript-eslint/no-inferrable-types`: Removes redundant type annotations
 - `@typescript-eslint/prefer-nullish-coalescing`: Uses ?? for null checks
 - `@typescript-eslint/prefer-optional-chain`: Uses optional chaining (.?)
-
-#### Return Types
-
-- `@typescript-eslint/explicit-function-return-types`: Documents public APIs
-  - Allows expressions, typed functions, and higher-order functions
-  - Improves IDE IntelliSense and documentation
 
 ### Jest Testing Best Practices
 

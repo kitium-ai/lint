@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2025-11-20
+
+### Fixed
+
+- **Naming Convention Format**: Fixed `@typescript-eslint/naming-convention` configuration
+  - Changed enum member format from `UPPER_SNAKE_CASE` to `UPPER_CASE` (valid format name)
+  - Removed non-existent `explicit-function-return-types` rule (not available in @typescript-eslint 8.x)
+  - Removed invalid `importBinding` selector (not supported in 8.x)
+  - Updated default selector to allow both `camelCase` and `PascalCase` for imports and object properties
+  - Added `objectLiteralProperty` selector to allow flexible naming for object properties
+  - Updated TypeScript config and documentation examples
+
 ## [1.3.0] - 2025-11-20
 
 ### Added
