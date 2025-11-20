@@ -27,7 +27,7 @@ export default [
   ...baseConfig,
   ...typeScriptConfig,
   ...vueConfig,
-  ...securityConfig,
+  securityConfig,
   {
     files: ['**/*.test.{js,ts,jsx,tsx}'],
     ...jestConfig,

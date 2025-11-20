@@ -34,7 +34,7 @@ export default [
   ...typeScriptConfig,
   ...reactConfig,
   ...nextjsConfig,
-  ...securityConfig,
+  securityConfig,
   {
     files: ['**/*.{test,spec}.{js,ts,jsx,tsx}'],
     ...jestConfig,

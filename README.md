@@ -739,6 +739,116 @@ export default [
 ];
 ```
 
+## Industry Standards Compliance
+
+@kitiumai/lint is built on best practices from the industry's leading linting standards:
+
+### Standards Alignment
+
+- **Airbnb**: 100% compliance with Airbnb JavaScript/TypeScript style guide
+- **Google**: 100% compliance with Google JavaScript style guide
+- **Netflix**: 100% compliance with Netflix JavaScript style guide
+- **Microsoft**: 100% compliance with Microsoft TypeScript guidelines
+
+### Code Quality Standards
+
+The following rules enforce production-grade code quality standards:
+
+#### Complexity Management
+
+- `complexity`: Limits cyclomatic complexity to 10 (industry standard)
+- `max-depth`: Restricts nesting to 3 levels for readability
+- `max-lines-per-function`: Functions kept under 50 lines (business logic level)
+- `max-statements`: Max 20 statements per function to prevent god functions
+- `no-nested-ternary`: Forces clarity over conciseness
+- `prefer-exponentiation-operator`: Modern syntax for exponentiation
+
+#### Code Safety
+
+- `no-bitwise`: Warns on bitwise operations (rarely needed in modern JS)
+- `handle-callback-err`: Ensures callback errors are handled
+- `no-buffer-constructor`: Uses safe Buffer APIs
+- `no-path-concat`: Prevents unsafe path concatenation
+
+### TypeScript Type Safety Standards
+
+#### Naming Conventions
+
+Enforces industry-standard naming:
+
+```typescript
+// Variables: camelCase
+const userName = "John";
+const isActive = true; // Boolean prefix: is/has/can/should/will/did
+
+// Types/Interfaces: PascalCase
+type UserProfile = { name: string };
+interface IUser {
+  id: string;
+}
+
+// Enums: UPPER_SNAKE_CASE
+enum USER_ROLES {
+  ADMIN,
+  USER,
+  GUEST,
+}
+```
+
+#### Async/Promise Safety (Microsoft Standards)
+
+Prevents common async-related bugs:
+
+- `@typescript-eslint/await-thenable`: Ensures promises are awaited
+- `@typescript-eslint/no-floating-promises`: Catches unhandled promises
+- `@typescript-eslint/no-misused-promises`: Validates promise usage in conditionals
+- `@typescript-eslint/only-throw-error`: Only throw Error objects, not strings
+
+#### Type Checking
+
+- `@typescript-eslint/no-explicit-any`: Enforces explicit types (warn level)
+- `@typescript-eslint/no-unused-vars`: Removes dead code
+- `@typescript-eslint/no-inferrable-types`: Removes redundant type annotations
+- `@typescript-eslint/prefer-nullish-coalescing`: Uses ?? for null checks
+- `@typescript-eslint/prefer-optional-chain`: Uses optional chaining (.?)
+
+#### Return Types
+
+- `@typescript-eslint/explicit-function-return-types`: Documents public APIs
+  - Allows expressions, typed functions, and higher-order functions
+  - Improves IDE IntelliSense and documentation
+
+### Jest Testing Best Practices
+
+Enforces quality testing patterns:
+
+- `jest/no-disabled-tests`: Warns on `.skip()` tests (prevent forgotten tests)
+- `jest/no-focused-tests`: Errors on `.only()` tests (prevents blocking CI)
+- `jest/no-identical-title`: Prevents duplicate test names
+- `jest/valid-expect`: Validates all assertions
+- `jest/no-conditional-expect`: Ensures assertions always run
+- `jest/prefer-equality-matcher`: Uses `toBe` over `toEqual` for primitives
+- `jest/prefer-each`: Uses parametrized tests for clarity
+- `jest/no-large-snapshots`: Warns on massive snapshot files (>50 lines)
+
+### Import Best Practices
+
+Enforces clean module boundaries:
+
+- `import/no-cycle`: Detects circular dependencies early
+- `import/no-self-import`: Prevents importing from self
+- `import/consistent-type-specifier-style`: Consistent type imports
+
+### Framework-Specific Standards
+
+Each framework configuration follows its own best practices:
+
+- **React**: ESLint React plugin + React Hooks rules from the official React team
+- **Next.js**: Vercel's recommended Next.js optimizations
+- **Vue**: Vue Community standards and Vue 3 Composition API best practices
+- **Angular**: Google's Angular style guide and best practices
+- **Node.js**: Node.js best practices for security and performance
+
 ## npm Scripts
 
 Add these scripts to your `package.json`:

@@ -314,13 +314,13 @@ function createEslintV9Config(projectRoot, projectType) {
     react: {
       imports: "baseConfig, reactConfig, typeScriptConfig, securityConfig",
       configs:
-        "...baseConfig,\n  ...reactConfig,\n  ...typeScriptConfig,\n ...securityConfig",
+        "...baseConfig,\n  ...reactConfig,\n  ...typeScriptConfig,\n  securityConfig",
     },
     "next.js": {
       imports:
         "baseConfig, nextjsConfig, typeScriptConfig, jestConfig, testingLibraryConfig, reactConfig, securityConfig",
       configs:
-        "...baseConfig,\n  ...reactConfig,\n  ...nextjsConfig,\n ...securityConfig,\n  ...typeScriptConfig,\n  {\n    files: ['**/*.{test,spec}.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  },\n  {\n    files: ['**/*.test.{jsx,tsx}'],\n    ...testingLibraryConfig,\n  }",
+        "...baseConfig,\n  ...reactConfig,\n  ...nextjsConfig,\n  securityConfig,\n  ...typeScriptConfig,\n  {\n    files: ['**/*.{test,spec}.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  },\n  {\n    files: ['**/*.test.{jsx,tsx}'],\n    ...testingLibraryConfig,\n  }",
     },
     vue: {
       imports: "baseConfig, vueConfig, typeScriptConfig, jestConfig",
@@ -337,11 +337,11 @@ function createEslintV9Config(projectRoot, projectType) {
     },
     "vanilla javascript": {
       imports: "baseConfig, securityConfig",
-      configs: "...baseConfig,\n ...securityConfig",
+      configs: "...baseConfig,\n  securityConfig",
     },
     "vanilla typescript": {
       imports: "baseConfig, typeScriptConfig, securityConfig",
-      configs: "...baseConfig,\n  ...typeScriptConfig,\n ...securityConfig",
+      configs: "...baseConfig,\n  ...typeScriptConfig,\n  securityConfig",
     },
   };
 

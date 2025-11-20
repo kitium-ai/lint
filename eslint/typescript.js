@@ -1,6 +1,6 @@
 /**
  * ESLint TypeScript Configuration
- * Configuration for TypeScript projects - Compatible with @typescript-eslint v8.x
+ * for TypeScript projects - Compatible with @typescript-eslint v8.x
  * Includes strict type checking and TypeScript best practices
  */
 
@@ -80,6 +80,54 @@ export default [
       "@typescript-eslint/unbound-method": "warn",
       "@typescript-eslint/unified-signatures": "error",
       "@typescript-eslint/require-await": "warn",
+
+      // Naming Conventions (Industry Standard - Google, Airbnb, Microsoft)
+      "@typescript-eslint/naming-convention": [
+        "error",
+        {
+          selector: "default",
+          format: ["camelCase"],
+          leadingUnderscore: "allow",
+          trailingUnderscore: "allow",
+        },
+        {
+          selector: "typeLike",
+          format: ["PascalCase"],
+        },
+        {
+          selector: "enumMember",
+          format: ["UPPER_SNAKE_CASE"],
+        },
+        {
+          selector: "variable",
+          types: ["boolean"],
+          format: ["PascalCase"],
+          prefix: ["is", "has", "can", "should", "will", "did"],
+        },
+      ],
+
+      // Async/Promise Safety (Microsoft TypeScript Standards)
+      "@typescript-eslint/await-thenable": "error",
+      "@typescript-eslint/no-floating-promises": "error",
+      "@typescript-eslint/no-misused-promises": [
+        "error",
+        {
+          checksVoidReturn: true,
+          checksConditionals: true,
+          checksSpreads: true,
+        },
+      ],
+      "@typescript-eslint/only-throw-error": "error",
+
+      // Explicit Return Types (Google Standards)
+      "@typescript-eslint/explicit-function-return-types": [
+        "warn",
+        {
+          allowExpressions: true,
+          allowTypedFunctionExpressions: true,
+          allowHigherOrderFunctions: true,
+        },
+      ],
     },
   },
 ];

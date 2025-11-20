@@ -89,6 +89,15 @@ const createJestConfig = () => {
         "jest/no-test-prefixes": "error",
         "jest/prefer-mock-promise-shorthand": "warn",
         "jest/no-untyped-mock-factory": "warn",
+
+        // Enhanced Jest Best Practices (Industry Standard)
+        "jest/no-commented-out-tests": "warn",
+        "jest/no-duplicate-hooks": "error",
+        "jest/prefer-hooks-in-order": "warn",
+        "jest/prefer-lowercase-title": ["warn", { ignore: ["describe"] }],
+        "jest/prefer-equality-matcher": "warn",
+        "jest/prefer-each": "warn",
+        "jest/no-test-return-statement": "error",
       },
     };
   }

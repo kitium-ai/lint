@@ -54,6 +54,11 @@ export default [
       "import/no-unresolved": "off",
       "import/order": "off", // Handled by simple-import-sort
 
+      // Import Best Practices (Google Standards)
+      "import/no-cycle": ["warn", { maxDepth: Infinity }],
+      "import/no-self-import": "error",
+      "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+
       // Security
       "security/detect-buffer-noassert": "warn",
       "security/detect-child-process": "warn",

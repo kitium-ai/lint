@@ -46,6 +46,18 @@ export default [
       "no-param-reassign": "error",
       "consistent-return": "error",
 
+      // Code Complexity & Maintainability (Best Practices Standard)
+      complexity: ["warn", 10],
+      "max-depth": ["warn", 3],
+      "max-lines-per-function": [
+        "warn",
+        { max: 50, skipBlankLines: true, skipComments: true },
+      ],
+      "max-statements": ["warn", 20],
+      "no-nested-ternary": "error",
+      "no-bitwise": "warn",
+      "prefer-exponentiation-operator": "warn",
+
       // Security
       "no-with": "error",
       "no-delete-var": "error",

@@ -31,7 +31,7 @@ export default [
   ...typeScriptConfig,
   ...nodeConfig,
   ...graphqlConfig,
-  ...securityConfig,
+  securityConfig,
   {
     files: ['**/*.test.{ts,js}'],
     ...jestConfig,
