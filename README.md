@@ -4,7 +4,8 @@ Enterprise-ready, simple, and secure linting configuration package for Kitium AI
 
 ## Features
 
-- ✅ **Interactive Setup**: Smart postinstall prompts to configure linting tools and project type
+- ✅ **Interactive Setup**: Smart setup script to configure linting tools and project type
+- ✅ **Manual Control**: Opt-in setup via `npm run setup:lint` for better monorepo support
 - ✅ **Project Type Support**: React, Vue, Next.js, Angular, Svelte, Node.js, and more
 - ✅ **Modular Configurations**: Separate configs for Base, React, Node.js, TypeScript, Jest, Testing Library, GraphQL, Vue, Next.js, Angular, Svelte
 - ✅ **TSLint Support**: Optional TSLint configuration for additional TypeScript linting
@@ -37,6 +38,30 @@ pnpm add --save-dev @kitiumai/lint
 ```
 
 ## Quick Start
+
+### 1. Run Setup (Recommended)
+
+After installing `@kitiumai/lint`, run the setup script to configure your project:
+
+```bash
+npm run setup:lint
+
+# or with yarn
+yarn setup:lint
+
+# or with pnpm
+pnpm setup:lint
+```
+
+This will:
+- Detect your project type
+- Ask which tools you want (ESLint, TSLint, Prettier)
+- Create configuration files (`eslint.config.js`, `.prettierrc.js`, etc.)
+- Update your `package.json` with useful scripts
+
+### 2. Manual Configuration (Alternative)
+
+If you prefer to skip the interactive setup, manually create `eslint.config.js`:
 
 ### For React + TypeScript Applications
 
@@ -90,9 +115,11 @@ import { eslintBaseConfig } from "@kitiumai/lint";
 export default [...eslintBaseConfig];
 ```
 
-## Interactive Setup (Automatic)
+## Interactive Setup (Manual)
 
-When you install `@kitiumai/lint`, the postinstall script prompts you with interactive questions:
+Run `npm run setup:lint` to interactively configure your linting setup.
+
+The setup script will prompt you with questions to configure your project:
 
 ```
 🎯 @kitiumai/lint Setup
@@ -963,22 +990,41 @@ This will:
 
 ### ESLint Configuration Not Created
 
-If the postinstall script fails to create ESLint configuration files, try the following:
+If the configuration files aren't created, use the manual setup script:
 
-#### 1. Check if npm scripts are disabled
+#### 1. Run Setup Script Manually
 
-```bash
-npm config get ignore-scripts
-```
-
-If set to `true`, enable scripts:
+The `setup:lint` script is added to your `package.json` during installation. Run it anytime:
 
 ```bash
-npm config set ignore-scripts false
-npm install @kitiumai/lint
+# npm
+npm run setup:lint
+
+# yarn
+yarn setup:lint
+
+# pnpm (recommended for monorepos)
+pnpm setup:lint
 ```
 
-#### 2. Verify ESLint Installation
+This is **required** in monorepo environments to avoid blocking installs with interactive prompts.
+
+#### 2. Run Script Directly
+
+Alternatively, run the setup script directly:
+
+```bash
+# npm
+node node_modules/@kitiumai/lint/scripts/postinstall.js
+
+# pnpm
+pnpm exec node node_modules/@kitiumai/lint/scripts/postinstall.js
+
+# yarn
+yarn node node_modules/@kitiumai/lint/scripts/postinstall.js
+```
+
+#### 3. Verify ESLint Installation
 
 Ensure ESLint is properly installed:
 
@@ -988,20 +1034,6 @@ npm list eslint
 
 You should see ESLint v9 (9.0.0+) installed.
 
-#### 3. Run Setup Manually
-
-If postinstall didn't run automatically, you can use the `setup:lint` script added to your `package.json`:
-
-```bash
-npm run setup:lint
-```
-
-Or run the postinstall script directly:
-
-```bash
-node node_modules/@kitiumai/lint/scripts/postinstall.js
-```
-
 #### 4. Check Node.js Version
 
 @kitiumai/lint requires Node.js ≥18.0.0:
@@ -1010,25 +1042,21 @@ node node_modules/@kitiumai/lint/scripts/postinstall.js
 node --version
 ```
 
-#### 5. For pnpm Users
+#### 5. Check npm Scripts Config
 
-If using pnpm, run setup after installation:
-
-```bash
-pnpm install
-pnpm exec node node_modules/@kitiumai/lint/scripts/postinstall.js
-```
-
-#### 6. For yarn Users
-
-If using yarn:
+Ensure npm scripts are not disabled:
 
 ```bash
-yarn install
-yarn node node_modules/@kitiumai/lint/scripts/postinstall.js
+npm config get ignore-scripts
 ```
 
-#### 7. Clear npm Cache
+If set to `true`, enable scripts:
+
+```bash
+npm config set ignore-scripts false
+```
+
+#### 6. Clear npm Cache
 
 Sometimes npm cache issues prevent script execution:
 
