@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.3.2] - 2025-11-21
 
 ### Fixed
+
 - removed postinstall and updated to setup:lint script
 
 ## [1.3.1] - 2025-11-20

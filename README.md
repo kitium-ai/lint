@@ -54,6 +54,7 @@ pnpm setup:lint
 ```
 
 This will:
+
 - Detect your project type
 - Ask which tools you want (ESLint, TSLint, Prettier)
 - Create configuration files (`eslint.config.js`, `.prettierrc.js`, etc.)
