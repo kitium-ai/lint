@@ -1,6 +1,6 @@
 {
   "name": "@kitiumai/lint",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Enterprise-ready, simple and secure linting configuration package for Kitium AI",
   "main": "index.js",
   "type": "module",
@@ -40,21 +40,34 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "node --test",
-    "test:watch": "node --test --watch",
+    "build": "echo 'No TypeScript files to build - this package uses JavaScript only'",
+    "typecheck": "echo 'No TypeScript files to typecheck - this package uses JavaScript only'",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "prepack": "npm run lint:fix && npm run format",
+    "test": "node --test",
+    "test:watch": "node --test --watch",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "prepack": "npm run lint:fix && npm run format:fix",
     "prepublish": "npm run test",
     "setup": "node scripts/postinstall.js",
     "setup:lint": "node scripts/postinstall.js",
-    "migrate": "node scripts/migrate.js"
+    "migrate": "node scripts/migrate.js",
+    "changeset": "ensure-changeset && changeset",
+    "version": "changeset version",
+    "publish:set-token": "set-npm-token",
+    "publish:setup": "set-npm-token",
+    "publish:check": "npm whoami --registry https://registry.npmjs.org || npm login --registry https://registry.npmjs.org",
+    "publish:login": "npm login --registry https://registry.npmjs.org",
+    "publish:package": "pnpm run publish:check && pnpm publish --access public --no-git-checks --registry https://registry.npmjs.org",
+    "publish:package:token": "pnpm run publish:setup && pnpm publish --access public --no-git-checks --registry https://registry.npmjs.org",
+    "publish:package:otp": "pnpm run publish:check && pnpm publish --access public --no-git-checks --registry https://registry.npmjs.org --otp",
+    "publish:dry-run": "pnpm publish --access public --no-git-checks --dry-run --registry https://registry.npmjs.org",
+    "publish:dry-run:token": "pnpm run publish:setup && pnpm publish --access public --no-git-checks --dry-run --registry https://registry.npmjs.org",
+    "release": "pnpm version && pnpm install --lockfile-only"
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "access": "public"
   },
   "keywords": [
     "linting",
@@ -108,6 +121,8 @@
     }
   },
   "dependencies": {
+    "@kitiumai/config": "^0.1.1",
+    "@kitiumai/scripts": "^0.1.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "eslint-config-prettier": "^9.1.0",
@@ -117,7 +132,7 @@
     "eslint-plugin-jest": "^28.0.0",
     "eslint-plugin-jsx-a11y": "^6.10.0",
     "eslint-plugin-react": "^7.37.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-testing-library": "^7.0.0",
     "eslint-plugin-vue": "^9.30.0",
     "@next/eslint-plugin-next": "^15.0.0",
@@ -137,7 +152,20 @@
     "eslint-plugin-graphql": "^4.0.0"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "node": ">=18.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "lodash.get": "npm:lodash@^4.17.21"
+    },
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "graphql"
+      ],
+      "allowedVersions": {
+        "graphql": "16 || 15",
+        "eslint": "9"
+      }
+    }
   }
 }

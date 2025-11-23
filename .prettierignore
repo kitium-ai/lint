@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Shell scripts
+*.sh
+*.bash
+
+# Config files that shouldn't be formatted
+*.min.js
+*.min.css
+
+# Generated files
+coverage/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Test outputs
+test-results/
+playwright-report/
+
+# Example files
+examples/
+

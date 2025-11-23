@@ -1,5 +1,58 @@
 # Changelog
 
+## [1.3.3] - 2025-11-22
+
+### Added
+
+- **@kitiumai/scripts Integration**: Added `@kitiumai/scripts` as a dependency and integrated its utilities
+  - Updated `postinstall.js` to use `log`, `readJson`, `writeJson` utilities from `@kitiumai/scripts/utils`
+  - Updated `migrate.js` to use standardized logging utilities
+  - Improved code consistency and maintainability across scripts
+
+- **Package Template Scripts**: Added missing scripts from `@kitiumai/config/package.template.json`
+  - `changeset`: Changeset management with ensure-changeset
+  - `version`: Version bumping via changesets
+  - `publish:set-token`, `publish:setup`, `publish:check`, `publish:login`: NPM authentication helpers
+  - `publish:package`, `publish:package:token`, `publish:package:otp`: Publishing scripts
+  - `publish:dry-run`, `publish:dry-run:token`: Dry-run publishing
+  - `release`: Release workflow script
+
+### Fixed
+
+- **Deprecated Dependencies**: Fixed deprecated subdependencies
+  - `lodash.get@4.4.2`: Added pnpm override to replace with `lodash@^4.17.21`
+  - `subscriptions-transport-ws@0.9.19`: Documented as known transitive dependency from `eslint-plugin-graphql`
+  - Added `fix-deprecated-deps` script integration from `@kitiumai/scripts`
+
+- **Peer Dependency Conflicts**: Resolved ESLint 9 and GraphQL 16 peer dependency warnings
+  - Updated `eslint-plugin-react-hooks` from `^4.6.0` to `^5.0.0` (ESLint 9 compatible)
+  - Added `pnpm.peerDependencyRules` to allow GraphQL 16 and ESLint 9 at package level
+  - Suppressed peer dependency warnings while maintaining functionality
+
+- **TypeScript Build Script**: Fixed build script for JavaScript-only package
+  - Changed from `tsc -p tsconfig/base.json` to no-op message
+  - Prevents TypeScript compilation errors when no `.ts` files exist
+  - Package correctly identifies as JavaScript-only
+
+### Changed
+
+- **Dependency Updates**:
+  - `@kitiumai/config`: Updated to `^0.1.1` (from `^0.2.0`)
+  - `@kitiumai/scripts`: Added `^0.1.0` as new dependency
+  - `eslint-plugin-react-hooks`: Updated to `^5.0.0` for ESLint 9 support
+
+- **Script Improvements**:
+  - Standardized logging across all scripts using `@kitiumai/scripts/utils`
+  - Improved async/await handling in configuration file operations
+  - Better error messages and user feedback
+
+### Compatibility
+
+- ✅ ESLint 9.39.1 (verified with eslint-plugin-react-hooks v5.0.0)
+- ✅ GraphQL 16.x (with peer dependency rules)
+- ✅ @kitiumai/scripts 0.1.0
+- ✅ @kitiumai/config 0.1.1
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),

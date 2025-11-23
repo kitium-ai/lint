@@ -2,20 +2,16 @@
  * Tests for Kitium customization helpers
  */
 
-import assert from "node:assert";
-import { test } from "node:test";
+import assert from 'node:assert';
+import { test } from 'node:test';
 
-import {
-  createKitiumConfig,
-  createKitiumPlugin,
-  eslintKitiumConfig,
-} from "../index.js";
+import { createKitiumConfig, createKitiumPlugin, eslintKitiumConfig } from '../index.js';
 
-test("createKitiumPlugin merges additional rules and configs", () => {
+test('createKitiumPlugin merges additional rules and configs', () => {
   const customRule = {
     meta: {
-      type: "suggestion",
-      docs: { description: "Custom rule", recommended: false },
+      type: 'suggestion',
+      docs: { description: 'Custom rule', recommended: false },
       schema: [],
     },
     create() {
@@ -25,59 +21,52 @@ test("createKitiumPlugin merges additional rules and configs", () => {
 
   const plugin = createKitiumPlugin({
     additionalRules: {
-      "custom-rule": customRule,
+      'custom-rule': customRule,
     },
     recommendedRules: {
-      "kitium/custom-rule": "error",
+      'kitium/custom-rule': 'error',
     },
   });
 
-  assert(plugin.rules["custom-rule"], "should include custom rule");
+  assert(plugin.rules['custom-rule'], 'should include custom rule');
   assert.strictEqual(
-    plugin.configs.recommended.rules["kitium/custom-rule"],
-    "error",
-    "should merge recommended rule overrides",
+    plugin.configs.recommended.rules['kitium/custom-rule'],
+    'error',
+    'should merge recommended rule overrides'
   );
 });
 
-test("createKitiumConfig merges extra rules, plugins, and overrides", () => {
+test('createKitiumConfig merges extra rules, plugins, and overrides', () => {
   const config = createKitiumConfig({
     additionalRules: {
-      "kitium/custom-rule": "warn",
+      'kitium/custom-rule': 'warn',
     },
     additionalPlugins: {
       customPlugin: { rules: {}, configs: {} },
     },
     overrides: [
       {
-        name: "custom-override",
+        name: 'custom-override',
         rules: {
-          "no-console": "off",
+          'no-console': 'off',
         },
       },
     ],
   });
 
   const kitiumEntry = config.find((entry) => entry.plugins?.kitium);
-  assert(kitiumEntry, "should include kitium entry");
+  assert(kitiumEntry, 'should include kitium entry');
   assert.strictEqual(
-    kitiumEntry.rules["kitium/custom-rule"],
-    "warn",
-    "should merge custom rules into kitium block",
+    kitiumEntry.rules['kitium/custom-rule'],
+    'warn',
+    'should merge custom rules into kitium block'
   );
-  assert(
-    kitiumEntry.plugins.customPlugin,
-    "should register additional plugins on kitium block",
-  );
+  assert(kitiumEntry.plugins.customPlugin, 'should register additional plugins on kitium block');
 
-  assert.strictEqual(
-    config.length,
-    eslintKitiumConfig.length + 1,
-    "should append overrides",
-  );
+  assert.strictEqual(config.length, eslintKitiumConfig.length + 1, 'should append overrides');
   assert.strictEqual(
     config[config.length - 1].name,
-    "custom-override",
-    "should append custom overrides at the end",
+    'custom-override',
+    'should append custom overrides at the end'
   );
 });
