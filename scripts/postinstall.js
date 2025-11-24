@@ -11,6 +11,7 @@ import { dirname, join } from 'node:path';
 import { createInterface } from 'node:readline';
 import { fileURLToPath } from 'node:url';
 
+import { ensureSharedConfigs } from '@kitiumai/scripts/dx';
 import { log, pathExists, readJson, writeJson } from '@kitiumai/scripts/utils';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -73,7 +74,9 @@ function findConsumerPackageJson() {
       }
 
       const parentDir = dirname(currentDir);
-      if (parentDir === currentDir || !parentDir) break;
+      if (parentDir === currentDir || !parentDir) {
+        break;
+      }
       currentDir = parentDir;
       levels++;
     }
@@ -130,7 +133,6 @@ async function promptYesNo(question, defaultAnswer = true) {
 async function promptChoice(question, choices, defaultIndex = 0) {
   const setupProjectType = process.env.SETUP_PROJECT_TYPE;
 
-  // eslint-disable-next-line no-undefined
   if (setupProjectType !== undefined) {
     const index = choices.findIndex((c) => c.toLowerCase() === setupProjectType.toLowerCase());
     log('info', `\n${question}`);
@@ -272,6 +274,31 @@ Need help? https://github.com/kitium-ai/lint/issues
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 `
   );
+}
+
+async function auditSharedConfigAdoption(projectRoot) {
+  try {
+    const results = await ensureSharedConfigs({
+      root: projectRoot,
+      requireTsconfig: false,
+      requireEslint: true,
+    });
+    if (results.length === 0) {
+      log('success', 'Shared config audit passed: project consumes @kitiumai/config presets.');
+      return;
+    }
+    log('warn', 'Shared config audit detected issues:');
+    results.forEach((result) => {
+      log('warn', `  • ${result.packageDir}`);
+      result.issues.forEach((issue) => log('info', `    - ${issue}`));
+    });
+    log(
+      'info',
+      'Install @kitiumai/config and extend the shared tsconfig/eslint presets to stay aligned with org standards.'
+    );
+  } catch (error) {
+    log('warn', `Could not run shared config audit: ${error.message}`);
+  }
 }
 
 /**
@@ -541,7 +568,7 @@ function removeDeprecatedEslintIgnore(projectRoot) {
 /**
  * Update package.json with selected scripts
  */
-// eslint-disable-next-line max-lines-per-function, max-statements, complexity
+// eslint-disable-next-line max-lines-per-function, complexity
 async function updatePackageJson(packageJsonPath, config) {
   try {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -622,7 +649,7 @@ async function updatePackageJson(packageJsonPath, config) {
 /**
  * Interactive setup prompts
  */
-// eslint-disable-next-line max-lines-per-function, max-statements
+// eslint-disable-next-line max-lines-per-function
 async function interactiveSetup(projectRoot) {
   log('info', '\n🎯 @kitiumai/lint Setup\n');
   log('info', "Let's configure which tools you'd like to use for linting and formatting.\n");
@@ -710,7 +737,7 @@ async function interactiveSetup(projectRoot) {
 /**
  * Main execution function
  */
-// eslint-disable-next-line max-lines-per-function, max-statements, complexity
+// eslint-disable-next-line max-lines-per-function, complexity
 async function main() {
   // Validate environment first
   validateEnvironment();
@@ -764,6 +791,8 @@ async function main() {
     createPrettierConfig(projectRoot);
   }
 
+  await auditSharedConfigAdoption(projectRoot);
+
   if (!isNewSetup) {
     log('success', '\n✨ @kitiumai/lint is ready to use with your existing configuration.\n');
   } else {
@@ -786,7 +815,7 @@ async function main() {
 /**
  * Detailed error handler with diagnostics and troubleshooting
  */
-// eslint-disable-next-line max-lines-per-function, max-statements, complexity
+// eslint-disable-next-line max-lines-per-function, complexity
 function handleSetupError(error) {
   console.error(`\n${'━'.repeat(70)}`);
 

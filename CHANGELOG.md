@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.3.4] - 2025-11-24
+
+### Changed
+
+- Bumped shared tooling dependencies to pull in latest automation suites:
+  - `@kitiumai/scripts` → `^0.2.1` (security/DX/release helpers, interactive token prompts)
+  - `@kitiumai/config` → `^0.1.2` (new org-wide git hygiene configs)
+- Added `pnpm verify` script (runs lint + format check + tests) for CI parity.
+- `postinstall.js` / `migrate.js` now run `ensureSharedConfigs` to audit consumers automatically.
+- README documents the verify workflow and optional peer dependency matrix.
+
 ## [1.3.3] - 2025-11-22
 
 ### Added

@@ -37,7 +37,7 @@ const createNextjsConfig = () => {
       },
       rules: {
         // Core Next.js rules
-        '@next/next/no-img-element': 'warn',
+        '@next/next/no-img-element': 'error',
         '@next/next/no-html-link-for-pages': 'error',
         '@next/next/no-unwanted-polyfillio': 'warn',
 
@@ -45,9 +45,6 @@ const createNextjsConfig = () => {
         '@next/next/no-sync-scripts': 'error',
         '@next/next/no-document-import-in-page': 'error',
         '@next/next/no-page-custom-font': 'warn',
-
-        // Image optimization
-        '@next/next/no-img-element': 'error',
 
         // CSS and styling
         '@next/next/inline-script-id': 'error',

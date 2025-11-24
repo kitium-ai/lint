@@ -16,6 +16,7 @@ import { createInterface } from 'node:readline';
 import { fileURLToPath } from 'node:url';
 import { inspect } from 'node:util';
 
+import { ensureSharedConfigs } from '@kitiumai/scripts/dx';
 import { log } from '@kitiumai/scripts/utils';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -60,7 +61,9 @@ function findProjectRoot() {
       }
 
       const parentDir = dirname(currentDir);
-      if (parentDir === currentDir || !parentDir) break;
+      if (parentDir === currentDir || !parentDir) {
+        break;
+      }
       currentDir = parentDir;
       levels++;
     }
@@ -159,7 +162,7 @@ function parsePrettierConfig(configPath) {
     }
 
     // Handle JS/CJS format
-    // eslint-disable-next-line no-eval
+
     const configObj = eval(
       `(${content.replace(/^module\.exports\s*=\s*/, '').replace(/^export\s+default\s+/, '')})`
     );
@@ -174,7 +177,9 @@ function parsePrettierConfig(configPath) {
  * Extract custom settings from Prettier config
  */
 function extractPrettierCustomSettings(config) {
-  if (!config) return {};
+  if (!config) {
+    return {};
+  }
 
   // Prettier config is mostly custom settings
   // We'll preserve everything except @kitiumai/lint overrides if they exist
@@ -200,7 +205,9 @@ function parseTslintConfig(configPath) {
  * Extract custom rules from TSLint config
  */
 function extractTslintCustomRules(config) {
-  if (!config) return { rules: {} };
+  if (!config) {
+    return { rules: {} };
+  }
 
   const customRules = {
     rules: config.rules || {},
@@ -473,11 +480,21 @@ function detectProjectType(projectRoot, config) {
   // Check extends in old config
   if (config?.extends) {
     const extendsStr = String(config.extends).toLowerCase();
-    if (extendsStr.includes('angular')) return 'angular';
-    if (extendsStr.includes('svelte')) return 'svelte';
-    if (extendsStr.includes('react')) return 'react';
-    if (extendsStr.includes('next')) return 'nextjs';
-    if (extendsStr.includes('vue')) return 'vue';
+    if (extendsStr.includes('angular')) {
+      return 'angular';
+    }
+    if (extendsStr.includes('svelte')) {
+      return 'svelte';
+    }
+    if (extendsStr.includes('react')) {
+      return 'react';
+    }
+    if (extendsStr.includes('next')) {
+      return 'nextjs';
+    }
+    if (extendsStr.includes('vue')) {
+      return 'vue';
+    }
   }
 
   return 'node';
@@ -486,7 +503,7 @@ function detectProjectType(projectRoot, config) {
 /**
  * Main migration function
  */
-// eslint-disable-next-line max-lines-per-function, max-statements, complexity
+// eslint-disable-next-line max-lines-per-function, complexity
 async function main() {
   const projectRoot = findProjectRoot();
 
@@ -596,12 +613,31 @@ async function main() {
   log('info', '  1. Review the migrated configs');
   log('info', '  2. Test your project: npm run lint');
   log('info', '  3. The original configs are backed up with .backup timestamps\n');
+
+  try {
+    const auditResults = await ensureSharedConfigs({
+      root: projectRoot,
+      requireTsconfig: false,
+      requireEslint: true,
+    });
+    if (auditResults.length === 0) {
+      log('success', 'Shared config audit passed post-migration.');
+    } else {
+      log('warn', 'Shared config audit detected remaining issues:');
+      auditResults.forEach((result) => {
+        log('warn', `  • ${result.packageDir}`);
+        result.issues.forEach((issue) => log('info', `    - ${issue}`));
+      });
+    }
+  } catch (error) {
+    log('warn', `Shared config audit skipped: ${error.message}`);
+  }
 }
 
 /**
  * Detailed error handler for migration with diagnostics
  */
-// eslint-disable-next-line max-lines-per-function, max-statements, complexity
+// eslint-disable-next-line max-lines-per-function, complexity
 function handleMigrationError(error) {
   console.error(`\n${'━'.repeat(70)}`);
 

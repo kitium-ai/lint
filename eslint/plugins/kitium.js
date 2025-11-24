@@ -59,7 +59,9 @@ const propsNamingRule = {
   create(context) {
     function validateName(node) {
       const name = node.id.name;
-      if (!name.includes('Props')) return;
+      if (!name.includes('Props')) {
+        return;
+      }
 
       if (!name.startsWith('Kt')) {
         context.report({
@@ -96,7 +98,9 @@ const eventNamingRule = {
   create(context) {
     function validateName(node) {
       const name = node.id.name;
-      if (!name.includes('Event')) return;
+      if (!name.includes('Event')) {
+        return;
+      }
 
       if (!name.startsWith('Kt')) {
         context.report({
@@ -154,7 +158,9 @@ const extendsBasePropsRule = {
         }
 
         const extendsBaseProps = extendsNodes.some((ext) => {
-          if (!ext.expression) return false;
+          if (!ext.expression) {
+            return false;
+          }
           if (ext.expression.type === 'Identifier') {
             return ext.expression.name === 'BaseProps' || ext.expression.name.startsWith('Kt');
           }
@@ -186,11 +192,17 @@ const extendsBaseComponentRule = {
     return {
       // eslint-disable-next-line complexity
       ClassDeclaration(node) {
-        if (!node.id) return;
+        if (!node.id) {
+          return;
+        }
         const className = node.id.name;
 
-        if (!className.startsWith('Kt')) return;
-        if (!className.endsWith('Web') && !className.endsWith('Mobile')) return;
+        if (!className.startsWith('Kt')) {
+          return;
+        }
+        if (!className.endsWith('Web') && !className.endsWith('Mobile')) {
+          return;
+        }
 
         const superClass = node.superClass;
         if (!superClass) {
@@ -261,7 +273,9 @@ const requiredTypeExportsRule = {
 
       'Program:exit'() {
         const match = filename.match(/\/([\w-]+)\.types\.ts$/i);
-        if (!match) return;
+        if (!match) {
+          return;
+        }
 
         const componentName = toPascalCase(match[1]);
         const requiredExports = [`Kt${componentName}Props`, `Kt${componentName}State`];

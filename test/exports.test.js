@@ -59,10 +59,6 @@ test('all exports should be defined', () => {
   const exports = Object.keys(lintPackage);
   assert(exports.length > 0, 'should have exports');
   for (const exportName of exports) {
-    assert(
-      // eslint-disable-next-line no-undefined
-      lintPackage[exportName] !== undefined,
-      `${exportName} should be defined`
-    );
+    assert(lintPackage[exportName] !== undefined, `${exportName} should be defined`);
   }
 });

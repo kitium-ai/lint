@@ -67,9 +67,6 @@ const createTestingLibraryConfig = () => {
 
         // Debug methods
         'testing-library/no-debug': 'warn',
-
-        // Empty callbacks
-        'testing-library/no-unnecessary-act': 'warn',
       },
     };
   }

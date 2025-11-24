@@ -98,7 +98,6 @@ const createJestConfig = () => {
         'jest/prefer-lowercase-title': ['warn', { ignore: ['describe'] }],
         'jest/prefer-equality-matcher': 'warn',
         'jest/prefer-each': 'warn',
-        'jest/no-test-return-statement': 'error',
       },
     };
   }

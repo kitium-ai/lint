@@ -33,7 +33,6 @@ test('all config presets should be exported', () => {
   };
 
   for (const [name, preset] of Object.entries(presets)) {
-    // eslint-disable-next-line no-undefined
     assert(preset !== undefined, `${name} should be exported`);
     assert(typeof preset === 'object', `${name} should be an object`);
   }

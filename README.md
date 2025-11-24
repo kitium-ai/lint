@@ -116,6 +116,17 @@ import { eslintBaseConfig } from '@kitiumai/lint';
 export default [...eslintBaseConfig];
 ```
 
+### 3. Run `verify` Before Committing
+
+Use the consolidated quality gate to mirror CI locally:
+
+```bash
+pnpm verify
+# Runs: pnpm lint && pnpm format && pnpm test
+```
+
+This ensures lint, formatting, and unit tests all pass before changes leave your machine.
+
 ## Interactive Setup (Manual)
 
 Run `npm run setup:lint` to interactively configure your linting setup.
@@ -891,12 +902,28 @@ Add these scripts to your `package.json`:
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "type-check": "tsc --noEmit"
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "type-check": "tsc --noEmit",
+    "verify": "pnpm lint && pnpm format && pnpm test"
   }
 }
 ```
+
+## Optional Peer Dependencies
+
+Install the relevant peers when you enable a preset:
+
+| Feature / preset        | Command                                                                 |
+| ----------------------- | ----------------------------------------------------------------------- |
+| React / Hooks / A11y    | `pnpm add -D eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-jsx-a11y` |
+| Next.js                 | `pnpm add -D @next/eslint-plugin-next`                                  |
+| Vue                     | `pnpm add -D eslint-plugin-vue`                                         |
+| Testing Library         | `pnpm add -D eslint-plugin-testing-library`                             |
+| Jest                    | `pnpm add -D eslint-plugin-jest @types/jest`                            |
+| GraphQL linting         | `pnpm add -D eslint-plugin-graphql graphql`                             |
+
+The interactive `setup:lint` wizard will prompt for these, but you can install them manually as shown above.
 
 ## IDE Integration
 

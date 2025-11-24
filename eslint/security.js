@@ -1,36 +1,29 @@
 /**
  * Enhanced Security Configuration for ESLint
- * Advanced security rules and vulnerability detection
- * Includes: OWASP checks, injection prevention, cryptography rules, and more
+ * Builds on the shared @kitiumai/config security preset and layers on
+ * SonarJS + Node hardening rules to match enterprise expectations.
  */
-
+import sharedSecurityConfig from '@kitiumai/config/eslint.config.security.js';
 import nodePlugin from 'eslint-plugin-n';
 import noUnsanitizedPlugin from 'eslint-plugin-no-unsanitized';
-import securityPlugin from 'eslint-plugin-security';
 import sonarjsPlugin from 'eslint-plugin-sonarjs';
 
+const upstreamSecurity =
+  sharedSecurityConfig.find((config) => config.name === 'kitiumai/security-hardening') ??
+  sharedSecurityConfig.at(-1) ??
+  {};
+
 export default {
-  files: ['**/*.{js,jsx,ts,tsx,mjs,cjs}'],
+  ...upstreamSecurity,
+  files: upstreamSecurity.files ?? ['**/*.{js,jsx,ts,tsx,mjs,cjs}'],
   plugins: {
-    security: securityPlugin,
+    ...(upstreamSecurity.plugins ?? {}),
     sonarjs: sonarjsPlugin,
     node: nodePlugin,
     'no-unsanitized': noUnsanitizedPlugin,
   },
   rules: {
-    // Original security plugin rules
-    'security/detect-object-injection': 'warn',
-    'security/detect-non-literal-regexp': 'warn',
-    'security/detect-unsafe-regex': 'error',
-    // Deprecated rules (removed in newer versions of eslint-plugin-security)
-    // "security/detect-buffer-noalloc": "error",
-    // "security/detect-child-process": "warn",
-    'security/detect-non-literal-require': 'warn',
-    'security/detect-non-literal-fs-filename': 'warn',
-    'security/detect-eval-with-expression': 'error',
-    // "security/detect-pseudoRandomBytes": "error",
-    'security/detect-no-csrf-before-method-override': 'warn',
-
+    ...(upstreamSecurity.rules ?? {}),
     // SonarJS - Code quality and security
     'sonarjs/no-duplicate-string': 'warn',
     'sonarjs/no-duplicated-branches': 'warn',
@@ -50,19 +43,13 @@ export default {
     'node/no-path-concat': 'error',
     'node/no-deprecated-api': 'warn',
 
-    // No unsanitized - XSS prevention
+    // No unsanitized - XSS prevention (left off by default, opt-in)
     'no-unsanitized/method': 'off',
     'no-unsanitized/property': 'off',
 
-    // Additional security practices
-    'no-eval': 'error',
-    'no-implied-eval': 'error',
-    'no-new-func': 'error',
+    // Additional safeguards
     'no-script-url': 'error',
     'require-await': 'warn',
     'no-promise-executor-return': 'error',
-
-    // Cryptography and randomness
-    // "no-math-random": "warn", // Rule does not exist in any plugin
   },
 };
