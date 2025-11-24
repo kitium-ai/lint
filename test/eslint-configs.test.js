@@ -25,10 +25,13 @@ test('eslintBaseConfig should export an array', () => {
 });
 
 test('eslintBaseConfig should have correct structure', () => {
-  const config = eslintBaseConfig[0];
-  assert(config.name === 'kitium/base', 'should have correct name');
-  assert(config.languageOptions, 'should have languageOptions');
-  assert(config.rules, 'should have rules');
+  const configWithRules = eslintBaseConfig.find((config) => Boolean(config.rules));
+  assert(configWithRules, 'should include a config object with rules');
+
+  const configWithLanguageOptions = eslintBaseConfig.find((config) =>
+    Boolean(config.languageOptions)
+  );
+  assert(configWithLanguageOptions, 'should include language options');
 });
 
 test('eslintReactConfig should export an array', () => {

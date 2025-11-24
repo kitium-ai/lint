@@ -914,14 +914,14 @@ Add these scripts to your `package.json`:
 
 Install the relevant peers when you enable a preset:
 
-| Feature / preset        | Command                                                                 |
-| ----------------------- | ----------------------------------------------------------------------- |
-| React / Hooks / A11y    | `pnpm add -D eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-jsx-a11y` |
-| Next.js                 | `pnpm add -D @next/eslint-plugin-next`                                  |
-| Vue                     | `pnpm add -D eslint-plugin-vue`                                         |
-| Testing Library         | `pnpm add -D eslint-plugin-testing-library`                             |
-| Jest                    | `pnpm add -D eslint-plugin-jest @types/jest`                            |
-| GraphQL linting         | `pnpm add -D eslint-plugin-graphql graphql`                             |
+| Feature / preset     | Command                                                                            |
+| -------------------- | ---------------------------------------------------------------------------------- |
+| React / Hooks / A11y | `pnpm add -D eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-jsx-a11y` |
+| Next.js              | `pnpm add -D @next/eslint-plugin-next`                                             |
+| Vue                  | `pnpm add -D eslint-plugin-vue`                                                    |
+| Testing Library      | `pnpm add -D eslint-plugin-testing-library`                                        |
+| Jest                 | `pnpm add -D eslint-plugin-jest @types/jest`                                       |
+| GraphQL linting      | `pnpm add -D eslint-plugin-graphql graphql`                                        |
 
 The interactive `setup:lint` wizard will prompt for these, but you can install them manually as shown above.
 

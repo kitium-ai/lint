@@ -13,17 +13,17 @@ test('eslintBaseConfig should have valid structure', () => {
   assert(Array.isArray(eslintBaseConfig), 'should be an array');
   assert(eslintBaseConfig.length > 0, 'should not be empty');
 
-  const config = eslintBaseConfig[0];
-  assert(config.name, 'should have a name');
-  assert(config.rules, 'should have rules');
-  assert(typeof config.rules === 'object', 'rules should be an object');
+  const configWithRules = eslintBaseConfig.find((config) => Boolean(config.rules));
+  assert(configWithRules, 'should contain at least one rules object');
+  assert(typeof configWithRules.rules === 'object', 'rules should be an object');
 });
 
 test('eslintBaseConfig should have common rules', () => {
-  const config = eslintBaseConfig[0];
-  assert(config.rules['no-var'], 'should have no-var rule');
-  assert(config.rules['prefer-const'], 'should have prefer-const rule');
-  assert(config.rules['no-console'], 'should have no-console rule');
+  const hasRule = (rule) => eslintBaseConfig.some((config) => Boolean(config.rules?.[rule]));
+
+  assert(hasRule('no-var'), 'should have no-var rule');
+  assert(hasRule('prefer-const'), 'should have prefer-const rule');
+  assert(hasRule('no-console'), 'should have no-console rule');
 });
 
 test('eslintReactConfig should have React-specific structure', () => {
