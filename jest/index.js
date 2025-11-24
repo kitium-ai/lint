@@ -2,7 +2,7 @@
  * Jest Configuration Export
  * Provides ready-to-use Jest configurations for different project types
  */
-import baseJestConfig from '@kitiumai/config/jest.config.base.js';
+import baseJestConfig from '@kitiumai/config/jest.config.base.cjs';
 
 /**
  * Base Jest configuration for unit testing (extends shared preset)
