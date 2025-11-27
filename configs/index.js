@@ -25,7 +25,16 @@ export const fullstack = [base, typescript, react, node, jest, testingLibrary, s
 /**
  * Full-stack strict: adds Kitium UI/component standards for shared libraries
  */
-export const fullstack_strict = [base, typescript, react, node, jest, testingLibrary, security, kitium];
+export const fullstack_strict = [
+  base,
+  typescript,
+  react,
+  node,
+  jest,
+  testingLibrary,
+  security,
+  kitium,
+];
 
 /**
  * React Single Page Application (SPA)

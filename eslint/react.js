@@ -20,14 +20,14 @@ let hasReactPlugins = false;
 
 // Try to load optional React plugins
 try {
-  const mod1 = await import('eslint-plugin-react').catch(() => null);
-  const mod2 = await import('eslint-plugin-react-hooks').catch(() => null);
-  const mod3 = await import('eslint-plugin-jsx-a11y').catch(() => null);
+  const module1 = await import('eslint-plugin-react').catch(() => null);
+  const module2 = await import('eslint-plugin-react-hooks').catch(() => null);
+  const module3 = await import('eslint-plugin-jsx-a11y').catch(() => null);
 
-  if (mod1 && mod2 && mod3) {
-    reactPlugin = mod1.default;
-    reactHooksPlugin = mod2.default;
-    jsxA11yPlugin = mod3.default;
+  if (module1 && module2 && module3) {
+    reactPlugin = module1.default;
+    reactHooksPlugin = module2.default;
+    jsxA11yPlugin = module3.default;
     hasReactPlugins = true;
   }
 } catch (_error) {

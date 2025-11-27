@@ -46,10 +46,10 @@ function findProjectRoot() {
         // eslint-disable-next-line max-depth
         try {
           // eslint-disable-next-line security/detect-non-literal-fs-filename
-          const pkg = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+          const package_ = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
           // Skip if this is @kitiumai/lint itself
           // eslint-disable-next-line max-depth
-          if (pkg.name === '@kitiumai/lint') {
+          if (package_.name === '@kitiumai/lint') {
             currentDir = dirname(currentDir);
             levels++;
             continue;
@@ -154,19 +154,19 @@ function parsePrettierConfig(configPath) {
   try {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     const content = readFileSync(configPath, 'utf-8');
-    const ext = basename(configPath);
+    const extension = basename(configPath);
 
     // Handle JSON format
-    if (ext.endsWith('.json') || ext === '.prettierrc') {
+    if (extension.endsWith('.json') || extension === '.prettierrc') {
       return JSON.parse(content);
     }
 
     // Handle JS/CJS format
 
-    const configObj = eval(
+    const configObject = eval(
       `(${content.replace(/^module\.exports\s*=\s*/, '').replace(/^export\s+default\s+/, '')})`
     );
-    return configObj;
+    return configObject;
   } catch (error) {
     log('error', `Error parsing Prettier config: ${error.message}`);
     return null;
@@ -252,9 +252,9 @@ function createMigratedTslintConfig(customRules) {
 
   // Add custom extends if they exist (but keep our base)
   if (customRules.extends && Array.isArray(customRules.extends)) {
-    customRules.extends.forEach((ext) => {
-      if (!tslintConfig.extends.includes(ext)) {
-        tslintConfig.extends.push(ext);
+    customRules.extends.forEach((extension) => {
+      if (!tslintConfig.extends.includes(extension)) {
+        tslintConfig.extends.push(extension);
       }
     });
   }
@@ -454,45 +454,45 @@ function backupConfigFile(filePath) {
 // eslint-disable-next-line complexity
 function detectProjectType(projectRoot, config) {
   // eslint-disable-next-line security/detect-non-literal-fs-filename
-  const pkgContent = readFileSync(join(projectRoot, 'package.json'), 'utf-8');
-  const pkg = JSON.parse(pkgContent);
+  const packageContent = readFileSync(join(projectRoot, 'package.json'), 'utf-8');
+  const package_ = JSON.parse(packageContent);
 
   // Check dependencies
-  if (pkg.dependencies?.['@angular/core'] || pkg.devDependencies?.['@angular/core']) {
+  if (package_.dependencies?.['@angular/core'] || package_.devDependencies?.['@angular/core']) {
     return 'angular';
   }
 
-  if (pkg.dependencies?.svelte || pkg.devDependencies?.svelte) {
+  if (package_.dependencies?.svelte || package_.devDependencies?.svelte) {
     return 'svelte';
   }
 
-  if (pkg.dependencies?.react || pkg.devDependencies?.react) {
-    if (pkg.dependencies?.next || pkg.devDependencies?.next) {
+  if (package_.dependencies?.react || package_.devDependencies?.react) {
+    if (package_.dependencies?.next || package_.devDependencies?.next) {
       return 'nextjs';
     }
     return 'react';
   }
 
-  if (pkg.dependencies?.vue || pkg.devDependencies?.vue) {
+  if (package_.dependencies?.vue || package_.devDependencies?.vue) {
     return 'vue';
   }
 
   // Check extends in old config
   if (config?.extends) {
-    const extendsStr = String(config.extends).toLowerCase();
-    if (extendsStr.includes('angular')) {
+    const extendsString = String(config.extends).toLowerCase();
+    if (extendsString.includes('angular')) {
       return 'angular';
     }
-    if (extendsStr.includes('svelte')) {
+    if (extendsString.includes('svelte')) {
       return 'svelte';
     }
-    if (extendsStr.includes('react')) {
+    if (extendsString.includes('react')) {
       return 'react';
     }
-    if (extendsStr.includes('next')) {
+    if (extendsString.includes('next')) {
       return 'nextjs';
     }
-    if (extendsStr.includes('vue')) {
+    if (extendsString.includes('vue')) {
       return 'vue';
     }
   }
@@ -648,7 +648,7 @@ function handleMigrationError(error) {
   console.error(`Error: ${error.message}\n`);
 
   // Categorize error and provide specific guidance
-  const errorMsg = error.message.toLowerCase();
+  const errorMessage = error.message.toLowerCase();
   const errorStack = error.stack || '';
 
   console.error('📋 Diagnostic Information:');
@@ -660,7 +660,7 @@ function handleMigrationError(error) {
   console.error(`  • npm lifecycle event: ${process.env.npm_lifecycle_event || 'none'}\n`);
 
   // Specific error handling
-  if (errorMsg.includes('eacces') || errorMsg.includes('permission denied')) {
+  if (errorMessage.includes('eacces') || errorMessage.includes('permission denied')) {
     console.error('🔒 Permission Issue Detected:\n');
 
     console.error('  The migration script cannot write to the current directory.\n');
@@ -676,7 +676,7 @@ function handleMigrationError(error) {
     console.error('     sudo chown -R $USER:$USER .\n');
 
     console.error('  3. Try from a different directory with write access\n');
-  } else if (errorMsg.includes('enoent') || errorMsg.includes('no such file')) {
+  } else if (errorMessage.includes('enoent') || errorMessage.includes('no such file')) {
     console.error('📁 Configuration File Not Found:\n');
 
     console.error('  The migration script cannot find your config file.\n');
@@ -697,9 +697,9 @@ function handleMigrationError(error) {
 
     console.error('     cd /path/to/your/project && npm run migrate\n');
   } else if (
-    errorMsg.includes('json') ||
-    errorMsg.includes('parse') ||
-    errorMsg.includes('syntax')
+    errorMessage.includes('json') ||
+    errorMessage.includes('parse') ||
+    errorMessage.includes('syntax')
   ) {
     console.error('📝 Configuration Parse Error:\n');
 
@@ -722,7 +722,7 @@ function handleMigrationError(error) {
     console.error('     node -c .eslintrc.js (if using JS format)\n');
 
     console.error('  3. Fix config file manually before migration\n');
-  } else if (errorMsg.includes('eval') || errorMsg.includes('expression')) {
+  } else if (errorMessage.includes('eval') || errorMessage.includes('expression')) {
     console.error('⚙️  Configuration Parsing Error:\n');
 
     console.error('  Could not evaluate your config file.\n');
@@ -736,7 +736,7 @@ function handleMigrationError(error) {
     console.error('  2. Check for relative imports that need absolute paths\n');
 
     console.error('  3. Remove any non-JSON properties if using JSON format\n');
-  } else if (errorMsg.includes('no project') || errorMsg.includes('not find')) {
+  } else if (errorMessage.includes('no project') || errorMessage.includes('not find')) {
     console.error('🔍 Project Not Found:\n');
 
     console.error('  The migration script could not locate a project.\n');

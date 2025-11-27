@@ -14,11 +14,11 @@ test('prettierConfig should be an object', () => {
 
 test('prettierConfig should have common properties', () => {
   // Prettier configs typically have these properties
-  const commonProps = ['semi', 'singleQuote', 'tabWidth', 'trailingComma'];
+  const commonProperties = ['semi', 'singleQuote', 'tabWidth', 'trailingComma'];
 
   // At least some of these should be present
-  const hasCommonProps = commonProps.some((prop) => prop in prettierConfig);
-  assert(hasCommonProps, 'should have common prettier properties');
+  const hasCommonProperties = commonProperties.some((property) => property in prettierConfig);
+  assert(hasCommonProperties, 'should have common prettier properties');
 });
 
 test('prettierConfig should be valid', () => {

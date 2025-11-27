@@ -72,7 +72,14 @@ const kitiumEnhancements = {
     'import/order': [
       'error',
       {
-        groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index'], 'object', 'type'],
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          ['parent', 'sibling', 'index'],
+          'object',
+          'type',
+        ],
         pathGroups: [
           { pattern: '@{app,features,shared}/**', group: 'internal', position: 'before' },
           { pattern: '@/**', group: 'internal', position: 'before' },
@@ -97,10 +104,7 @@ const kitiumEnhancements = {
     ],
 
     // Error handling & logging discipline
-    'no-console': [
-      'error',
-      { allow: ['warn', 'error', 'info'] },
-    ],
+    'no-console': ['error', { allow: ['warn', 'error', 'info'] }],
     'promise/always-return': 'warn',
     'promise/catch-or-return': 'warn',
     'promise/no-nesting': 'warn',
@@ -111,7 +115,6 @@ const kitiumEnhancements = {
 
     // Performance and correctness (Unicorn essentials)
     'unicorn/no-array-callback-reference': 'warn',
-    'unicorn/no-await-in-loop': 'warn',
     'unicorn/no-useless-undefined': 'error',
     'unicorn/prefer-node-protocol': 'warn',
     'unicorn/prefer-query-selector': 'warn',
@@ -154,11 +157,7 @@ const kitiumEnhancements = {
 
 const formattingGuardrails = {
   name: 'kitium/formatting-guardrails',
-  files: [
-    '**/.prettierrc',
-    '**/.prettierrc.*',
-    '**/prettier.config.*',
-  ],
+  files: ['**/.prettierrc', '**/.prettierrc.*', '**/prettier.config.*'],
   languageOptions: {
     parser: noopParser,
   },
@@ -192,4 +191,9 @@ const editorConfigGuardrails = {
   },
 };
 
-export default [...sharedBaseConfig, kitiumEnhancements, formattingGuardrails, editorConfigGuardrails];
+export default [
+  ...sharedBaseConfig,
+  kitiumEnhancements,
+  formattingGuardrails,
+  editorConfigGuardrails,
+];

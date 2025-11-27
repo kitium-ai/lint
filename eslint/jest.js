@@ -14,9 +14,9 @@ let hasJestPlugin = false;
 
 // Try to load optional Jest plugin
 try {
-  const mod = await import('eslint-plugin-jest').catch(() => null);
-  if (mod) {
-    jestPlugin = mod.default;
+  const module_ = await import('eslint-plugin-jest').catch(() => null);
+  if (module_) {
+    jestPlugin = module_.default;
     hasJestPlugin = true;
   }
 } catch (_error) {
