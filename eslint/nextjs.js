@@ -14,7 +14,7 @@ let hasNextPlugin = false;
 
 // Try to load optional Next.js plugin
 try {
-  const module_ = await import('@next/eslint-plugin-next').catch(() => null);
+  const module_ = await import("@next/eslint-plugin-next").catch(() => null);
   if (module_) {
     nextPlugin = module_.default;
     hasNextPlugin = true;
@@ -25,7 +25,7 @@ try {
 
 const createNextjsConfig = () => {
   const baseConfig = {
-    files: ['**/*.{js,jsx,ts,tsx}'],
+    files: ["**/*.{js,jsx,ts,tsx}"],
     rules: {},
   };
 
@@ -33,28 +33,28 @@ const createNextjsConfig = () => {
     return {
       ...baseConfig,
       plugins: {
-        '@next/next': nextPlugin,
+        "@next/next": nextPlugin,
       },
       rules: {
         // Core Next.js rules
-        '@next/next/no-img-element': 'error',
-        '@next/next/no-html-link-for-pages': 'error',
-        '@next/next/no-unwanted-polyfillio': 'warn',
+        "@next/next/no-img-element": "error",
+        "@next/next/no-html-link-for-pages": "error",
+        "@next/next/no-unwanted-polyfillio": "warn",
 
         // Performance
-        '@next/next/no-sync-scripts': 'error',
-        '@next/next/no-document-import-in-page': 'error',
-        '@next/next/no-page-custom-font': 'warn',
+        "@next/next/no-sync-scripts": "error",
+        "@next/next/no-document-import-in-page": "error",
+        "@next/next/no-page-custom-font": "warn",
 
         // CSS and styling
-        '@next/next/inline-script-id': 'error',
+        "@next/next/inline-script-id": "error",
 
         // Font optimization
-        '@next/next/google-font-display': 'warn',
-        '@next/next/google-font-preconnect': 'warn',
+        "@next/next/google-font-display": "warn",
+        "@next/next/google-font-preconnect": "warn",
 
         // Script optimization
-        '@next/next/next-script-for-ga': 'warn',
+        "@next/next/next-script-for-ga": "warn",
       },
     };
   }

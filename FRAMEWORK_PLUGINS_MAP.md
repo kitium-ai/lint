@@ -38,9 +38,9 @@ Configuration: eslint/base.js + eslint/typescript.js
 **Usage:**
 
 ```javascript
-import { eslintBaseConfig, eslintTypeScriptConfig } from '@kitiumai/lint';
+import { eslintBaseConfig, eslintTypeScriptConfig } from "@kitiumai/lint";
 // or for presets:
-import { minimal } from '@kitiumai/lint/configs';
+import { minimal } from "@kitiumai/lint/configs";
 ```
 
 ---
@@ -67,9 +67,9 @@ Configuration: eslint/base.js + eslint/typescript.js + eslint/react.js
 **Usage:**
 
 ```javascript
-import { eslintReactConfig } from '@kitiumai/lint';
+import { eslintReactConfig } from "@kitiumai/lint";
 // or for presets:
-import { react_spa } from '@kitiumai/lint/configs';
+import { react_spa } from "@kitiumai/lint/configs";
 ```
 
 ---
@@ -91,7 +91,11 @@ Configuration: React Config + eslint/jest.js + eslint/testing-library.js
 **Usage:**
 
 ```javascript
-import { eslintReactConfig, eslintJestConfig, eslintTestingLibraryConfig } from '@kitiumai/lint';
+import {
+  eslintReactConfig,
+  eslintJestConfig,
+  eslintTestingLibraryConfig,
+} from "@kitiumai/lint";
 ```
 
 ---
@@ -117,9 +121,9 @@ Configuration: eslint/base.js + eslint/typescript.js + eslint/node.js
 **Usage:**
 
 ```javascript
-import { eslintNodeConfig } from '@kitiumai/lint';
+import { eslintNodeConfig } from "@kitiumai/lint";
 // or for presets:
-import { node_api } from '@kitiumai/lint/configs';
+import { node_api } from "@kitiumai/lint/configs";
 ```
 
 ---
@@ -142,9 +146,9 @@ Configuration: Node Config + eslint/graphql.js
 **Usage:**
 
 ```javascript
-import { eslintGraphQLConfig } from '@kitiumai/lint';
+import { eslintGraphQLConfig } from "@kitiumai/lint";
 // or for presets:
-import { graphql_api } from '@kitiumai/lint/configs';
+import { graphql_api } from "@kitiumai/lint/configs";
 ```
 
 **Important:** Install `eslint-plugin-graphql` separately if using GraphQL:
@@ -174,9 +178,9 @@ Configuration: eslint/base.js + eslint/typescript.js + eslint/vue.js
 **Usage:**
 
 ```javascript
-import { eslintVueConfig } from '@kitiumai/lint';
+import { eslintVueConfig } from "@kitiumai/lint";
 // or for presets:
-import { vue_spa } from '@kitiumai/lint/configs';
+import { vue_spa } from "@kitiumai/lint/configs";
 ```
 
 ---
@@ -200,9 +204,9 @@ Configuration: React Config + eslint/nextjs.js
 **Usage:**
 
 ```javascript
-import { eslintNextjsConfig } from '@kitiumai/lint';
+import { eslintNextjsConfig } from "@kitiumai/lint";
 // or for presets:
-import { nextjs_app } from '@kitiumai/lint/configs';
+import { nextjs_app } from "@kitiumai/lint/configs";
 ```
 
 ---
@@ -226,7 +230,7 @@ Configuration: eslint/angular.js
 **Usage:**
 
 ```javascript
-import { eslintAngularConfig } from '@kitiumai/lint';
+import { eslintAngularConfig } from "@kitiumai/lint";
 ```
 
 **Note:** Angular projects need to install their own ESLint plugins:
@@ -256,7 +260,7 @@ Configuration: eslint/svelte.js
 **Usage:**
 
 ```javascript
-import { eslintSvelteConfig } from '@kitiumai/lint';
+import { eslintSvelteConfig } from "@kitiumai/lint";
 ```
 
 **Note:** Svelte projects need to install their own ESLint plugins:
@@ -285,7 +289,7 @@ Configuration: eslint/security.js
 **Usage:**
 
 ```javascript
-import { eslintSecurityConfig } from '@kitiumai/lint';
+import { eslintSecurityConfig } from "@kitiumai/lint";
 ```
 
 ---
@@ -307,9 +311,13 @@ Configuration: eslint/base.js + eslint/typescript.js + eslint/jest.js
 **Usage:**
 
 ```javascript
-import { eslintBaseConfig, eslintTypeScriptConfig, eslintJestConfig } from '@kitiumai/lint';
+import {
+  eslintBaseConfig,
+  eslintTypeScriptConfig,
+  eslintJestConfig,
+} from "@kitiumai/lint";
 // or for presets:
-import { library, monorepo } from '@kitiumai/lint/configs';
+import { library, monorepo } from "@kitiumai/lint/configs";
 ```
 
 ---
@@ -332,7 +340,7 @@ Configuration: React Config + Node Config + Testing Config
 **Usage:**
 
 ```javascript
-import { fullstack } from '@kitiumai/lint/configs';
+import { fullstack } from "@kitiumai/lint/configs";
 ```
 
 ---
@@ -421,7 +429,7 @@ import {
   graphql_api,
   library,
   minimal,
-} from '@kitiumai/lint/configs';
+} from "@kitiumai/lint/configs";
 
 export default [
   // Use presets

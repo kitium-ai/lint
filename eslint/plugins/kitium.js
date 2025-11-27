@@ -5,18 +5,18 @@
 
 function toPascalCase(value) {
   return value
-    .replace(/[-_]+/g, ' ')
+    .replace(/[-_]+/g, " ")
     .replace(/\s+(\w)/g, (_, c) => c.toUpperCase())
     .replace(/^\w/, (c) => c.toUpperCase())
-    .replace(/\s/g, '');
+    .replace(/\s/g, "");
 }
 
 const componentNamingRule = {
   meta: {
-    type: 'suggestion',
+    type: "suggestion",
     docs: {
-      description: 'Enforce Kt prefix on component class exports',
-      category: 'Naming Conventions',
+      description: "Enforce Kt prefix on component class exports",
+      category: "Naming Conventions",
       recommended: true,
     },
     schema: [],
@@ -25,17 +25,21 @@ const componentNamingRule = {
     return {
       ExportNamedDeclaration(node) {
         const declaration = node.declaration;
-        if (!declaration || declaration.type !== 'ClassDeclaration' || !declaration.id) {
+        if (
+          !declaration ||
+          declaration.type !== "ClassDeclaration" ||
+          !declaration.id
+        ) {
           return;
         }
 
         const className = declaration.id.name;
 
-        if (!className.endsWith('Web') && !className.endsWith('Mobile')) {
+        if (!className.endsWith("Web") && !className.endsWith("Mobile")) {
           return;
         }
 
-        if (!className.startsWith('Kt')) {
+        if (!className.startsWith("Kt")) {
           context.report({
             node: declaration.id,
             message: `Component class "${className}" must start with "Kt" prefix. Use "Kt${className}" instead.`,
@@ -48,10 +52,11 @@ const componentNamingRule = {
 
 const propsNamingRule = {
   meta: {
-    type: 'suggestion',
+    type: "suggestion",
     docs: {
-      description: 'Enforce Kt{Component}Props naming pattern for props interfaces',
-      category: 'Naming Conventions',
+      description:
+        "Enforce Kt{Component}Props naming pattern for props interfaces",
+      category: "Naming Conventions",
       recommended: true,
     },
     schema: [],
@@ -59,21 +64,21 @@ const propsNamingRule = {
   create(context) {
     function validateName(node) {
       const name = node.id.name;
-      if (!name.includes('Props')) {
+      if (!name.includes("Props")) {
         return;
       }
 
-      if (!name.startsWith('Kt')) {
+      if (!name.startsWith("Kt")) {
         context.report({
           node: node.id,
-          message: `Props interface "${name}" must follow pattern "Kt{Component}Props". Rename to "Kt${name.replace(/^(I|_)/, '')}"`,
+          message: `Props interface "${name}" must follow pattern "Kt{Component}Props". Rename to "Kt${name.replace(/^(I|_)/, "")}"`,
         });
       }
 
-      if (!name.endsWith('Props')) {
+      if (!name.endsWith("Props")) {
         context.report({
           node: node.id,
-          message: `Props interface "${name}" must end with "Props". Use "${name.replace(/Props.*$/, 'Props')}" instead.`,
+          message: `Props interface "${name}" must end with "Props". Use "${name.replace(/Props.*$/, "Props")}" instead.`,
         });
       }
     }
@@ -87,10 +92,11 @@ const propsNamingRule = {
 
 const eventNamingRule = {
   meta: {
-    type: 'suggestion',
+    type: "suggestion",
     docs: {
-      description: 'Enforce Kt{Component}{Event}Event naming pattern for event interfaces',
-      category: 'Naming Conventions',
+      description:
+        "Enforce Kt{Component}{Event}Event naming pattern for event interfaces",
+      category: "Naming Conventions",
       recommended: true,
     },
     schema: [],
@@ -98,21 +104,21 @@ const eventNamingRule = {
   create(context) {
     function validateName(node) {
       const name = node.id.name;
-      if (!name.includes('Event')) {
+      if (!name.includes("Event")) {
         return;
       }
 
-      if (!name.startsWith('Kt')) {
+      if (!name.startsWith("Kt")) {
         context.report({
           node: node.id,
-          message: `Event interface "${name}" must follow pattern "Kt{Component}{Event}Event". Rename to "Kt${name.replace(/^(I|_)/, '')}"`,
+          message: `Event interface "${name}" must follow pattern "Kt{Component}{Event}Event". Rename to "Kt${name.replace(/^(I|_)/, "")}"`,
         });
       }
 
-      if (!name.endsWith('Event')) {
+      if (!name.endsWith("Event")) {
         context.report({
           node: node.id,
-          message: `Event interface "${name}" must end with "Event". Use "${name.replace(/Event.*$/, 'Event')}" instead.`,
+          message: `Event interface "${name}" must end with "Event". Use "${name.replace(/Event.*$/, "Event")}" instead.`,
         });
       }
     }
@@ -126,10 +132,10 @@ const eventNamingRule = {
 
 const extendsBasePropertiesRule = {
   meta: {
-    type: 'suggestion',
+    type: "suggestion",
     docs: {
-      description: 'Enforce BaseProps extension for component props interfaces',
-      category: 'Best Practices',
+      description: "Enforce BaseProps extension for component props interfaces",
+      category: "Best Practices",
       recommended: true,
     },
     schema: [],
@@ -139,18 +145,18 @@ const extendsBasePropertiesRule = {
       TSInterfaceDeclaration(node) {
         const name = node.id.name;
 
-        if (!name.startsWith('Kt') || !name.endsWith('Props')) {
+        if (!name.startsWith("Kt") || !name.endsWith("Props")) {
           return;
         }
 
         const extendsNodes = node.extends || [];
 
-        if (name.endsWith('WebProps') || name.endsWith('MobileProps')) {
+        if (name.endsWith("WebProps") || name.endsWith("MobileProps")) {
           const extendsKtProperties = extendsNodes.some(
             (extension) =>
               extension.expression &&
-              extension.expression.type === 'Identifier' &&
-              extension.expression.name.startsWith('Kt')
+              extension.expression.type === "Identifier" &&
+              extension.expression.name.startsWith("Kt"),
           );
           if (extendsKtProperties) {
             return;
@@ -161,10 +167,10 @@ const extendsBasePropertiesRule = {
           if (!extension.expression) {
             return false;
           }
-          if (extension.expression.type === 'Identifier') {
+          if (extension.expression.type === "Identifier") {
             return (
-              extension.expression.name === 'BaseProps' ||
-              extension.expression.name.startsWith('Kt')
+              extension.expression.name === "BaseProps" ||
+              extension.expression.name.startsWith("Kt")
             );
           }
           return false;
@@ -183,10 +189,10 @@ const extendsBasePropertiesRule = {
 
 const extendsBaseComponentRule = {
   meta: {
-    type: 'suggestion',
+    type: "suggestion",
     docs: {
-      description: 'Enforce BaseComponent extension for web component classes',
-      category: 'Best Practices',
+      description: "Enforce BaseComponent extension for web component classes",
+      category: "Best Practices",
       recommended: true,
     },
     schema: [],
@@ -200,10 +206,10 @@ const extendsBaseComponentRule = {
         }
         const className = node.id.name;
 
-        if (!className.startsWith('Kt')) {
+        if (!className.startsWith("Kt")) {
           return;
         }
-        if (!className.endsWith('Web') && !className.endsWith('Mobile')) {
+        if (!className.endsWith("Web") && !className.endsWith("Mobile")) {
           return;
         }
 
@@ -217,11 +223,12 @@ const extendsBaseComponentRule = {
         }
 
         const extendsBaseComponent =
-          (superClass.type === 'Identifier' && superClass.name === 'BaseComponent') ||
-          (superClass.type === 'MemberExpression' &&
+          (superClass.type === "Identifier" &&
+            superClass.name === "BaseComponent") ||
+          (superClass.type === "MemberExpression" &&
             superClass.object &&
-            superClass.object.type === 'Identifier' &&
-            superClass.object.name === 'BaseComponent');
+            superClass.object.type === "Identifier" &&
+            superClass.object.name === "BaseComponent");
 
         if (!extendsBaseComponent) {
           context.report({
@@ -236,17 +243,17 @@ const extendsBaseComponentRule = {
 
 const requiredTypeExportsRule = {
   meta: {
-    type: 'suggestion',
+    type: "suggestion",
     docs: {
-      description: 'Enforce required type exports for component types files',
-      category: 'Best Practices',
-      recommended: 'warn',
+      description: "Enforce required type exports for component types files",
+      category: "Best Practices",
+      recommended: "warn",
     },
     schema: [],
   },
   create(context) {
-    const filename = context.getFilename().replace(/\\/g, '/');
-    if (!filename.endsWith('.types.ts')) {
+    const filename = context.getFilename().replace(/\\/g, "/");
+    if (!filename.endsWith(".types.ts")) {
       return {};
     }
 
@@ -257,8 +264,8 @@ const requiredTypeExportsRule = {
         if (node.declaration) {
           const { declaration } = node;
           if (
-            (declaration.type === 'TSInterfaceDeclaration' ||
-              declaration.type === 'TSTypeAliasDeclaration') &&
+            (declaration.type === "TSInterfaceDeclaration" ||
+              declaration.type === "TSTypeAliasDeclaration") &&
             declaration.id
           ) {
             exports.add(declaration.id.name);
@@ -274,14 +281,17 @@ const requiredTypeExportsRule = {
         }
       },
 
-      'Program:exit'() {
+      "Program:exit"() {
         const match = filename.match(/\/([\w-]+)\.types\.ts$/i);
         if (!match) {
           return;
         }
 
         const componentName = toPascalCase(match[1]);
-        const requiredExports = [`Kt${componentName}Props`, `Kt${componentName}State`];
+        const requiredExports = [
+          `Kt${componentName}Props`,
+          `Kt${componentName}State`,
+        ];
 
         requiredExports.forEach((requiredExport) => {
           if (!exports.has(requiredExport)) {
@@ -297,23 +307,23 @@ const requiredTypeExportsRule = {
 };
 
 export const rules = {
-  'component-naming': componentNamingRule,
-  'props-naming': propsNamingRule,
-  'event-naming': eventNamingRule,
-  'extends-base-props': extendsBasePropertiesRule,
-  'extends-base-component': extendsBaseComponentRule,
-  'required-type-exports': requiredTypeExportsRule,
+  "component-naming": componentNamingRule,
+  "props-naming": propsNamingRule,
+  "event-naming": eventNamingRule,
+  "extends-base-props": extendsBasePropertiesRule,
+  "extends-base-component": extendsBaseComponentRule,
+  "required-type-exports": requiredTypeExportsRule,
 };
 
 export const configs = {
   recommended: {
     rules: {
-      'kitium/component-naming': 'error',
-      'kitium/props-naming': 'error',
-      'kitium/event-naming': 'error',
-      'kitium/extends-base-props': 'warn',
-      'kitium/extends-base-component': 'warn',
-      'kitium/required-type-exports': 'warn',
+      "kitium/component-naming": "error",
+      "kitium/props-naming": "error",
+      "kitium/event-naming": "error",
+      "kitium/extends-base-props": "warn",
+      "kitium/extends-base-component": "warn",
+      "kitium/required-type-exports": "warn",
     },
   },
 };

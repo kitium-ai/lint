@@ -10,14 +10,20 @@
  *   node scripts/migrate.js
  */
 
-import { existsSync, readFileSync, renameSync, unlinkSync, writeFileSync } from 'node:fs';
-import { basename, dirname, join } from 'node:path';
-import { createInterface } from 'node:readline';
-import { fileURLToPath } from 'node:url';
-import { inspect } from 'node:util';
+import {
+  existsSync,
+  readFileSync,
+  renameSync,
+  unlinkSync,
+  writeFileSync,
+} from "node:fs";
+import { basename, dirname, join } from "node:path";
+import { createInterface } from "node:readline";
+import { fileURLToPath } from "node:url";
+import { inspect } from "node:util";
 
-import { ensureSharedConfigs } from '@kitiumai/scripts/dx';
-import { log } from '@kitiumai/scripts/utils';
+import { ensureSharedConfigs } from "@kitiumai/scripts/dx";
+import { log } from "@kitiumai/scripts/utils";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -38,18 +44,23 @@ function findProjectRoot() {
     const maxLevels = 10;
     let levels = 0;
 
-    while (currentDir && currentDir !== '/' && currentDir.length > 1 && levels < maxLevels) {
-      const packageJsonPath = join(currentDir, 'package.json');
+    while (
+      currentDir &&
+      currentDir !== "/" &&
+      currentDir.length > 1 &&
+      levels < maxLevels
+    ) {
+      const packageJsonPath = join(currentDir, "package.json");
 
       // eslint-disable-next-line security/detect-non-literal-fs-filename
       if (existsSync(packageJsonPath)) {
         // eslint-disable-next-line max-depth
         try {
           // eslint-disable-next-line security/detect-non-literal-fs-filename
-          const package_ = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+          const package_ = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
           // Skip if this is @kitiumai/lint itself
           // eslint-disable-next-line max-depth
-          if (package_.name === '@kitiumai/lint') {
+          if (package_.name === "@kitiumai/lint") {
             currentDir = dirname(currentDir);
             levels++;
             continue;
@@ -77,14 +88,14 @@ function findProjectRoot() {
  */
 async function promptUser(question) {
   // Support auto-yes mode for testing/CI via environment variable
-  if (process.env.MIGRATE_AUTO_YES === 'true') {
-    log('info', question);
+  if (process.env.MIGRATE_AUTO_YES === "true") {
+    log("info", question);
     return true;
   }
 
   // Support auto-no mode for testing via environment variable
-  if (process.env.MIGRATE_AUTO_NO === 'true') {
-    log('info', question);
+  if (process.env.MIGRATE_AUTO_NO === "true") {
+    log("info", question);
     return false;
   }
 
@@ -96,7 +107,7 @@ async function promptUser(question) {
 
     rl.question(question, (answer) => {
       rl.close();
-      resolve(answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes');
+      resolve(answer.toLowerCase() === "y" || answer.toLowerCase() === "yes");
     });
   });
 }
@@ -112,14 +123,14 @@ function detectExistingConfigs(projectRoot) {
   };
 
   // ESLint v9 flat config
-  const eslintV9Path = join(projectRoot, 'eslint.config.js');
+  const eslintV9Path = join(projectRoot, "eslint.config.js");
   // eslint-disable-next-line security/detect-non-literal-fs-filename
   if (existsSync(eslintV9Path)) {
     configs.eslintV9 = eslintV9Path;
   }
 
   // TSLint config
-  const tslintPath = join(projectRoot, 'tslint.json');
+  const tslintPath = join(projectRoot, "tslint.json");
   // eslint-disable-next-line security/detect-non-literal-fs-filename
   if (existsSync(tslintPath)) {
     configs.tslint = tslintPath;
@@ -127,12 +138,12 @@ function detectExistingConfigs(projectRoot) {
 
   // Prettier configs
   const prettierPatterns = [
-    '.prettierrc.js',
-    '.prettierrc.cjs',
-    '.prettierrc.json',
-    '.prettierrc.yml',
-    '.prettierrc.yaml',
-    '.prettierrc',
+    ".prettierrc.js",
+    ".prettierrc.cjs",
+    ".prettierrc.json",
+    ".prettierrc.yml",
+    ".prettierrc.yaml",
+    ".prettierrc",
   ];
 
   for (const pattern of prettierPatterns) {
@@ -153,22 +164,22 @@ function detectExistingConfigs(projectRoot) {
 function parsePrettierConfig(configPath) {
   try {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    const content = readFileSync(configPath, 'utf-8');
+    const content = readFileSync(configPath, "utf-8");
     const extension = basename(configPath);
 
     // Handle JSON format
-    if (extension.endsWith('.json') || extension === '.prettierrc') {
+    if (extension.endsWith(".json") || extension === ".prettierrc") {
       return JSON.parse(content);
     }
 
     // Handle JS/CJS format
 
     const configObject = eval(
-      `(${content.replace(/^module\.exports\s*=\s*/, '').replace(/^export\s+default\s+/, '')})`
+      `(${content.replace(/^module\.exports\s*=\s*/, "").replace(/^export\s+default\s+/, "")})`,
     );
     return configObject;
   } catch (error) {
-    log('error', `Error parsing Prettier config: ${error.message}`);
+    log("error", `Error parsing Prettier config: ${error.message}`);
     return null;
   }
 }
@@ -193,10 +204,10 @@ function extractPrettierCustomSettings(config) {
 function parseTslintConfig(configPath) {
   try {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    const content = readFileSync(configPath, 'utf-8');
+    const content = readFileSync(configPath, "utf-8");
     return JSON.parse(content);
   } catch (error) {
-    log('error', `Error parsing TSLint config: ${error.message}`);
+    log("error", `Error parsing TSLint config: ${error.message}`);
     return null;
   }
 }
@@ -231,23 +242,23 @@ function extractTslintCustomRules(config) {
  */
 function createMigratedTslintConfig(customRules) {
   const tslintConfig = {
-    extends: ['tslint:recommended'],
+    extends: ["tslint:recommended"],
     rules: {
-      'no-console': {
-        severity: 'warning',
+      "no-console": {
+        severity: "warning",
       },
-      'object-literal-sort-keys': false,
-      'ordered-imports': [
+      "object-literal-sort-keys": false,
+      "ordered-imports": [
         true,
         {
-          'import-sources-order': 'lowercase-last',
-          'named-imports-order': 'lowercase-last',
+          "import-sources-order": "lowercase-last",
+          "named-imports-order": "lowercase-last",
         },
       ],
       // Your existing custom rules have been preserved below
       ...customRules.rules,
     },
-    exclude: customRules.exclude || ['node_modules', 'dist', 'build', '.next'],
+    exclude: customRules.exclude || ["node_modules", "dist", "build", ".next"],
   };
 
   // Add custom extends if they exist (but keep our base)
@@ -266,7 +277,7 @@ function createMigratedTslintConfig(customRules) {
  * Remove deprecated .eslintignore file (ESLint v9 uses ignores in eslint.config.js)
  */
 function removeDeprecatedEslintIgnore(projectRoot) {
-  const eslintIgnorePath = join(projectRoot, '.eslintignore');
+  const eslintIgnorePath = join(projectRoot, ".eslintignore");
 
   // eslint-disable-next-line security/detect-non-literal-fs-filename
   if (existsSync(eslintIgnorePath)) {
@@ -274,12 +285,12 @@ function removeDeprecatedEslintIgnore(projectRoot) {
       // eslint-disable-next-line security/detect-non-literal-fs-filename
       unlinkSync(eslintIgnorePath);
       log(
-        'success',
-        'Removed deprecated .eslintignore (using ignores in eslint.config.js instead)'
+        "success",
+        "Removed deprecated .eslintignore (using ignores in eslint.config.js instead)",
       );
     } catch (error) {
       // Silently fail if removal fails
-      log('warn', `Could not remove .eslintignore: ${error.message}`);
+      log("warn", `Could not remove .eslintignore: ${error.message}`);
     }
   }
 }
@@ -288,30 +299,30 @@ function removeDeprecatedEslintIgnore(projectRoot) {
  * Create migrated ESLint config (flat config format)
  */
 // eslint-disable-next-line max-lines-per-function
-function createMigratedEslintConfig(customRules, projectType = 'node') {
+function createMigratedEslintConfig(customRules, projectType = "node") {
   const configMap = {
     react: {
-      imports: 'baseConfig, reactConfig, typeScriptConfig',
-      configs: '...baseConfig,\n  ...reactConfig,\n  ...typeScriptConfig',
+      imports: "baseConfig, reactConfig, typeScriptConfig",
+      configs: "...baseConfig,\n  ...reactConfig,\n  ...typeScriptConfig",
     },
-    'node.js': {
-      imports: 'baseConfig, nodeConfig, typeScriptConfig',
-      configs: '...baseConfig,\n  ...nodeConfig,\n  ...typeScriptConfig',
+    "node.js": {
+      imports: "baseConfig, nodeConfig, typeScriptConfig",
+      configs: "...baseConfig,\n  ...nodeConfig,\n  ...typeScriptConfig",
     },
-    'next.js': {
+    "next.js": {
       imports:
-        'baseConfig, nextjsConfig, typeScriptConfig, jestConfig, testingLibraryConfig, reactConfig',
+        "baseConfig, nextjsConfig, typeScriptConfig, jestConfig, testingLibraryConfig, reactConfig",
       configs:
         "...baseConfig,\n  ...reactConfig,\n  ...nextjsConfig,\n  ...typeScriptConfig,\n  {\n    files: ['**/*.{test,spec}.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  },\n  {\n    files: ['**/*.test.{jsx,tsx}'],\n    ...testingLibraryConfig,\n  }",
     },
     vue: {
-      imports: 'baseConfig, vueConfig, typeScriptConfig, jestConfig',
+      imports: "baseConfig, vueConfig, typeScriptConfig, jestConfig",
       configs:
         "...baseConfig,\n  ...vueConfig,\n  ...typeScriptConfig,\n  {\n    files: ['**/*.test.{js,ts,jsx,tsx}'],\n    ...jestConfig,\n  }",
     },
   };
 
-  const configData = configMap[projectType] || configMap['node.js'];
+  const configData = configMap[projectType] || configMap["node.js"];
   const imports = configData.imports;
   const configs = configData.configs;
 
@@ -359,9 +370,9 @@ export default [
   if (Object.keys(customRules.rules || {}).length > 0) {
     configContent += Object.entries(customRules.rules)
       .map(([rule, value]) => `      '${rule}': ${inspect(value)},`)
-      .join('\n');
+      .join("\n");
   } else {
-    configContent += '      // Add your custom rules here\n';
+    configContent += "      // Add your custom rules here\n";
   }
 
   configContent += `
@@ -384,7 +395,7 @@ export default [
       if (override.rules) {
         configContent += Object.entries(override.rules)
           .map(([rule, value]) => `      '${rule}': ${inspect(value)},`)
-          .join('\n');
+          .join("\n");
       }
       configContent += `
     },
@@ -436,14 +447,17 @@ export default {
  */
 function backupConfigFile(filePath) {
   try {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+    const timestamp = new Date()
+      .toISOString()
+      .replace(/[:.]/g, "-")
+      .slice(0, -5);
     const backupPath = `${filePath}.backup.${timestamp}`;
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     renameSync(filePath, backupPath);
-    log('success', `Backed up original config: ${basename(backupPath)}`);
+    log("success", `Backed up original config: ${basename(backupPath)}`);
     return backupPath;
   } catch (error) {
-    log('error', `Failed to backup ${basename(filePath)}: ${error.message}`);
+    log("error", `Failed to backup ${basename(filePath)}: ${error.message}`);
     return null;
   }
 }
@@ -454,50 +468,56 @@ function backupConfigFile(filePath) {
 // eslint-disable-next-line complexity
 function detectProjectType(projectRoot, config) {
   // eslint-disable-next-line security/detect-non-literal-fs-filename
-  const packageContent = readFileSync(join(projectRoot, 'package.json'), 'utf-8');
+  const packageContent = readFileSync(
+    join(projectRoot, "package.json"),
+    "utf-8",
+  );
   const package_ = JSON.parse(packageContent);
 
   // Check dependencies
-  if (package_.dependencies?.['@angular/core'] || package_.devDependencies?.['@angular/core']) {
-    return 'angular';
+  if (
+    package_.dependencies?.["@angular/core"] ||
+    package_.devDependencies?.["@angular/core"]
+  ) {
+    return "angular";
   }
 
   if (package_.dependencies?.svelte || package_.devDependencies?.svelte) {
-    return 'svelte';
+    return "svelte";
   }
 
   if (package_.dependencies?.react || package_.devDependencies?.react) {
     if (package_.dependencies?.next || package_.devDependencies?.next) {
-      return 'nextjs';
+      return "nextjs";
     }
-    return 'react';
+    return "react";
   }
 
   if (package_.dependencies?.vue || package_.devDependencies?.vue) {
-    return 'vue';
+    return "vue";
   }
 
   // Check extends in old config
   if (config?.extends) {
     const extendsString = String(config.extends).toLowerCase();
-    if (extendsString.includes('angular')) {
-      return 'angular';
+    if (extendsString.includes("angular")) {
+      return "angular";
     }
-    if (extendsString.includes('svelte')) {
-      return 'svelte';
+    if (extendsString.includes("svelte")) {
+      return "svelte";
     }
-    if (extendsString.includes('react')) {
-      return 'react';
+    if (extendsString.includes("react")) {
+      return "react";
     }
-    if (extendsString.includes('next')) {
-      return 'nextjs';
+    if (extendsString.includes("next")) {
+      return "nextjs";
     }
-    if (extendsString.includes('vue')) {
-      return 'vue';
+    if (extendsString.includes("vue")) {
+      return "vue";
     }
   }
 
-  return 'node';
+  return "node";
 }
 
 /**
@@ -508,73 +528,82 @@ async function main() {
   const projectRoot = findProjectRoot();
 
   if (!projectRoot) {
-    throw new Error('Could not find project root (package.json)');
+    throw new Error("Could not find project root (package.json)");
   }
 
-  log('info', '\n🔄 @kitiumai/lint Migration Tool\n');
+  log("info", "\n🔄 @kitiumai/lint Migration Tool\n");
 
   const configs = detectExistingConfigs(projectRoot);
 
   if (!configs.eslintV9 && !configs.prettier && !configs.tslint) {
-    log('info', 'ℹ️  No existing ESLint v9, TSLint, or Prettier configurations found.');
-    log('info', '   Run the postinstall setup to create fresh configurations.\n');
+    log(
+      "info",
+      "ℹ️  No existing ESLint v9, TSLint, or Prettier configurations found.",
+    );
+    log(
+      "info",
+      "   Run the postinstall setup to create fresh configurations.\n",
+    );
     return;
   }
 
-  log('info', 'Found existing configurations:');
+  log("info", "Found existing configurations:");
   if (configs.eslintV9) {
-    log('info', `  ✓ ESLint v9 (flat config): ${basename(configs.eslintV9)}`);
+    log("info", `  ✓ ESLint v9 (flat config): ${basename(configs.eslintV9)}`);
   }
   if (configs.tslint) {
-    log('info', `  ✓ TSLint: ${basename(configs.tslint)}`);
+    log("info", `  ✓ TSLint: ${basename(configs.tslint)}`);
   }
   if (configs.prettier) {
-    log('info', `  ✓ Prettier: ${basename(configs.prettier)}\n`);
+    log("info", `  ✓ Prettier: ${basename(configs.prettier)}\n`);
   }
 
   // Prompt for migration
   const proceedESLint = configs.eslintV9
-    ? await promptUser('Migrate ESLint v9 configuration? (y/n): ')
+    ? await promptUser("Migrate ESLint v9 configuration? (y/n): ")
     : false;
 
   const proceedTSLint = configs.tslint
-    ? await promptUser('Migrate TSLint configuration? (y/n): ')
+    ? await promptUser("Migrate TSLint configuration? (y/n): ")
     : false;
 
   const proceedPrettier = configs.prettier
-    ? await promptUser('Migrate Prettier configuration? (y/n): ')
+    ? await promptUser("Migrate Prettier configuration? (y/n): ")
     : false;
 
   if (!proceedESLint && !proceedTSLint && !proceedPrettier) {
-    log('info', '\n📝 Migration skipped.\n');
+    log("info", "\n📝 Migration skipped.\n");
     return;
   }
 
-  log('info', '\n⏳ Migrating configurations...\n');
+  log("info", "\n⏳ Migrating configurations...\n");
 
   // Migrate ESLint
   if (proceedESLint) {
-    log('info', '📦 Processing ESLint v9 (flat config)...');
+    log("info", "📦 Processing ESLint v9 (flat config)...");
     removeDeprecatedEslintIgnore(projectRoot);
     const configPath = configs.eslintV9;
     const eslintConfig = { rules: {}, overrides: [] };
 
     const projectType = detectProjectType(projectRoot, eslintConfig);
-    const migratedESLint = createMigratedEslintConfig(eslintConfig, projectType);
+    const migratedESLint = createMigratedEslintConfig(
+      eslintConfig,
+      projectType,
+    );
 
     // Backup original
     backupConfigFile(configPath);
 
     // Write migrated config
-    const newConfigPath = join(projectRoot, 'eslint.config.js');
+    const newConfigPath = join(projectRoot, "eslint.config.js");
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    writeFileSync(newConfigPath, migratedESLint, 'utf-8');
-    log('success', 'Created eslint.config.js\n');
+    writeFileSync(newConfigPath, migratedESLint, "utf-8");
+    log("success", "Created eslint.config.js\n");
   }
 
   // Migrate TSLint
   if (proceedTSLint) {
-    log('info', '📦 Processing TSLint config...');
+    log("info", "📦 Processing TSLint config...");
     const parsedTslint = parseTslintConfig(configs.tslint);
     const customRules = extractTslintCustomRules(parsedTslint);
 
@@ -584,15 +613,15 @@ async function main() {
     backupConfigFile(configs.tslint);
 
     // Write migrated config
-    const newConfigPath = join(projectRoot, 'tslint.json');
+    const newConfigPath = join(projectRoot, "tslint.json");
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    writeFileSync(newConfigPath, migratedTslint, 'utf-8');
-    log('success', 'Created tslint.json\n');
+    writeFileSync(newConfigPath, migratedTslint, "utf-8");
+    log("success", "Created tslint.json\n");
   }
 
   // Migrate Prettier
   if (proceedPrettier) {
-    log('info', '📦 Processing Prettier config...');
+    log("info", "📦 Processing Prettier config...");
     const parsedPrettier = parsePrettierConfig(configs.prettier);
     const customSettings = extractPrettierCustomSettings(parsedPrettier);
 
@@ -602,17 +631,20 @@ async function main() {
     backupConfigFile(configs.prettier);
 
     // Write migrated config
-    const newConfigPath = join(projectRoot, '.prettierrc.js');
+    const newConfigPath = join(projectRoot, ".prettierrc.js");
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    writeFileSync(newConfigPath, migratedPrettier, 'utf-8');
-    log('success', 'Created .prettierrc.js\n');
+    writeFileSync(newConfigPath, migratedPrettier, "utf-8");
+    log("success", "Created .prettierrc.js\n");
   }
 
-  log('success', '✨ Migration complete!\n');
-  log('info', 'Next steps:');
-  log('info', '  1. Review the migrated configs');
-  log('info', '  2. Test your project: npm run lint');
-  log('info', '  3. The original configs are backed up with .backup timestamps\n');
+  log("success", "✨ Migration complete!\n");
+  log("info", "Next steps:");
+  log("info", "  1. Review the migrated configs");
+  log("info", "  2. Test your project: npm run lint");
+  log(
+    "info",
+    "  3. The original configs are backed up with .backup timestamps\n",
+  );
 
   try {
     const auditResults = await ensureSharedConfigs({
@@ -621,16 +653,16 @@ async function main() {
       requireEslint: true,
     });
     if (auditResults.length === 0) {
-      log('success', 'Shared config audit passed post-migration.');
+      log("success", "Shared config audit passed post-migration.");
     } else {
-      log('warn', 'Shared config audit detected remaining issues:');
+      log("warn", "Shared config audit detected remaining issues:");
       auditResults.forEach((result) => {
-        log('warn', `  • ${result.packageDir}`);
-        result.issues.forEach((issue) => log('info', `    - ${issue}`));
+        log("warn", `  • ${result.packageDir}`);
+        result.issues.forEach((issue) => log("info", `    - ${issue}`));
       });
     }
   } catch (error) {
-    log('warn', `Shared config audit skipped: ${error.message}`);
+    log("warn", `Shared config audit skipped: ${error.message}`);
   }
 }
 
@@ -639,152 +671,170 @@ async function main() {
  */
 // eslint-disable-next-line max-lines-per-function, complexity
 function handleMigrationError(error) {
-  console.error(`\n${'━'.repeat(70)}`);
+  console.error(`\n${"━".repeat(70)}`);
 
-  console.error('❌ MIGRATION ERROR');
+  console.error("❌ MIGRATION ERROR");
 
-  console.error(`${'━'.repeat(70)}\n`);
+  console.error(`${"━".repeat(70)}\n`);
 
   console.error(`Error: ${error.message}\n`);
 
   // Categorize error and provide specific guidance
   const errorMessage = error.message.toLowerCase();
-  const errorStack = error.stack || '';
+  const errorStack = error.stack || "";
 
-  console.error('📋 Diagnostic Information:');
+  console.error("📋 Diagnostic Information:");
 
   console.error(`  • Node.js version: ${process.version}`);
 
   console.error(`  • Current directory: ${process.cwd()}`);
 
-  console.error(`  • npm lifecycle event: ${process.env.npm_lifecycle_event || 'none'}\n`);
+  console.error(
+    `  • npm lifecycle event: ${process.env.npm_lifecycle_event || "none"}\n`,
+  );
 
   // Specific error handling
-  if (errorMessage.includes('eacces') || errorMessage.includes('permission denied')) {
-    console.error('🔒 Permission Issue Detected:\n');
-
-    console.error('  The migration script cannot write to the current directory.\n');
-
-    console.error('  Try these solutions:\n');
-
-    console.error('  1. Check directory permissions:');
-
-    console.error('     ls -la . | head\n');
-
-    console.error('  2. Fix ownership if needed:');
-
-    console.error('     sudo chown -R $USER:$USER .\n');
-
-    console.error('  3. Try from a different directory with write access\n');
-  } else if (errorMessage.includes('enoent') || errorMessage.includes('no such file')) {
-    console.error('📁 Configuration File Not Found:\n');
-
-    console.error('  The migration script cannot find your config file.\n');
-
-    console.error('  Common causes:\n');
-
-    console.error('  • Config file was deleted or moved');
-
-    console.error('  • Running from wrong directory\n');
-
-    console.error('  Try these solutions:\n');
-
-    console.error('  1. List available configs:');
-
-    console.error('     ls -la .eslintrc* .prettierrc* tslint.json\n');
-
-    console.error('  2. Run migration from the correct directory:');
-
-    console.error('     cd /path/to/your/project && npm run migrate\n');
-  } else if (
-    errorMessage.includes('json') ||
-    errorMessage.includes('parse') ||
-    errorMessage.includes('syntax')
+  if (
+    errorMessage.includes("eacces") ||
+    errorMessage.includes("permission denied")
   ) {
-    console.error('📝 Configuration Parse Error:\n');
+    console.error("🔒 Permission Issue Detected:\n");
 
-    console.error('  Invalid syntax or format in your config file.\n');
+    console.error(
+      "  The migration script cannot write to the current directory.\n",
+    );
 
-    console.error('  Common causes:\n');
+    console.error("  Try these solutions:\n");
 
-    console.error('  • Malformed JSON (missing quotes, commas, etc.)');
+    console.error("  1. Check directory permissions:");
 
-    console.error('  • Invalid JavaScript syntax\n');
+    console.error("     ls -la . | head\n");
 
-    console.error('  Try these solutions:\n');
+    console.error("  2. Fix ownership if needed:");
 
-    console.error('  1. Validate JSON config:');
+    console.error("     sudo chown -R $USER:$USER .\n");
 
-    console.error('     cat .eslintrc.json | python -m json.tool\n');
+    console.error("  3. Try from a different directory with write access\n");
+  } else if (
+    errorMessage.includes("enoent") ||
+    errorMessage.includes("no such file")
+  ) {
+    console.error("📁 Configuration File Not Found:\n");
 
-    console.error('  2. Check for syntax errors:');
+    console.error("  The migration script cannot find your config file.\n");
 
-    console.error('     node -c .eslintrc.js (if using JS format)\n');
+    console.error("  Common causes:\n");
 
-    console.error('  3. Fix config file manually before migration\n');
-  } else if (errorMessage.includes('eval') || errorMessage.includes('expression')) {
-    console.error('⚙️  Configuration Parsing Error:\n');
+    console.error("  • Config file was deleted or moved");
 
-    console.error('  Could not evaluate your config file.\n');
+    console.error("  • Running from wrong directory\n");
 
-    console.error('  Try these solutions:\n');
+    console.error("  Try these solutions:\n");
 
-    console.error('  1. Ensure your config is valid JavaScript:');
+    console.error("  1. List available configs:");
 
-    console.error('     node -c eslint.config.js\n');
+    console.error("     ls -la .eslintrc* .prettierrc* tslint.json\n");
 
-    console.error('  2. Check for relative imports that need absolute paths\n');
+    console.error("  2. Run migration from the correct directory:");
 
-    console.error('  3. Remove any non-JSON properties if using JSON format\n');
-  } else if (errorMessage.includes('no project') || errorMessage.includes('not find')) {
-    console.error('🔍 Project Not Found:\n');
+    console.error("     cd /path/to/your/project && npm run migrate\n");
+  } else if (
+    errorMessage.includes("json") ||
+    errorMessage.includes("parse") ||
+    errorMessage.includes("syntax")
+  ) {
+    console.error("📝 Configuration Parse Error:\n");
 
-    console.error('  The migration script could not locate a project.\n');
+    console.error("  Invalid syntax or format in your config file.\n");
 
-    console.error('  Requirements:\n');
+    console.error("  Common causes:\n");
 
-    console.error('  • Requires a package.json file in the directory tree\n');
+    console.error("  • Malformed JSON (missing quotes, commas, etc.)");
 
-    console.error('  Try these solutions:\n');
+    console.error("  • Invalid JavaScript syntax\n");
 
-    console.error('  1. Verify package.json exists:');
+    console.error("  Try these solutions:\n");
 
-    console.error('     ls -la package.json\n');
+    console.error("  1. Validate JSON config:");
 
-    console.error('  2. Create one if missing:');
+    console.error("     cat .eslintrc.json | python -m json.tool\n");
 
-    console.error('     npm init -y\n');
+    console.error("  2. Check for syntax errors:");
+
+    console.error("     node -c .eslintrc.js (if using JS format)\n");
+
+    console.error("  3. Fix config file manually before migration\n");
+  } else if (
+    errorMessage.includes("eval") ||
+    errorMessage.includes("expression")
+  ) {
+    console.error("⚙️  Configuration Parsing Error:\n");
+
+    console.error("  Could not evaluate your config file.\n");
+
+    console.error("  Try these solutions:\n");
+
+    console.error("  1. Ensure your config is valid JavaScript:");
+
+    console.error("     node -c eslint.config.js\n");
+
+    console.error("  2. Check for relative imports that need absolute paths\n");
+
+    console.error("  3. Remove any non-JSON properties if using JSON format\n");
+  } else if (
+    errorMessage.includes("no project") ||
+    errorMessage.includes("not find")
+  ) {
+    console.error("🔍 Project Not Found:\n");
+
+    console.error("  The migration script could not locate a project.\n");
+
+    console.error("  Requirements:\n");
+
+    console.error("  • Requires a package.json file in the directory tree\n");
+
+    console.error("  Try these solutions:\n");
+
+    console.error("  1. Verify package.json exists:");
+
+    console.error("     ls -la package.json\n");
+
+    console.error("  2. Create one if missing:");
+
+    console.error("     npm init -y\n");
   }
 
-  console.error('💡 Migration Tips:');
+  console.error("💡 Migration Tips:");
 
-  console.error('  • Backup your configs before migration:');
+  console.error("  • Backup your configs before migration:");
 
-  console.error('    cp .eslintrc.json .eslintrc.json.backup\n');
+  console.error("    cp .eslintrc.json .eslintrc.json.backup\n");
 
-  console.error('  • Run migration in non-interactive mode:');
+  console.error("  • Run migration in non-interactive mode:");
 
-  console.error('    MIGRATE_AUTO_YES=true npm run migrate\n');
+  console.error("    MIGRATE_AUTO_YES=true npm run migrate\n");
 
-  console.error('  • Test after migration:');
+  console.error("  • Test after migration:");
 
-  console.error('    npm run lint -- --debug\n');
+  console.error("    npm run lint -- --debug\n");
 
-  console.error('📚 Additional Resources:');
+  console.error("📚 Additional Resources:");
 
-  console.error('  • Full error stack:');
+  console.error("  • Full error stack:");
 
-  console.error(`    ${errorStack.split('\n').slice(0, 3).join('\n    ')}\n`);
+  console.error(`    ${errorStack.split("\n").slice(0, 3).join("\n    ")}\n`);
 
-  console.error('  • Report an issue:');
+  console.error("  • Report an issue:");
 
-  console.error('    https://github.com/kitium-ai/lint/issues\n');
+  console.error("    https://github.com/kitium-ai/lint/issues\n");
 
-  console.error('  • Documentation:');
+  console.error("  • Documentation:");
 
-  console.error('    https://github.com/kitium-ai/lint#migration-from-existing-configs\n');
+  console.error(
+    "    https://github.com/kitium-ai/lint#migration-from-existing-configs\n",
+  );
 
-  console.error(`${'━'.repeat(70)}\n`);
+  console.error(`${"━".repeat(70)}\n`);
 }
 
 // Run migration

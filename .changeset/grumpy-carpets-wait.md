@@ -1,5 +1,5 @@
 ---
-'@kitiumai/lint': patch
+"@kitiumai/lint": patch
 ---
 
 initial lint release
