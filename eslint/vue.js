@@ -11,13 +11,20 @@
 
 let vuePlugin;
 let hasVuePlugin = false;
+let vueA11yPlugin;
+let hasVueA11yPlugin = false;
 
 // Try to load optional Vue plugin
 try {
   const mod = await import('eslint-plugin-vue').catch(() => null);
+  const a11y = await import('eslint-plugin-vuejs-accessibility').catch(() => null);
   if (mod) {
     vuePlugin = mod.default;
     hasVuePlugin = true;
+  }
+  if (a11y) {
+    vueA11yPlugin = a11y.default ?? a11y;
+    hasVueA11yPlugin = true;
   }
 } catch (_error) {
   // eslint-plugin-vue is not installed - this is optional
@@ -41,6 +48,7 @@ const createVueConfig = () => {
       ...baseConfig,
       plugins: {
         vue: vuePlugin,
+        ...(hasVueA11yPlugin ? { 'vuejs-accessibility': vueA11yPlugin } : {}),
       },
       rules: {
         // Vue specific rules
@@ -67,6 +75,18 @@ const createVueConfig = () => {
         // Accessibility
         'vue/click-events-have-key-events': 'warn',
         'vue/no-static-inline-styles': 'warn',
+        ...(hasVueA11yPlugin
+          ? {
+              'vuejs-accessibility/alt-text': 'error',
+              'vuejs-accessibility/aria-role': 'error',
+              'vuejs-accessibility/form-control-has-label': 'error',
+              'vuejs-accessibility/anchor-has-content': 'error',
+              'vuejs-accessibility/no-autofocus': 'error',
+              'vuejs-accessibility/no-static-element-interactions': 'warn',
+              'vuejs-accessibility/mouse-events-have-key-events': 'warn',
+              'vuejs-accessibility/aria-props': 'error',
+            }
+          : {}),
 
         // Performance and security
         'vue/no-v-html': 'warn',

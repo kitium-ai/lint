@@ -46,11 +46,17 @@ const createTestingLibraryConfig = () => {
         'testing-library/prefer-query-by-role': 'warn',
         'testing-library/no-node-access': 'warn',
         'testing-library/no-container': 'warn',
+        'testing-library/prefer-presence-queries': 'warn',
+        'testing-library/prefer-find-by': 'warn',
 
         // Avoid implementation details
         'testing-library/no-render-in-setup': 'error',
         'testing-library/no-wait-for-empty-dom': 'error',
         'testing-library/no-wait-for-multiple-assertions': 'warn',
+        'testing-library/render-result-naming-convention': 'warn',
+        'testing-library/no-promise-in-fire-event': 'error',
+        'testing-library/no-await-sync-query': 'error',
+        'testing-library/no-await-sync-events': 'error',
 
         // Async handling
         'testing-library/no-wait-for-side-effects': 'warn',

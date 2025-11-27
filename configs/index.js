@@ -7,6 +7,7 @@
 import base from '../eslint/base.js';
 import graphql from '../eslint/graphql.js';
 import jest from '../eslint/jest.js';
+import kitium from '../eslint/kitium.js';
 import nextjs from '../eslint/nextjs.js';
 import node from '../eslint/node.js';
 import react from '../eslint/react.js';
@@ -20,6 +21,11 @@ import vue from '../eslint/vue.js';
  * Includes: Base, TypeScript, React, Jest, Testing Library, Security
  */
 export const fullstack = [base, typescript, react, node, jest, testingLibrary, security];
+
+/**
+ * Full-stack strict: adds Kitium UI/component standards for shared libraries
+ */
+export const fullstack_strict = [base, typescript, react, node, jest, testingLibrary, security, kitium];
 
 /**
  * React Single Page Application (SPA)
@@ -88,6 +94,7 @@ export const all = [
 
 export default {
   fullstack,
+  fullstack_strict,
   react_spa,
   nextjs_app,
   node_api,

@@ -1,5 +1,20 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Import discipline: deterministic ordering via `simple-import-sort`, cycle detection, and guards against deep relative imports plus module boundary guidance.
+- Promise and logging safety: stricter `eslint-plugin-promise` coverage and `no-console` posture to push teams toward structured loggers.
+- Performance correctness: Unicorn best-practice set (`prefer-query-selector`, `no-await-in-loop`, `throw-new-error`, etc.).
+- Security depth: enabled `no-unsanitized/*` by default and added buffer/eval protections to the security preset.
+- Accessibility upgrades: tighter React a11y defaults and optional Vue accessibility plugin integration.
+- Testing rigor: expanded Jest (`require-top-level-describe`, nested describe limits) and Testing Library (`prefer-presence-queries`, async safeguards) rules.
+- Formatting guardrails: lint-level enforcement against stray Prettier or `.editorconfig` files to preserve the shared formatter baseline.
+- Architecture boundaries: filename casing standards, banned deep relative imports, and baseline module layering rules.
+- Automation templates: Husky hooks run `pnpm lint:fix`, `pnpm format:fix`, `lint-staged`, and `pnpm verify`; added GitHub Actions workflow example using `pnpm verify`.
+- Strict preset: `configs.fullstack_strict` layers Kitium UI standards atop the full-stack bundle for teams that want maximum guardrails.
+
 ## [1.3.4] - 2025-11-24
 
 ### Changed
