@@ -16,10 +16,10 @@ let hasVueA11yPlugin = false;
 
 // Try to load optional Vue plugin
 try {
-  const mod = await import('eslint-plugin-vue').catch(() => null);
+  const module_ = await import('eslint-plugin-vue').catch(() => null);
   const a11y = await import('eslint-plugin-vuejs-accessibility').catch(() => null);
-  if (mod) {
-    vuePlugin = mod.default;
+  if (module_) {
+    vuePlugin = module_.default;
     hasVuePlugin = true;
   }
   if (a11y) {

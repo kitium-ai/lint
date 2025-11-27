@@ -60,9 +60,9 @@ function findConsumerPackageJson() {
         // eslint-disable-next-line max-depth
         try {
           // eslint-disable-next-line security/detect-non-literal-fs-filename
-          const pkg = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+          const package_ = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
           // eslint-disable-next-line max-depth
-          if (pkg.name === '@kitiumai/lint') {
+          if (package_.name === '@kitiumai/lint') {
             currentDir = dirname(currentDir);
             levels++;
             continue;
@@ -136,9 +136,9 @@ async function promptChoice(question, choices, defaultIndex = 0) {
   if (setupProjectType !== undefined) {
     const index = choices.findIndex((c) => c.toLowerCase() === setupProjectType.toLowerCase());
     log('info', `\n${question}`);
-    choices.forEach((choice, idx) => {
-      const marker = idx === (index >= 0 ? index : defaultIndex) ? '>' : ' ';
-      log('info', `  ${marker} ${idx + 1}. ${choice}`);
+    choices.forEach((choice, index_) => {
+      const marker = index_ === (index >= 0 ? index : defaultIndex) ? '>' : ' ';
+      log('info', `  ${marker} ${index_ + 1}. ${choice}`);
     });
     return index >= 0 ? index : defaultIndex;
   }
@@ -826,7 +826,7 @@ function handleSetupError(error) {
   console.error(`Error: ${error.message}\n`);
 
   // Categorize error and provide specific guidance
-  const errorMsg = error.message.toLowerCase();
+  const errorMessage = error.message.toLowerCase();
   const errorStack = error.stack || '';
 
   console.error('📋 Diagnostic Information:');
@@ -840,7 +840,7 @@ function handleSetupError(error) {
   console.error(`  • npm lifecycle event: ${process.env.npm_lifecycle_event || 'none'}\n`);
 
   // Specific error handling
-  if (errorMsg.includes('eacces') || errorMsg.includes('permission denied')) {
+  if (errorMessage.includes('eacces') || errorMessage.includes('permission denied')) {
     console.error('🔒 Permission Issue Detected:\n');
 
     console.error('  This usually means @kitiumai/lint cannot write to the current directory.\n');
@@ -860,7 +860,7 @@ function handleSetupError(error) {
     console.error('  3. Check directory ownership:');
 
     console.error('     ls -la package.json\n');
-  } else if (errorMsg.includes('enoent') || errorMsg.includes('no such file')) {
+  } else if (errorMessage.includes('enoent') || errorMessage.includes('no such file')) {
     console.error('📁 File Not Found:\n');
 
     console.error('  A required file is missing. This might happen if:\n');
@@ -878,7 +878,7 @@ function handleSetupError(error) {
     console.error('  2. Run from the correct directory:');
 
     console.error('     cd /path/to/your/project\n');
-  } else if (errorMsg.includes('json') || errorMsg.includes('parse')) {
+  } else if (errorMessage.includes('json') || errorMessage.includes('parse')) {
     console.error('📝 Configuration Parse Error:\n');
 
     console.error('  Invalid JSON or configuration syntax detected.\n');
@@ -892,7 +892,7 @@ function handleSetupError(error) {
     console.error('  2. Reset setup configuration:');
 
     console.error('     rm .kitium-lint-setup.json\n');
-  } else if (errorMsg.includes('timeout') || errorMsg.includes('timed out')) {
+  } else if (errorMessage.includes('timeout') || errorMessage.includes('timed out')) {
     console.error('⏱️  Timeout Error:\n');
 
     console.error('  The setup took too long to complete.\n');

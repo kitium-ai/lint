@@ -14,9 +14,9 @@ let hasTestingLibraryPlugin = false;
 
 // Try to load optional Testing Library plugin
 try {
-  const mod = await import('eslint-plugin-testing-library').catch(() => null);
-  if (mod) {
-    testingLibraryPlugin = mod.default;
+  const module_ = await import('eslint-plugin-testing-library').catch(() => null);
+  if (module_) {
+    testingLibraryPlugin = module_.default;
     hasTestingLibraryPlugin = true;
   }
 } catch (_error) {

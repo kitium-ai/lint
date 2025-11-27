@@ -124,7 +124,7 @@ const eventNamingRule = {
   },
 };
 
-const extendsBasePropsRule = {
+const extendsBasePropertiesRule = {
   meta: {
     type: 'suggestion',
     docs: {
@@ -146,28 +146,31 @@ const extendsBasePropsRule = {
         const extendsNodes = node.extends || [];
 
         if (name.endsWith('WebProps') || name.endsWith('MobileProps')) {
-          const extendsKtProps = extendsNodes.some(
-            (ext) =>
-              ext.expression &&
-              ext.expression.type === 'Identifier' &&
-              ext.expression.name.startsWith('Kt')
+          const extendsKtProperties = extendsNodes.some(
+            (extension) =>
+              extension.expression &&
+              extension.expression.type === 'Identifier' &&
+              extension.expression.name.startsWith('Kt')
           );
-          if (extendsKtProps) {
+          if (extendsKtProperties) {
             return;
           }
         }
 
-        const extendsBaseProps = extendsNodes.some((ext) => {
-          if (!ext.expression) {
+        const extendsBaseProperties = extendsNodes.some((extension) => {
+          if (!extension.expression) {
             return false;
           }
-          if (ext.expression.type === 'Identifier') {
-            return ext.expression.name === 'BaseProps' || ext.expression.name.startsWith('Kt');
+          if (extension.expression.type === 'Identifier') {
+            return (
+              extension.expression.name === 'BaseProps' ||
+              extension.expression.name.startsWith('Kt')
+            );
           }
           return false;
         });
 
-        if (!extendsBaseProps) {
+        if (!extendsBaseProperties) {
           context.report({
             node: node.id,
             message: `Props interface "${name}" should extend BaseProps or another Kt*Props interface to ensure consistency.`,
@@ -297,7 +300,7 @@ export const rules = {
   'component-naming': componentNamingRule,
   'props-naming': propsNamingRule,
   'event-naming': eventNamingRule,
-  'extends-base-props': extendsBasePropsRule,
+  'extends-base-props': extendsBasePropertiesRule,
   'extends-base-component': extendsBaseComponentRule,
   'required-type-exports': requiredTypeExportsRule,
 };

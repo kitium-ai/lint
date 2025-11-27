@@ -14,9 +14,9 @@ let hasNextPlugin = false;
 
 // Try to load optional Next.js plugin
 try {
-  const mod = await import('@next/eslint-plugin-next').catch(() => null);
-  if (mod) {
-    nextPlugin = mod.default;
+  const module_ = await import('@next/eslint-plugin-next').catch(() => null);
+  if (module_) {
+    nextPlugin = module_.default;
     hasNextPlugin = true;
   }
 } catch (_error) {
