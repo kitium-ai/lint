@@ -43,11 +43,13 @@ export default {
     'node/no-path-concat': 'error',
     'node/no-deprecated-api': 'warn',
 
-    // No unsanitized - XSS prevention (left off by default, opt-in)
-    'no-unsanitized/method': 'off',
-    'no-unsanitized/property': 'off',
+    // No unsanitized - XSS prevention (on by default, override where necessary)
+    'no-unsanitized/method': 'warn',
+    'no-unsanitized/property': 'warn',
 
     // Additional safeguards
+    'security/detect-eval-with-expression': 'error',
+    'security/detect-new-buffer': 'error',
     'no-script-url': 'error',
     'require-await': 'warn',
     'no-promise-executor-return': 'error',

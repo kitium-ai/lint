@@ -10,8 +10,8 @@ const config = {
    * Runs linting and formatting checks on staged files
    */
   hooks: {
-    'pre-commit': 'lint-staged',
-    'pre-push': 'npm run lint && npm test',
+    'pre-commit': 'pnpm lint:fix && pnpm format:fix && lint-staged',
+    'pre-push': 'pnpm verify',
   },
 
   /**

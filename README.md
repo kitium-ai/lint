@@ -17,10 +17,15 @@ Enterprise-ready, simple, and secure linting configuration package for Kitium AI
 - ✅ **React Ready**: Complete React and React Hooks support with accessibility rules
 - ✅ **Testing Support**: Jest configuration and Testing Library best practices
 - ✅ **Framework Support**: Next.js, Vue.js, Angular, Svelte, and GraphQL configurations included
+- ✅ **Import & Module Discipline**: Deterministic sorting, cycle detection, and guardrails against deep relative imports with module boundary hints
+- ✅ **Error Handling & Promise Safety**: Enforces structured logging expectations and safer async flows using `eslint-plugin-promise`
+- ✅ **Performance & Correctness**: Unicorn essentials to catch subtle perf regressions (`prefer-query-selector`, `no-await-in-loop`, etc.)
+- ✅ **Security Depth**: SonarJS + Node hardening + enabled `no-unsanitized/*` XSS protection by default
 - ✅ **ESLint v9 Support**: Full support for ESLint v9 flat config format
 - ✅ **Kitium UI Standards**: Optional Kitium UI component naming & typing enforcement
 - ✅ **Git Hooks Integration**: Pre-built Husky setup for automated code quality checks
-- ✅ **Code Formatting**: Opinionated Prettier configuration included
+- ✅ **Accessibility First**: Stricter React and Vue accessibility defaults; opt-in Vue a11y plugin support
+- ✅ **Code Formatting**: Opinionated Prettier configuration included plus lint guardrails against stray local Prettier/EditorConfig files
 - ✅ **Shareable Presets**: Pre-built configurations for common project patterns
 - ✅ **Easy to Use**: Simple, composable configurations for any project type
 - ✅ **Zero Configuration**: Works out of the box, no complex setup needed
@@ -126,6 +131,22 @@ pnpm verify
 ```
 
 This ensures lint, formatting, and unit tests all pass before changes leave your machine.
+
+### 4. Enable guardrails everywhere
+
+- **Husky hooks**: The built-in `husky/index.js` runs `pnpm lint:fix`, `pnpm format:fix`, and `lint-staged` on `pre-commit`, then `pnpm verify` on `pre-push` so repos stay aligned with CI.
+- **CI template**: Drop `examples/ci-github-actions.yml` into `.github/workflows/quality.yml` to run the same `pnpm verify` pipeline in GitHub Actions.
+- **Formatting guardrails**: The base config errors on project-local Prettier or `.editorconfig` files so teams keep using the shared formatter defaults.
+
+### Strict presets
+
+For teams that want every guardrail enabled by default, use the `fullstack_strict` preset which layers Kitium UI standards on top of the full-stack bundle:
+
+```javascript
+import { configs } from '@kitiumai/lint';
+
+export default configs.fullstack_strict;
+```
 
 ## Interactive Setup (Manual)
 

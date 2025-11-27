@@ -90,6 +90,10 @@ const createJestConfig = () => {
         'jest/no-test-prefixes': 'error',
         'jest/prefer-mock-promise-shorthand': 'warn',
         'jest/no-untyped-mock-factory': 'warn',
+        'jest/require-top-level-describe': 'error',
+        'jest/max-nested-describe': ['warn', { max: 3 }],
+        'jest/no-alias-methods': 'warn',
+        'jest/no-conditional-in-test': 'warn',
 
         // Enhanced Jest Best Practices (Industry Standard)
         'jest/no-commented-out-tests': 'warn',
