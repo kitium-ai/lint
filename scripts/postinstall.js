@@ -53,18 +53,18 @@ function findConsumerPackageJson() {
     __dirname, // Fallback to script directory
   ];
 
-  for (const startDir of searchPaths) {
-    let currentDir = startDir;
+  for (const startDirectory of searchPaths) {
+    let currentDirectory = startDirectory;
     let levels = 0;
     const maxLevels = 10;
 
     while (
-      currentDir &&
-      currentDir !== "/" &&
-      currentDir.length > 1 &&
+      currentDirectory &&
+      currentDirectory !== "/" &&
+      currentDirectory.length > 1 &&
       levels < maxLevels
     ) {
-      const packageJsonPath = join(currentDir, "package.json");
+      const packageJsonPath = join(currentDirectory, "package.json");
 
       // eslint-disable-next-line security/detect-non-literal-fs-filename
       if (existsSync(packageJsonPath)) {
@@ -74,7 +74,7 @@ function findConsumerPackageJson() {
           const package_ = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
           // eslint-disable-next-line max-depth
           if (package_.name === "@kitiumai/lint") {
-            currentDir = dirname(currentDir);
+            currentDirectory = dirname(currentDirectory);
             levels++;
             continue;
           }
@@ -84,11 +84,11 @@ function findConsumerPackageJson() {
         }
       }
 
-      const parentDir = dirname(currentDir);
-      if (parentDir === currentDir || !parentDir) {
+      const parentDirectory = dirname(currentDirectory);
+      if (parentDirectory === currentDirectory || !parentDirectory) {
         break;
       }
-      currentDir = parentDir;
+      currentDirectory = parentDirectory;
       levels++;
     }
   }
@@ -1004,7 +1004,11 @@ function handleSetupError(error) {
 }
 
 // Run setup
-main().catch((error) => {
-  handleSetupError(error);
-  process.exitCode = 1;
-});
+(async () => {
+  try {
+    await main();
+  } catch (error) {
+    handleSetupError(error);
+    process.exitCode = 1;
+  }
+})();

@@ -131,6 +131,20 @@ import { eslintBaseConfig } from "@kitiumai/lint";
 export default [...eslintBaseConfig];
 ```
 
+## Usage & Tree-Shaking
+
+- Prefer importing the specific subpath you need to keep consumer bundles small. Examples:
+  - `import base from "@kitiumai/lint/eslint/base"`
+  - `import { prettierConfig } from "@kitiumai/lint/prettier"`
+
+- The package uses ESM and provides per-file subpath exports. Bundlers that support tree-shaking (Rollup, esbuild, webpack with Terser) will eliminate unused exports when consumers import only what they need.
+
+- If you use the top-level barrel `import { eslintBaseConfig } from "@kitiumai/lint"`, modern bundlers can still tree-shake unused exports, but importing subpaths is the most robust way to guarantee minimal bundle surface area across toolchains.
+
+- TypeScript users: the package now ships `index.d.ts` with basic declarations for the common subpaths to improve IDE autocompletion and static imports.
+
+If you want, create a minimal verification bundle with `esbuild` to validate that only the chosen config is included.
+
 ### 3. Run `verify` Before Committing
 
 Use the consolidated quality gate to mirror CI locally:

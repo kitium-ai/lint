@@ -88,8 +88,8 @@ importers:
         version: 8.48.0(eslint@9.39.1)(typescript@5.9.3)
     devDependencies:
       '@kitiumai/config':
-        specifier: ^2.0.0
-        version: 2.0.0(eslint@9.39.1)(prettier@3.7.1)(semantic-release@25.0.2(typescript@5.9.3))(typescript@5.9.3)
+        specifier: ^2.0.1
+        version: 2.0.1(eslint@9.39.1)(prettier@3.7.1)(semantic-release@25.0.2(typescript@5.9.3))(typescript@5.9.3)
       '@kitiumai/scripts':
         specifier: ^1.0.0
         version: 1.0.0
@@ -281,8 +281,8 @@ packages:
   '@iarna/toml@2.2.5':
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
 
-  '@kitiumai/config@2.0.0':
-    resolution: {integrity: sha512-7okSZw6yJeqQd0ZAH7iE65AvLIqjIH69uB0aqteR+rL2ywMPFs3vG5uEJci1rcC71b2zT5RBeloEE48gp9IbJw==}
+  '@kitiumai/config@2.0.1':
+    resolution: {integrity: sha512-rhtgWleVSNxstffSgW0LBeflTv+0WWYckRM0X4j6y9loSmgvrGk9U1+WWgMEjeM2JT8PNHSB1NdPH+a/0lDIJA==}
     hasBin: true
 
   '@kitiumai/scripts@1.0.0':
@@ -3447,7 +3447,7 @@ snapshots:
   '@iarna/toml@2.2.5':
     optional: true
 
-  '@kitiumai/config@2.0.0(eslint@9.39.1)(prettier@3.7.1)(semantic-release@25.0.2(typescript@5.9.3))(typescript@5.9.3)':
+  '@kitiumai/config@2.0.1(eslint@9.39.1)(prettier@3.7.1)(semantic-release@25.0.2(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@commitlint/config-conventional': 18.6.3
       '@eslint/js': 9.39.1

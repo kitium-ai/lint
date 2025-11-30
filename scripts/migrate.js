@@ -39,18 +39,18 @@ function findProjectRoot() {
     __dirname, // Fallback to script directory
   ];
 
-  for (const startDir of searchPaths) {
-    let currentDir = startDir;
+  for (const startDirectory of searchPaths) {
+    let currentDirectory = startDirectory;
     const maxLevels = 10;
     let levels = 0;
 
     while (
-      currentDir &&
-      currentDir !== "/" &&
-      currentDir.length > 1 &&
+      currentDirectory &&
+      currentDirectory !== "/" &&
+      currentDirectory.length > 1 &&
       levels < maxLevels
     ) {
-      const packageJsonPath = join(currentDir, "package.json");
+      const packageJsonPath = join(currentDirectory, "package.json");
 
       // eslint-disable-next-line security/detect-non-literal-fs-filename
       if (existsSync(packageJsonPath)) {
@@ -61,21 +61,21 @@ function findProjectRoot() {
           // Skip if this is @kitiumai/lint itself
           // eslint-disable-next-line max-depth
           if (package_.name === "@kitiumai/lint") {
-            currentDir = dirname(currentDir);
+            currentDirectory = dirname(currentDirectory);
             levels++;
             continue;
           }
-          return currentDir;
+          return currentDirectory;
         } catch {
           // Invalid JSON, continue searching
         }
       }
 
-      const parentDir = dirname(currentDir);
-      if (parentDir === currentDir || !parentDir) {
+      const parentDirectory = dirname(currentDirectory);
+      if (parentDirectory === currentDirectory || !parentDirectory) {
         break;
       }
-      currentDir = parentDir;
+      currentDirectory = parentDirectory;
       levels++;
     }
   }
@@ -838,7 +838,11 @@ function handleMigrationError(error) {
 }
 
 // Run migration
-main().catch((error) => {
-  handleMigrationError(error);
-  process.exitCode = 1;
-});
+(async () => {
+  try {
+    await main();
+  } catch (error) {
+    handleMigrationError(error);
+    process.exitCode = 1;
+  }
+})();
