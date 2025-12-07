@@ -76,6 +76,11 @@ declare module "@kitiumai/lint/husky" {
   export default h;
 }
 
+declare module "@kitiumai/lint/commitlint" {
+  const cl: any;
+  export default cl;
+}
+
 declare module "@kitiumai/lint/configs" {
   const presets: { [k: string]: any };
   export default presets;

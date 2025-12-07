@@ -2,7 +2,8 @@
  * Helpers for extending Kitium ESLint configuration
  */
 
-import kitiumConfig from "./kitium.js";
+import kitiumConfig from './kitium.js';
+import { warnIfDisablingCriticalRules } from './utils/critical-rules.js';
 
 /**
  * Create a Kitium ESLint configuration with additional rules, plugins, or overrides.
@@ -19,10 +20,12 @@ export function createKitiumConfig({
   overrides = [],
   baseConfig = kitiumConfig,
 } = {}) {
+  warnIfDisablingCriticalRules(additionalRules, 'createKitiumConfig additionalRules');
+
   const baseArray = Array.isArray(baseConfig) ? baseConfig : [baseConfig];
 
   const extendedBase = baseArray.map((config) => {
-    if (!config || typeof config !== "object") {
+    if (!config || typeof config !== 'object') {
       return config;
     }
 

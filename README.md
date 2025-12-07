@@ -11,6 +11,7 @@ Enterprise-ready, simple, and secure linting configuration package for Kitium AI
 - TypeScript: `@kitiumai/lint/tsconfig/base`, `@kitiumai/lint/tsconfig/react`, `@kitiumai/lint/tsconfig/node`
 - Jest: `@kitiumai/lint/jest` (`baseConfig`, `reactConfig`, `nextjsConfig`, `reactNativeConfig`)
 - Husky helpers: `@kitiumai/lint/husky`
+- Commitlint: `@kitiumai/lint/commitlint`
 
 ## Features
 
@@ -34,6 +35,7 @@ Enterprise-ready, simple, and secure linting configuration package for Kitium AI
 - ✅ **ESLint v9 Support**: Full support for ESLint v9 flat config format
 - ✅ **Kitium UI Standards**: Optional Kitium UI component naming & typing enforcement
 - ✅ **Git Hooks Integration**: Pre-built Husky setup for automated code quality checks
+- ✅ **Commit Message Linting**: Conventional commits enforcement with Commitlint
 - ✅ **Accessibility First**: Stricter React and Vue accessibility defaults; opt-in Vue a11y plugin support
 - ✅ **Code Formatting**: Opinionated Prettier configuration included plus lint guardrails against stray local Prettier/EditorConfig files
 - ✅ **Shareable Presets**: Pre-built configurations for common project patterns

@@ -25,6 +25,7 @@
     "./tsconfig/node": "./tsconfig/node.json",
     "./jest": "./jest/index.js",
     "./husky": "./husky/index.js",
+    "./commitlint": "./.commitlintrc.js",
     "./configs": "./configs/index.js"
   },
   "files": [
@@ -35,6 +36,7 @@
     "tsconfig/",
     "jest/",
     "husky/",
+    ".commitlintrc.js",
     "examples/",
     "configs/",
     "scripts/",
@@ -119,9 +121,9 @@
   "homepage": "https://github.com/kitium-ai/lint#readme",
   "peerDependencies": {
     "eslint": "^9.15.0",
-    "typescript": "^5.6.0",
+    "eslint-plugin-graphql": "^4.0.0",
     "graphql": "^16.8.0",
-    "eslint-plugin-graphql": "^4.0.0"
+    "typescript": "^5.6.0"
   },
   "peerDependenciesMeta": {
     "typescript": {
@@ -135,42 +137,44 @@
     }
   },
   "dependencies": {
+    "@eslint/js": "^9.14.0",
+    "@next/eslint-plugin-next": "^15.0.0",
     "@typescript-eslint/eslint-plugin": "^8.16.0",
     "@typescript-eslint/parser": "^8.16.0",
-    "typescript-eslint": "^8.0.0",
-    "@eslint/js": "^9.14.0",
-    "eslint-plugin-boundaries": "^4.1.0",
-    "eslint-plugin-prettier": "^5.5.4",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-boundaries": "^4.1.0",
     "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-promise": "^7.1.0",
-    "eslint-plugin-security": "^3.0.1",
-    "eslint-plugin-simple-import-sort": "^12.0.0",
-    "eslint-plugin-unicorn": "^56.0.0",
     "eslint-plugin-jest": "^28.0.0",
     "eslint-plugin-jsx-a11y": "^6.10.0",
-    "eslint-plugin-react": "^7.37.0",
-    "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-testing-library": "^7.0.0",
-    "eslint-plugin-vue": "^9.30.0",
-    "eslint-plugin-vuejs-accessibility": "^2.4.1",
-    "@next/eslint-plugin-next": "^15.0.0",
-    "eslint-plugin-sonarjs": "^1.0.0",
     "eslint-plugin-n": "^17.0.0",
     "eslint-plugin-no-unsanitized": "^4.1.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-promise": "^7.1.0",
+    "eslint-plugin-react": "^7.37.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-security": "^3.0.1",
+    "eslint-plugin-simple-import-sort": "^12.0.0",
+    "eslint-plugin-sonarjs": "^1.0.0",
+    "eslint-plugin-testing-library": "^7.0.0",
+    "eslint-plugin-unicorn": "^56.0.0",
+    "eslint-plugin-vue": "^9.30.0",
+    "eslint-plugin-vuejs-accessibility": "^2.4.1",
     "prettier": "^3.6.2",
-    "husky": "^9.0.10"
+    "typescript-eslint": "^8.0.0"
   },
   "optionalDependencies": {
     "eslint-plugin-graphql": "^4.0.0"
   },
   "devDependencies": {
-    "@kitiumai/config": "^2.0.1",
-    "@kitiumai/scripts": "^1.0.0",
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "@kitiumai/config": "^3.0.1",
+    "@kitiumai/scripts": "^2.0.0",
     "eslint": "^9.15.0",
-    "typescript": "^5.6.0",
+    "eslint-plugin-graphql": "^4.0.0",
     "graphql": "^16.8.0",
-    "eslint-plugin-graphql": "^4.0.0"
+    "husky": "^9.0.10",
+    "typescript": "^5.6.0"
   },
   "engines": {
     "node": ">=18.0.0"
