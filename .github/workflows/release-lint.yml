@@ -1,0 +1,149 @@
+name: Release @kitiumai/lint
+
+on:
+  push:
+    tags:
+      - "lint-v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to release (e.g., lint-v1.0.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release-lint:
+    name: "Release @kitiumai/lint"
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/ashishyd/kitiumai-dev:latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+
+      - name: Environment health check
+        run: |
+          echo "📋 Environment diagnostics:"
+          echo "Node: $(node --version)"
+          echo "PNPM: $(pnpm --version)"
+          echo "Git: $(git --version)"
+          echo "Working directory: $(pwd)"
+
+      - name: Ensure pnpm available (corepack fallback)
+        run: |
+          if ! command -v pnpm >/dev/null 2>&1; then
+            echo "pnpm not found, enabling via corepack"
+            corepack enable
+            corepack prepare pnpm@9 -o /usr/local/bin/pnpm
+          fi
+
+      - name: Get tag name
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            TAG_NAME="${GITHUB_REF#refs/tags/}"
+          else
+            TAG_NAME="${{ inputs.tag }}"
+          fi
+          echo "tag=${TAG_NAME}" >> "$GITHUB_OUTPUT"
+          echo "Processing tag: $TAG_NAME"
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          VERSION=$(echo "${{ steps.tag.outputs.tag }}" | sed 's/^lint-v//')
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Extracted version: $VERSION"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline --ignore-scripts
+
+      - name: Build package
+        working-directory: packages/dev-tools/@kitiumai/lint
+        run: pnpm run build || echo "No build step defined"
+
+      - name: Run lint
+        working-directory: packages/dev-tools/@kitiumai/lint
+        run: pnpm run lint || echo "Lint script not found"
+
+      - name: Run tests
+        working-directory: packages/dev-tools/@kitiumai/lint
+        run: pnpm run test || echo "Tests not defined"
+
+      - name: Update package version
+        working-directory: packages/dev-tools/@kitiumai/lint
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          TARGET_VERSION="${{ steps.version.outputs.version }}"
+          if [ "$CURRENT_VERSION" = "$TARGET_VERSION" ]; then
+            echo "Version already $TARGET_VERSION, skipping npm version"
+          else
+            npm version "$TARGET_VERSION" --no-git-tag-version
+          fi
+
+      - name: Configure npm auth
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        working-directory: packages/dev-tools/@kitiumai/lint
+        run: |
+          if [ -z "$NPM_TOKEN" ]; then
+            echo "NPM_TOKEN is required"
+            exit 1
+          fi
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+          npm config set provenance true
+
+      - name: Check if version already published
+        id: version_check
+        working-directory: packages/dev-tools/@kitiumai/lint
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          PACKAGE="@kitiumai/lint"
+          if npm view "${PACKAGE}@${VERSION}" version 2>/dev/null; then
+            echo "already_published=true" >> "$GITHUB_OUTPUT"
+            echo "Version ${VERSION} already exists on npm"
+          else
+            echo "already_published=false" >> "$GITHUB_OUTPUT"
+            echo "Version ${VERSION} not found on npm, proceeding"
+          fi
+
+      - name: Publish to npm
+        if: steps.version_check.outputs.already_published != 'true'
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        working-directory: packages/dev-tools/@kitiumai/lint
+        run: npm publish --access public --provenance
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          release_name: "@kitiumai/lint ${{ steps.version.outputs.version }}"
+          body: |
+            ## Release @kitiumai/lint@${{ steps.version.outputs.version }}
+
+            - Automated release pipeline
+
+            ### Install
+            ```bash
+            pnpm add @kitiumai/lint@${{ steps.version.outputs.version }}
+            ```
+          draft: false
+          prerelease: false

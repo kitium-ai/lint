@@ -1,0 +1,55 @@
+name: Tag & Release @kitiumai/lint
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g., 1.2.3)"
+        required: true
+      prerelease:
+        description: "Mark as prerelease"
+        required: false
+        default: "false"
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/dev-tools/@kitiumai/lint/**"
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  tag-release:
+    name: Tag @kitiumai/lint
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/ashishyd/kitiumai-dev:latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION=$(node -p "require('./packages/dev-tools/@kitiumai/lint/package.json').version")
+          fi
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Create tag
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          TAG="lint-v${VERSION}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists"
+          else
+            git tag "$TAG"
+            git push origin "$TAG"
+          fi
