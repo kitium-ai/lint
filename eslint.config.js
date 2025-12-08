@@ -4,9 +4,12 @@
  * while relaxing internal-only patterns (e.g., relative imports in config files).
  */
 
+import baseConfig from '@kitiumai/config/eslint.config.base.js';
+
 import { eslintBaseConfig, eslintNodeConfig, eslintTypeScriptConfig } from './index.js';
 
 export default [
+  ...baseConfig,
   ...eslintBaseConfig,
   ...eslintTypeScriptConfig,
   ...eslintNodeConfig,
