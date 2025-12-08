@@ -32,6 +32,8 @@ jobs:
       - name: Lint (via @kitiumai/scripts)
         run: pnpm exec node --input-type=module -e "import { lintAll } from '@kitiumai/scripts/lint'; await lintAll(false);"
       - name: Tests with coverage
-        run: pnpm exec node --input-type=module -e "import { runTestsCoverage } from '@kitiumai/scripts/test'; await runTestsCoverage();"
+        run: |
+          mkdir -p coverage
+          NODE_V8_COVERAGE=coverage pnpm test
       - name: Type check
         run: pnpm exec tsc -b --noEmit
