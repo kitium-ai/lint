@@ -5,6 +5,9 @@
     "outDir": "./dist"
   },
   "include": [
-    "src"
+    "index.d.ts",
+    "vitest.config.ts",
+    "tsconfig/**/*.ts",
+    "types/**/*.d.ts"
   ]
 }
