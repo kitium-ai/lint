@@ -4,7 +4,7 @@ inputs:
   working-directory:
     description: Relative path to the @kitiumai/lint package
     required: false
-    default: packages/dev-tools/@kitiumai/lint
+    default: .
   run-verify:
     description: Run pnpm verify in the package directory
     required: false

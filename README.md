@@ -2,6 +2,46 @@
 
 Enterprise-ready, simple, and secure linting configuration package for Kitium AI projects.
 
+## What is this package
+
+@kitiumai/lint is a comprehensive, enterprise-grade linting and code quality configuration package designed specifically for Kitium AI projects. It provides pre-configured, battle-tested configurations for ESLint, Prettier, TypeScript, Jest, and other development tools, supporting multiple frameworks including React, Vue, Next.js, Angular, Svelte, and Node.js. The package emphasizes security, consistency, and developer productivity through automated setup, migration tools, and extensive presets.
+
+## Why we need this package
+
+In a large-scale monorepo like Kitium AI, maintaining code quality across dozens of projects is crucial. This package ensures:
+
+- **Consistency**: Uniform coding standards across all projects
+- **Security**: Built-in security scanning to prevent vulnerabilities
+- **Productivity**: Automated setup and tooling reduces onboarding time
+- **Quality**: Early bug detection and best practice enforcement
+- **Scalability**: Easy configuration for new projects and frameworks
+- **Maintenance**: Centralized updates to linting rules and dependencies
+
+## Competitor Comparison
+
+| Feature | @kitiumai/lint | Airbnb ESLint | Standard JS | XO | TSLint |
+|---------|----------------|----------------|-------------|----|--------|
+| Multi-framework support | ✅ React, Vue, Next.js, Angular, Svelte, Node.js | ❌ Limited | ❌ No | ❌ Limited | ❌ Deprecated |
+| Security scanning | ✅ SonarJS, OWASP | ❌ | ❌ | ❌ | ❌ |
+| Interactive setup | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Migration tools | ✅ | ❌ | ❌ | ❌ | ✅ |
+| TypeScript support | ✅ Full | ✅ | ❌ | ✅ | ✅ |
+| Prettier integration | ✅ | ❌ | ❌ | ✅ | ❌ |
+| Jest configuration | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Git hooks | ✅ Husky | ❌ | ❌ | ❌ | ❌ |
+| Enterprise features | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Monorepo support | ✅ | ❌ | ❌ | ❌ | ❌ |
+
+## Unique Selling Proposition (USP)
+
+- **Enterprise Security First**: Integrated OWASP Top 10 protection and SonarJS analysis
+- **Zero-Configuration Setup**: Interactive wizard detects project type and configures everything
+- **Comprehensive Framework Coverage**: One package for all your JavaScript/TypeScript needs
+- **Migration-Friendly**: Automatic migration from existing configs with backup
+- **Monorepo-Optimized**: Designed for large-scale development with shared tooling
+- **Kitium-Specific Rules**: Custom rules for Kitium UI components and patterns
+- **Performance Focused**: Optimized configurations for fast linting and formatting
+
 ## API Reference (imports)
 
 - ESLint configs: `eslintBaseConfig`, `eslintReactConfig`, `eslintNodeConfig`, `eslintTypeScriptConfig`, `eslintJestConfig`, `eslintTestingLibraryConfig`, `eslintGraphQLConfig`, `eslintVueConfig`, `eslintNextjsConfig`, `eslintAngularConfig`, `eslintSvelteConfig`, `eslintSecurityConfig`, `eslintKitiumConfig`
@@ -12,6 +52,46 @@ Enterprise-ready, simple, and secure linting configuration package for Kitium AI
 - Jest: `@kitiumai/lint/jest` (`baseConfig`, `reactConfig`, `nextjsConfig`, `reactNativeConfig`)
 - Husky helpers: `@kitiumai/lint/husky`
 - Commitlint: `@kitiumai/lint/commitlint`
+
+## Configuration Examples
+
+### React + TypeScript Application
+
+```javascript
+import { eslintReactConfig, eslintTypeScriptConfig } from "@kitiumai/lint";
+
+export default [
+  ...eslintReactConfig,
+  ...eslintTypeScriptConfig,
+  {
+    files: ["src/**/*.{ts,tsx}"],
+    rules: {
+      // Project-specific overrides
+      "react/prop-types": "off",
+    },
+  },
+];
+```
+
+### Node.js API
+
+```javascript
+import { eslintNodeConfig, eslintTypeScriptConfig, eslintSecurityConfig } from "@kitiumai/lint";
+
+export default [
+  ...eslintNodeConfig,
+  ...eslintTypeScriptConfig,
+  eslintSecurityConfig,
+];
+```
+
+### Using Presets
+
+```javascript
+import { configs } from "@kitiumai/lint";
+
+export default [...configs.nextjs_app];
+```
 
 ## Features
 
