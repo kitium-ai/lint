@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Shared setup (install + audit)
-        uses: packages/dev-tools/@kitiumai/lint/.github/actions/lint-shared-setup
+        uses: ./.github/actions/lint-shared-setup
         with:
           run-security-audit: "true"
           audit-allow-failure: "true"

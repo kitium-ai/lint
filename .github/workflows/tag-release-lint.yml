@@ -73,7 +73,7 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
       - name: Shared setup (install + verify)
-        uses: packages/dev-tools/@kitiumai/lint/.github/actions/lint-shared-setup
+        uses: ./.github/actions/lint-shared-setup
         with:
           run-verify: "true"
 

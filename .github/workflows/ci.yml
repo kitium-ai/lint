@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Shared setup (install, verify, typecheck)
-        uses: packages/dev-tools/@kitiumai/lint/.github/actions/lint-shared-setup
+        uses: ./.github/actions/lint-shared-setup
         with:
           ensure-shared-configs: "true"
           run-verify: "true"
