@@ -1,0 +1,88 @@
+name: Kitium Lint Shared Setup
+description: Install workspace deps and optionally run verify/typecheck/audit for @kitiumai/lint
+inputs:
+  working-directory:
+    description: Relative path to the @kitiumai/lint package
+    required: false
+    default: packages/dev-tools/@kitiumai/lint
+  run-verify:
+    description: Run pnpm verify in the package directory
+    required: false
+    default: "false"
+  run-typecheck:
+    description: Run pnpm exec tsc -b --noEmit in the package directory
+    required: false
+    default: "false"
+  run-security-audit:
+    description: Run pnpm audit --audit-level moderate
+    required: false
+    default: "false"
+  ensure-shared-configs:
+    description: Check ensureSharedConfigs helper before running verify
+    required: false
+    default: "false"
+  enable-coverage:
+    description: Create coverage dir and set NODE_V8_COVERAGE before pnpm verify
+    required: false
+    default: "false"
+  coverage-dir:
+    description: Coverage directory name within the package directory
+    required: false
+    default: coverage
+  audit-allow-failure:
+    description: Allow pnpm audit to fail without stopping the workflow
+    required: false
+    default: "false"
+runs:
+  using: composite
+  steps:
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile --prefer-offline --ignore-scripts
+      shell: bash
+
+    - name: Verify shared configs
+      if: ${{ inputs.ensure-shared-configs == 'true' }}
+      run: >
+        pnpm exec node --input-type=module -e "import { ensureSharedConfigs } from '@kitiumai/scripts/dx';
+          const results = await ensureSharedConfigs({ requireTsconfig: true, requireEslint: true });
+          const issues = results.flatMap((entry) => entry.issues || []);
+          if (issues.length) { console.error(issues.join('\n')); process.exit(1); }
+          console.log('Shared configs verified');"
+      shell: bash
+
+    - name: Run pnpm verify
+      if: ${{ inputs.run-verify == 'true' }}
+      run: |
+        WORKDIR="${{ inputs.working-directory }}"
+        COVERAGE_DIR="${{ inputs.coverage-dir }}"
+        mkdir -p "$WORKDIR/$COVERAGE_DIR"
+        (
+          cd "$WORKDIR"
+          if [ "${{ inputs.enable-coverage }}" = "true" ]; then
+            NODE_V8_COVERAGE="$COVERAGE_DIR" pnpm verify
+          else
+            pnpm verify
+          fi
+        )
+      shell: bash
+
+    - name: Type check package
+      if: ${{ inputs.run-typecheck == 'true' }}
+      run: |
+        WORKDIR="${{ inputs.working-directory }}"
+        cd "$WORKDIR"
+        pnpm exec tsc -b --noEmit
+      shell: bash
+
+    - name: pnpm audit
+      if: ${{ inputs.run-security-audit == 'true' }}
+      run: |
+        if pnpm audit --audit-level moderate; then
+          exit 0
+        elif [ "${{ inputs.audit-allow-failure }}" = "true" ]; then
+          echo "pnpm audit failed but continuing as requested"
+          exit 0
+        else
+          exit 1
+        fi
+      shell: bash
