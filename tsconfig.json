@@ -4,10 +4,5 @@
     "baseUrl": ".",
     "outDir": "./dist"
   },
-  "include": [
-    "index.d.ts",
-    "vitest.config.ts",
-    "tsconfig/**/*.ts",
-    "types/**/*.d.ts"
-  ]
+  "include": ["index.d.ts", "vitest.config.ts", "tsconfig/**/*.ts", "types/**/*.d.ts"]
 }

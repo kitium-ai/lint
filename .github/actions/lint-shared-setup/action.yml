@@ -8,23 +8,23 @@ inputs:
   run-verify:
     description: Run pnpm verify in the package directory
     required: false
-    default: "false"
+    default: 'false'
   run-typecheck:
     description: Run pnpm exec tsc -b --noEmit in the package directory
     required: false
-    default: "false"
+    default: 'false'
   run-security-audit:
     description: Run pnpm audit --audit-level moderate
     required: false
-    default: "false"
+    default: 'false'
   ensure-shared-configs:
     description: Check ensureSharedConfigs helper before running verify
     required: false
-    default: "false"
+    default: 'false'
   enable-coverage:
     description: Create coverage dir and set NODE_V8_COVERAGE before pnpm verify
     required: false
-    default: "false"
+    default: 'false'
   coverage-dir:
     description: Coverage directory name within the package directory
     required: false
@@ -32,7 +32,7 @@ inputs:
   audit-allow-failure:
     description: Allow pnpm audit to fail without stopping the workflow
     required: false
-    default: "false"
+    default: 'false'
 runs:
   using: composite
   steps:

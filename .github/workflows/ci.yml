@@ -18,7 +18,7 @@ jobs:
       - name: Shared setup (install, verify, typecheck)
         uses: ./.github/actions/lint-shared-setup
         with:
-          ensure-shared-configs: "true"
-          run-verify: "true"
-          run-typecheck: "true"
-          enable-coverage: "true"
+          ensure-shared-configs: 'true'
+          run-verify: 'true'
+          run-typecheck: 'true'
+          enable-coverage: 'true'

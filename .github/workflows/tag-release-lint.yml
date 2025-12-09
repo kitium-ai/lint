@@ -1,4 +1,3 @@
-
 name: Tag @kitiumai/lint Release
 
 on:
@@ -76,7 +75,7 @@ jobs:
       - name: Shared setup (install + verify)
         uses: ./.github/actions/lint-shared-setup
         with:
-          run-verify: "true"
+          run-verify: 'true'
 
       - name: Check package version
         id: version_check

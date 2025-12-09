@@ -1,4 +1,3 @@
-
 name: Release @kitiumai/lint
 
 on:
@@ -68,7 +67,7 @@ jobs:
       - name: Shared setup (install + verify)
         uses: ./.github/actions/lint-shared-setup
         with:
-          run-verify: "true"
+          run-verify: 'true'
 
       - name: Security checks
         run: |

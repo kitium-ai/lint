@@ -1,4 +1,4 @@
-declare module "@kitiumai/lint" {
+declare module '@kitiumai/lint' {
   // Core ESLint configs (arrays of flat config objects)
   export const eslintBaseConfig: any;
   export const eslintReactConfig: any;
@@ -26,62 +26,62 @@ declare module "@kitiumai/lint" {
 }
 
 // Common subpath modules
-declare module "@kitiumai/lint/eslint/base" {
+declare module '@kitiumai/lint/eslint/base' {
   const base: any;
   export default base;
 }
 
-declare module "@kitiumai/lint/eslint/react" {
+declare module '@kitiumai/lint/eslint/react' {
   const react: any;
   export default react;
 }
 
-declare module "@kitiumai/lint/eslint/node" {
+declare module '@kitiumai/lint/eslint/node' {
   const node: any;
   export default node;
 }
 
-declare module "@kitiumai/lint/eslint/typescript" {
+declare module '@kitiumai/lint/eslint/typescript' {
   const ts: any;
   export default ts;
 }
 
-declare module "@kitiumai/lint/prettier" {
+declare module '@kitiumai/lint/prettier' {
   const prettier: any;
   export default prettier;
 }
 
-declare module "@kitiumai/lint/tsconfig/base" {
+declare module '@kitiumai/lint/tsconfig/base' {
   const cfg: any;
   export default cfg;
 }
 
-declare module "@kitiumai/lint/tsconfig/react" {
+declare module '@kitiumai/lint/tsconfig/react' {
   const cfg: any;
   export default cfg;
 }
 
-declare module "@kitiumai/lint/tsconfig/node" {
+declare module '@kitiumai/lint/tsconfig/node' {
   const cfg: any;
   export default cfg;
 }
 
-declare module "@kitiumai/lint/jest" {
+declare module '@kitiumai/lint/jest' {
   const jest: any;
   export default jest;
 }
 
-declare module "@kitiumai/lint/husky" {
+declare module '@kitiumai/lint/husky' {
   const h: any;
   export default h;
 }
 
-declare module "@kitiumai/lint/commitlint" {
+declare module '@kitiumai/lint/commitlint' {
   const cl: any;
   export default cl;
 }
 
-declare module "@kitiumai/lint/configs" {
+declare module '@kitiumai/lint/configs' {
   const presets: { [k: string]: any };
   export default presets;
 }
