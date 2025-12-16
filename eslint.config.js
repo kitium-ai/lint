@@ -5,6 +5,7 @@
  */
 
 import baseConfig from '@kitiumai/config/eslint.config.base.js';
+import eslintConfigPrettier from 'eslint-config-prettier';
 
 import { eslintBaseConfig, eslintNodeConfig, eslintTypeScriptConfig } from './index.js';
 
@@ -76,4 +77,5 @@ export default [
   {
     ignores: ['node_modules/**', 'dist/**', 'coverage/**', '*.min.js', 'examples/**', '*.d.ts'],
   },
+  eslintConfigPrettier,
 ];

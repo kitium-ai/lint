@@ -4,6 +4,8 @@
  * Combines multiple ESLint configs for common use cases
  */
 
+import eslintConfigPrettier from 'eslint-config-prettier';
+
 import base from '../eslint/base.js';
 import graphql from '../eslint/graphql.js';
 import jest from '../eslint/jest.js';
@@ -20,7 +22,16 @@ import vue from '../eslint/vue.js';
  * Full-stack application with React and Node.js
  * Includes: Base, TypeScript, React, Jest, Testing Library, Security
  */
-export const fullstack = [base, typescript, react, node, jest, testingLibrary, security];
+export const fullstack = [
+  base,
+  typescript,
+  react,
+  node,
+  jest,
+  testingLibrary,
+  security,
+  eslintConfigPrettier,
+];
 
 /**
  * Full-stack strict: adds Kitium UI/component standards for shared libraries
@@ -34,55 +45,77 @@ export const fullstack_strict = [
   testingLibrary,
   security,
   kitium,
+  eslintConfigPrettier,
 ];
 
 /**
  * React Single Page Application (SPA)
  * Includes: Base, TypeScript, React, Jest, Testing Library
  */
-export const react_spa = [base, typescript, react, jest, testingLibrary];
+export const react_spa = [base, typescript, react, jest, testingLibrary, eslintConfigPrettier];
 
 /**
  * React with Next.js Framework
  * Includes: Base, TypeScript, React, Next.js, Jest, Testing Library, Security
  */
-export const nextjs_app = [base, typescript, react, nextjs, jest, testingLibrary, security];
+export const nextjs_app = [
+  base,
+  typescript,
+  react,
+  nextjs,
+  jest,
+  testingLibrary,
+  security,
+  eslintConfigPrettier,
+];
 
 /**
  * Node.js Backend API
  * Includes: Base, TypeScript, Node, Jest, Security
  */
-export const node_api = [base, typescript, node, jest, security];
+export const node_api = [base, typescript, node, jest, security, eslintConfigPrettier];
 
 /**
  * GraphQL API Server
  * Includes: Base, TypeScript, Node, GraphQL, Jest, Security
  */
-export const graphql_api = [base, typescript, node, graphql, jest, security];
+export const graphql_api = [base, typescript, node, graphql, jest, security, eslintConfigPrettier];
 
 /**
  * Vue.js Single Page Application
  * Includes: Base, TypeScript, Vue, Jest
  */
-export const vue_spa = [base, typescript, vue, jest];
+export const vue_spa = [base, typescript, vue, jest, eslintConfigPrettier];
 
 /**
  * Monorepo with multiple packages
  * Includes: Base, TypeScript, Jest, Security
  */
-export const monorepo = [base, typescript, jest, security];
+export const monorepo = [base, typescript, jest, security, eslintConfigPrettier];
 
 /**
  * Library/Package development
  * Includes: Base, TypeScript, Jest, Security
  */
-export const library = [base, typescript, jest, security];
+export const library = [
+  base,
+  typescript,
+  jest,
+  security,
+  {
+    name: 'kitium/library-overrides',
+    rules: {
+      '@typescript-eslint/explicit-module-boundary-types': 'error',
+    },
+  },
+  eslintConfigPrettier,
+];
 
 /**
  * Minimal configuration (JS only, no TypeScript)
  * Includes: Base only
  */
-export const minimal = [base];
+export const minimal = [base, eslintConfigPrettier];
 
 /**
  * Everything enabled (all rules)
@@ -99,6 +132,7 @@ export const all = [
   vue,
   nextjs,
   security,
+  eslintConfigPrettier,
 ];
 
 export default {

@@ -24,13 +24,13 @@ const TYPE_ALIASES = {
 
 const PRESET_DEFINITIONS = {
   node: {
-    imports: ['baseConfig', 'nodeConfig', 'typeScriptConfig'],
-    layers: ['...baseConfig', '...nodeConfig', '...typeScriptConfig'],
+    imports: ['baseConfig', 'nodeConfig', 'typeScriptConfig', 'eslintConfigPrettier'],
+    layers: ['...baseConfig', '...nodeConfig', '...typeScriptConfig', 'eslintConfigPrettier'],
   },
   react: {
-    imports: ['baseConfig', 'reactConfig', 'typeScriptConfig'],
-    layers: ['...baseConfig', '...reactConfig', '...typeScriptConfig'],
-    securityPosition: 'append',
+    imports: ['baseConfig', 'reactConfig', 'typeScriptConfig', 'eslintConfigPrettier'],
+    layers: ['...baseConfig', '...reactConfig', '...typeScriptConfig', 'eslintConfigPrettier'],
+    securityPosition: 'before_prettier',
   },
   nextjs: {
     imports: [
@@ -40,6 +40,7 @@ const PRESET_DEFINITIONS = {
       'typeScriptConfig',
       'jestConfig',
       'testingLibraryConfig',
+      'eslintConfigPrettier',
     ],
     layers: [
       '...baseConfig',
@@ -54,11 +55,12 @@ const PRESET_DEFINITIONS = {
     files: ['**/*.test.{jsx,tsx}'],
     ...testingLibraryConfig,
   }`,
+      'eslintConfigPrettier',
     ],
     securityPosition: 'before_typescript',
   },
   vue: {
-    imports: ['baseConfig', 'vueConfig', 'typeScriptConfig', 'jestConfig'],
+    imports: ['baseConfig', 'vueConfig', 'typeScriptConfig', 'jestConfig', 'eslintConfigPrettier'],
     layers: [
       '...baseConfig',
       '...vueConfig',
@@ -67,25 +69,26 @@ const PRESET_DEFINITIONS = {
     files: ['**/*.test.{js,ts,jsx,tsx}'],
     ...jestConfig,
   }`,
+      'eslintConfigPrettier',
     ],
   },
   angular: {
-    imports: ['baseConfig', 'angularConfig', 'typeScriptConfig'],
-    layers: ['...baseConfig', '...angularConfig', '...typeScriptConfig'],
+    imports: ['baseConfig', 'angularConfig', 'typeScriptConfig', 'eslintConfigPrettier'],
+    layers: ['...baseConfig', '...angularConfig', '...typeScriptConfig', 'eslintConfigPrettier'],
   },
   svelte: {
-    imports: ['baseConfig', 'svelteConfig', 'typeScriptConfig'],
-    layers: ['...baseConfig', '...svelteConfig', '...typeScriptConfig'],
+    imports: ['baseConfig', 'svelteConfig', 'typeScriptConfig', 'eslintConfigPrettier'],
+    layers: ['...baseConfig', '...svelteConfig', '...typeScriptConfig', 'eslintConfigPrettier'],
   },
   'vanilla-js': {
-    imports: ['baseConfig'],
-    layers: ['...baseConfig'],
-    securityPosition: 'append',
+    imports: ['baseConfig', 'eslintConfigPrettier'],
+    layers: ['...baseConfig', 'eslintConfigPrettier'],
+    securityPosition: 'before_prettier',
   },
   'vanilla-ts': {
-    imports: ['baseConfig', 'typeScriptConfig'],
-    layers: ['...baseConfig', '...typeScriptConfig'],
-    securityPosition: 'append',
+    imports: ['baseConfig', 'typeScriptConfig', 'eslintConfigPrettier'],
+    layers: ['...baseConfig', '...typeScriptConfig', 'eslintConfigPrettier'],
+    securityPosition: 'before_prettier',
   },
 };
 
@@ -94,8 +97,13 @@ function insertSecurityLayer(layers, position) {
     return [...layers];
   }
 
-  if (position === 'append') {
-    return [...layers, 'securityConfig'];
+  // Handle specific positions
+  if (position === 'before_prettier') {
+    const copy = [...layers];
+    const prettierIndex = copy.indexOf('eslintConfigPrettier');
+    const insertIndex = prettierIndex === -1 ? copy.length : prettierIndex;
+    copy.splice(insertIndex, 0, 'securityConfig');
+    return copy;
   }
 
   if (position === 'before_typescript') {
@@ -104,6 +112,10 @@ function insertSecurityLayer(layers, position) {
     const insertIndex = tsIndex === -1 ? copy.length : tsIndex;
     copy.splice(insertIndex, 0, 'securityConfig');
     return copy;
+  }
+
+  if (position === 'append') {
+    return [...layers, 'securityConfig'];
   }
 
   if (typeof position === 'number') {
@@ -132,6 +144,11 @@ export function buildEslintPreset(projectType, { includeSecurity = false } = {})
 
   if (includeSecurity && definition.securityPosition && !imports.includes('securityConfig')) {
     imports.push('securityConfig');
+  }
+
+  // Ensure eslintConfigPrettier is imported if used (it's in the definition already, but double check)
+  if (!imports.includes('eslintConfigPrettier')) {
+    imports.push('eslintConfigPrettier');
   }
 
   return { imports, layers };
