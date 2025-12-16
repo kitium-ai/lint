@@ -54,8 +54,8 @@ const kitiumEnhancements = {
     'no-nested-ternary': 'error',
     'no-bitwise': 'warn',
     'prefer-exponentiation-operator': 'warn',
-    'eqeqeq': ['error', 'always', { null: 'ignore' }],
-    'curly': ['error', 'all'],
+    eqeqeq: ['error', 'always', { null: 'ignore' }],
+    curly: ['error', 'all'],
     'no-param-reassign': 'error',
 
     // Formatting / consistency additions that aren't covered upstream
